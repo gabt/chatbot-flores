@@ -8,7 +8,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: Arial, sans-serif; color: #333; }
 
-        /* HEADER */
         header {
             background: #1a5276;
             color: white;
@@ -21,7 +20,6 @@
         header p { font-size: 0.85rem; opacity: 0.85; }
         .header-logos { font-size: 0.75rem; text-align: right; opacity: 0.8; }
 
-        /* NAV */
         nav {
             background: #2e86c1;
             display: flex;
@@ -34,11 +32,14 @@
             text-decoration: none;
             padding: 12px 15px;
             font-size: 0.9rem;
+            cursor: pointer;
             transition: background 0.2s;
         }
-        nav a:hover { background: #1a5276; }
+        nav a:hover, nav a.active { background: #1a5276; }
 
-        /* HERO */
+        .seccion { display: none; }
+        .seccion.activa { display: block; }
+
         .hero {
             background: linear-gradient(135deg, #1a5276, #2e86c1);
             color: white;
@@ -52,12 +53,12 @@
             color: #1a5276;
             padding: 12px 30px;
             border-radius: 25px;
-            text-decoration: none;
             font-weight: bold;
             font-size: 1rem;
+            cursor: pointer;
+            border: none;
         }
 
-        /* CARDS */
         .cards {
             display: flex;
             gap: 20px;
@@ -73,41 +74,138 @@
             width: 220px;
             text-align: center;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
         }
+        .card:hover { transform: translateY(-3px); }
         .card .icon { font-size: 2.5rem; margin-bottom: 10px; }
         .card h3 { font-size: 1rem; color: #1a5276; margin-bottom: 8px; }
         .card p { font-size: 0.85rem; color: #666; }
 
-        /* INFO */
-        .info {
-            padding: 40px 30px;
-            max-width: 900px;
+        .contenido {
+            max-width: 960px;
             margin: 0 auto;
+            padding: 40px 30px;
         }
-        .info h2 { color: #1a5276; margin-bottom: 15px; font-size: 1.5rem; }
-        .info p { line-height: 1.7; margin-bottom: 10px; color: #555; }
+        .contenido h2 {
+            color: #1a5276;
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #2e86c1;
+            padding-bottom: 10px;
+        }
+        .contenido h3 {
+            color: #2e86c1;
+            font-size: 1.2rem;
+            margin: 20px 0 10px;
+        }
+        .contenido p {
+            line-height: 1.8;
+            margin-bottom: 12px;
+            color: #555;
+        }
+        .contenido ul {
+            margin: 10px 0 15px 25px;
+            color: #555;
+            line-height: 1.8;
+        }
 
-        /* CONTACTO */
-        .contacto {
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .grid-item {
+            background: #eaf4fb;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #2e86c1;
+        }
+        .grid-item h4 { color: #1a5276; margin-bottom: 8px; }
+        .grid-item p { font-size: 0.9rem; color: #555; margin: 0; }
+
+        /* GALERÍA DE IMÁGENES */
+        .galeria {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        .galeria img {
+            width: 180px;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transition: transform 0.2s;
+        }
+        .galeria img:hover { transform: scale(1.05); }
+        .galeria-loading {
+            color: #888;
+            font-style: italic;
+            font-size: 0.9rem;
+            padding: 10px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        th {
+            background: #1a5276;
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+        td { padding: 9px 10px; border-bottom: 1px solid #eee; }
+        tr:hover { background: #f4f6f7; }
+
+        .contacto-box {
+            background: #1a5276;
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .contacto-box p { color: white; margin-bottom: 8px; opacity: 0.95; }
+
+        .seccion-footer {
             background: #1a5276;
             color: white;
             padding: 30px;
             text-align: center;
+            margin-top: 40px;
         }
-        .contacto h3 { margin-bottom: 10px; }
-        .contacto p { opacity: 0.9; font-size: 0.95rem; }
+        .seccion-footer p { opacity: 0.9; font-size: 0.95rem; }
 
-        /* FOOTER */
         footer {
             background: #154360;
             color: white;
             text-align: center;
             padding: 15px;
             font-size: 0.8rem;
-            opacity: 0.9;
         }
 
-        /* CHATBOT */
+        .noticia {
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+        }
+        .noticia h4 { color: #1a5276; margin-bottom: 5px; }
+        .noticia p { font-size: 0.9rem; color: #666; }
+        .tag {
+            display: inline-block;
+            background: #2e86c1;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            margin-bottom: 5px;
+        }
+
         #chat-btn {
             position: fixed;
             bottom: 25px;
@@ -207,7 +305,6 @@
 </head>
 <body>
 
-<!-- HEADER -->
 <header>
     <div>
         <h1>🏛️ Municipalidad de Flores</h1>
@@ -219,76 +316,303 @@
     </div>
 </header>
 
-<!-- NAV -->
 <nav>
-    <a href="#">Inicio</a>
-    <a href="#">Municipalidad</a>
-    <a href="#">Servicios</a>
-    <a href="#">Transparencia</a>
-    <a href="#">Contribuyente</a>
-    <a href="#">Contáctenos</a>
+    <a onclick="mostrar('inicio')" class="active" id="nav-inicio">Inicio</a>
+    <a onclick="mostrar('municipalidad')" id="nav-municipalidad">Municipalidad</a>
+    <a onclick="mostrar('canton')" id="nav-canton">Cantón de Flores</a>
+    <a onclick="mostrar('contribuyente')" id="nav-contribuyente">Contribuyente</a>
+    <a onclick="mostrar('transparencia')" id="nav-transparencia">Transparencia</a>
+    <a onclick="mostrar('noticias')" id="nav-noticias">Noticias</a>
+    <a onclick="mostrar('contacto')" id="nav-contacto">Contáctenos</a>
 </nav>
 
-<!-- HERO -->
-<div class="hero">
-    <h2>Bienvenidos al Cantón de Flores</h2>
-    <p>El cantón más pequeño de Costa Rica, con gran corazón</p>
-    <a href="#" class="hero-btn">💬 Consultá al Asistente Virtual</a>
+<!-- INICIO -->
+<div id="inicio" class="seccion activa">
+    <div class="hero">
+        <h2>Bienvenidos al Cantón de Flores</h2>
+        <p>El cantón más pequeño de Costa Rica, con gran corazón</p>
+        <button class="hero-btn" onclick="toggleChat()">💬 Consultá al Asistente Virtual</button>
+    </div>
+    <div class="cards">
+        <div class="card" onclick="mostrar('municipalidad')">
+            <div class="icon">🏛️</div>
+            <h3>Municipalidad</h3>
+            <p>Información institucional, concejo y organigrama</p>
+        </div>
+        <div class="card" onclick="mostrar('contribuyente')">
+            <div class="icon">💳</div>
+            <h3>Contribuyente</h3>
+            <p>Pagá tus impuestos y tributos desde cualquier lugar</p>
+        </div>
+        <div class="card" onclick="mostrar('transparencia')">
+            <div class="icon">🔍</div>
+            <h3>Transparencia</h3>
+            <p>Acceso a información institucional y presupuestos</p>
+        </div>
+        <div class="card" onclick="mostrar('canton')">
+            <div class="icon">🌿</div>
+            <h3>Cantón de Flores</h3>
+            <p>Historia, población y organizaciones cantonales</p>
+        </div>
+        <div class="card" onclick="mostrar('noticias')">
+            <div class="icon">📰</div>
+            <h3>Noticias</h3>
+            <p>Comunicados y eventos del cantón</p>
+        </div>
+        <div class="card" onclick="mostrar('contacto')">
+            <div class="icon">📞</div>
+            <h3>Contáctenos</h3>
+            <p>Directorio institucional y ubicación</p>
+        </div>
+    </div>
+    <div class="contenido">
+        <h2>Sobre la Municipalidad de Flores</h2>
+        <p>La Municipalidad de Flores tiene como misión ser una institución transparente, que en estricto apego a los principios éticos y normativos, optimice los recursos disponibles para contribuir a mejorar la calidad de vida y el bienestar de los habitantes del cantón.</p>
+        <p>📅 <strong>Horario de atención:</strong> Lunes a viernes de 7:00 a.m. a 3:00 p.m.</p>
+        <p>📞 <strong>Teléfono:</strong> (506) 2265-7109 | ✉️ <strong>Correo:</strong> info@flores.go.cr</p>
+    </div>
+    <div class="seccion-footer">
+        <p>📍 Diagonal a la esquina suroeste de la iglesia católica de San Joaquín de Flores, Calle Central</p>
+    </div>
 </div>
 
-<!-- CARDS -->
-<div class="cards">
-    <div class="card">
-        <div class="icon">💳</div>
+<!-- MUNICIPALIDAD -->
+<div id="municipalidad" class="seccion">
+    <div class="contenido">
+        <h2>🏛️ Municipalidad</h2>
+        <div id="galeria-municipalidad" class="galeria">
+            <p class="galeria-loading">Cargando imágenes...</p>
+        </div>
+        <h3>Información General</h3>
+        <p>La Municipalidad de Flores es el gobierno local del cantón número 8 de la provincia de Heredia, creado por la Ley No.52 del 12 de agosto de 1915.</p>
+        <h3>Misión y Visión</h3>
+        <div class="grid">
+            <div class="grid-item">
+                <h4>🎯 Misión</h4>
+                <p>Ser una institución transparente que, en estricto apego a los principios éticos y normativos, optimice los recursos disponibles para contribuir a mejorar la calidad de vida de los habitantes del cantón.</p>
+            </div>
+            <div class="grid-item">
+                <h4>🔭 Visión</h4>
+                <p>Ser un gobierno local moderno, eficiente y transparente, que brinde servicios de calidad y promueva el desarrollo integral del cantón de Flores.</p>
+            </div>
+        </div>
+        <h3>Autoridades</h3>
+        <div class="grid">
+            <div class="grid-item">
+                <h4>👤 Alcalde</h4>
+                <p><strong>Eder Ramírez</strong><br>📞 Ext. 108 | eramirez@flores.go.cr</p>
+            </div>
+            <div class="grid-item">
+                <h4>👤 Vicealcaldesa</h4>
+                <p><strong>María de los Ángeles Ulate</strong><br>📞 Ext. 109 | maulate@flores.go.cr</p>
+            </div>
+        </div>
+        <h3>Servicios Municipales</h3>
+        <div class="grid">
+            <div class="grid-item">
+                <h4>🪟 Ventanilla Única</h4>
+                <p>Atención de todos los trámites de la Dirección de Desarrollo y Control Urbano en jornada continua.</p>
+            </div>
+            <div class="grid-item">
+                <h4>📋 Contraloría de Servicios</h4>
+                <p>Mejora la articulación entre usuarios y funcionarios para optimizar la calidad de los servicios.</p>
+            </div>
+            <div class="grid-item">
+                <h4>💼 OMIL</h4>
+                <p>Oficina Municipal de Intermediación Laboral. Publicación de oportunidades de empleo en el cantón.</p>
+            </div>
+            <div class="grid-item">
+                <h4>👶 CECUDI</h4>
+                <p>Centro de Cuido y Desarrollo Infantil de Flores para niños del cantón.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CANTÓN -->
+<div id="canton" class="seccion">
+    <div class="contenido">
+        <h2>🌿 Cantón de Flores</h2>
+        <div id="galeria-canton" class="galeria">
+            <p class="galeria-loading">Cargando imágenes...</p>
+        </div>
+        <h3>Historia</h3>
+        <p>Flores se erigió como el cantón número 8 de la provincia de Heredia, por la Ley No.52 del 12 de agosto de 1915. Es el cantón más pequeño de la República de Costa Rica con apenas 6.96 km².</p>
+        <h3>Información General</h3>
+        <div class="grid">
+            <div class="grid-item">
+                <h4>📍 Ubicación</h4>
+                <p>Provincia de Heredia, Costa Rica</p>
+            </div>
+            <div class="grid-item">
+                <h4>📏 Extensión</h4>
+                <p>6.96 km² — el cantón más pequeño de Costa Rica</p>
+            </div>
+            <div class="grid-item">
+                <h4>👥 Población</h4>
+                <p>Aproximadamente 20,037 habitantes</p>
+            </div>
+            <div class="grid-item">
+                <h4>🏔️ Altitud</h4>
+                <p>1,086 metros sobre el nivel del mar</p>
+            </div>
+        </div>
+        <h3>Distritos</h3>
+        <div class="grid">
+            <div class="grid-item">
+                <h4>🏘️ San Joaquín</h4>
+                <p>Cabecera del cantón. Sede de la Municipalidad y la iglesia parroquial.</p>
+            </div>
+            <div class="grid-item">
+                <h4>🏘️ Llorente</h4>
+                <p>Distrito con importante actividad comercial e industrial.</p>
+            </div>
+            <div class="grid-item">
+                <h4>🏘️ Barrantes</h4>
+                <p>Distrito con zonas residenciales y áreas verdes.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CONTRIBUYENTE -->
+<div id="contribuyente" class="seccion">
+    <div class="contenido">
+        <h2>💳 Contribuyente</h2>
+        <div id="galeria-contribuyente" class="galeria">
+            <p class="galeria-loading">Cargando imágenes...</p>
+        </div>
         <h3>Pago en Línea</h3>
-        <p>Pagá tus impuestos y tributos desde cualquier lugar</p>
-    </div>
-    <div class="card">
-        <div class="icon">📋</div>
-        <h3>Trámites</h3>
-        <p>Ventanilla única y servicios municipales</p>
-    </div>
-    <div class="card">
-        <div class="icon">🔍</div>
-        <h3>Transparencia</h3>
-        <p>Acceso a información institucional y presupuestos</p>
-    </div>
-    <div class="card">
-        <div class="icon">💼</div>
-        <h3>OMIL</h3>
-        <p>Oportunidades de empleo en el cantón</p>
-    </div>
-    <div class="card">
-        <div class="icon">🏗️</div>
-        <h3>Contrataciones</h3>
-        <p>Licitaciones y contratación administrativa</p>
+        <div class="grid">
+            <div class="grid-item">
+                <h4>🏦 Plataformas Bancarias</h4>
+                <p>Realizá tus pagos a través de la banca en línea de tu banco favorito.</p>
+            </div>
+            <div class="grid-item">
+                <h4>📱 SINPE Móvil</h4>
+                <p>Disponible de lunes a viernes de 7:00 a.m. a 1:00 p.m.</p>
+            </div>
+        </div>
+        <h3>Servicios al Contribuyente</h3>
+        <div class="grid">
+            <div class="grid-item">
+                <h4>🏠 Bienes Inmuebles</h4>
+                <p>Consultas y pagos del impuesto de bienes inmuebles.</p>
+            </div>
+            <div class="grid-item">
+                <h4>📜 Patentes Municipales</h4>
+                <p>Trámites relacionados con licencias comerciales y patentes.</p>
+            </div>
+            <div class="grid-item">
+                <h4>♻️ Recolección de Desechos</h4>
+                <p>Información sobre rutas y horarios de recolección y reciclaje.</p>
+            </div>
+            <div class="grid-item">
+                <h4>🏗️ Permisos de Construcción</h4>
+                <p>Trámites APC, planos y requisitos para construcción.</p>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- INFO -->
-<div class="info">
-    <h2>Sobre el Cantón de Flores</h2>
-    <p>Flores se erigió como el cantón número 8 de la provincia de Heredia, por la Ley No.52 del 12 de agosto de 1915. Es el cantón más pequeño de la República de Costa Rica con 6.96 km², y cuenta con tres distritos: San Joaquín, Llorente y Barrantes.</p>
-    <p><strong>Misión:</strong> La Municipalidad de Flores tiene como misión ser una institución transparente, que en estricto apego a los principios éticos y normativos, optimice los recursos disponibles para contribuir a mejorar la calidad de vida y el bienestar de los habitantes del cantón.</p>
-    <p>📅 <strong>Horario de atención:</strong> Lunes a viernes de 7:00 a.m. a 3:00 p.m.</p>
+<!-- TRANSPARENCIA -->
+<div id="transparencia" class="seccion">
+    <div class="contenido">
+        <h2>🔍 Transparencia</h2>
+        <div id="galeria-transparencia" class="galeria">
+            <p class="galeria-loading">Cargando imágenes...</p>
+        </div>
+        <p>La Municipalidad de Flores, en un firme compromiso con la transparencia y la eficiencia administrativa, pone a disposición de la ciudadanía la siguiente información:</p>
+        <div class="grid">
+            <div class="grid-item">
+                <h4>💰 Presupuesto Municipal</h4>
+                <p>Consulta el presupuesto municipal aprobado y su ejecución.</p>
+            </div>
+            <div class="grid-item">
+                <h4>📊 Informes Económicos</h4>
+                <p>Ejecución presupuestaria e informes de labores periódicos.</p>
+            </div>
+            <div class="grid-item">
+                <h4>🛒 Contratación Administrativa</h4>
+                <p>Licitaciones y procesos de contratación a través de SICOP.</p>
+            </div>
+            <div class="grid-item">
+                <h4>👥 Funcionarios</h4>
+                <p>Información sobre funcionarios y años laborados.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- NOTICIAS -->
+<div id="noticias" class="seccion">
+    <div class="contenido">
+        <h2>📰 Noticias y Comunicados</h2>
+        <div id="galeria-noticias" class="galeria">
+            <p class="galeria-loading">Cargando imágenes...</p>
+        </div>
+        <div class="noticia">
+            <span class="tag">Municipalidad</span>
+            <h4>Marco de Gestión de Tecnologías de la Información</h4>
+            <p>La Municipalidad de Flores adopta oficialmente su nuevo Marco de Gestión de TI.</p>
+        </div>
+        <div class="noticia">
+            <span class="tag">Emprendimiento</span>
+            <h4>Programa Flores Emprende</h4>
+            <p>Programa de acompañamiento y capacitaciones para emprendedores del cantón.</p>
+        </div>
+        <div class="noticia">
+            <span class="tag">Gestión Ambiental</span>
+            <h4>Galardón Bandera Azul</h4>
+            <p>La Municipalidad recibe el galardón Bandera Azul por segundo año consecutivo.</p>
+        </div>
+        <div class="noticia">
+            <span class="tag">Seguridad</span>
+            <h4>Policía Municipal de Flores</h4>
+            <p>La Policía Municipal de Flores inició oficialmente sus operaciones en el cantón.</p>
+        </div>
+        <div class="noticia">
+            <span class="tag">Comunidad</span>
+            <h4>Gira a Fraijanes con Personas Adultas Mayores</h4>
+            <p>Gira al Parque Recreativo de Fraijanes con adultos mayores del cantón.</p>
+        </div>
+    </div>
 </div>
 
 <!-- CONTACTO -->
-<div class="contacto">
-    <h3>📞 Contáctenos</h3>
-    <p>Central telefónica: (506) 2265-7109 | info@flores.go.cr</p>
-    <p>Diagonal a la esquina suroeste de la iglesia católica de San Joaquín de Flores, Calle Central</p>
+<div id="contacto" class="seccion">
+    <div class="contenido">
+        <h2>📞 Contáctenos</h2>
+        <div id="galeria-contacto" class="galeria">
+            <p class="galeria-loading">Cargando imágenes...</p>
+        </div>
+        <div class="contacto-box">
+            <p>📍 <strong>Dirección:</strong> Diagonal a la esquina suroeste de la iglesia católica de San Joaquín de Flores</p>
+            <p>📞 <strong>Teléfono:</strong> (506) 2265-7109</p>
+            <p>✉️ <strong>Correo:</strong> info@flores.go.cr</p>
+            <p>🕐 <strong>Horario:</strong> Lunes a viernes de 7:00 a.m. a 3:00 p.m.</p>
+        </div>
+        <h3>Directorio Institucional</h3>
+        <table>
+            <tr><th>Cargo</th><th>Nombre</th><th>Ext.</th><th>Correo</th></tr>
+            <tr><td>Alcaldía</td><td>Eder Ramírez</td><td>108</td><td>eramirez@flores.go.cr</td></tr>
+            <tr><td>Vicealcaldía</td><td>María de los Ángeles Ulate</td><td>109</td><td>maulate@flores.go.cr</td></tr>
+            <tr><td>Dirección Financiera</td><td>Wilbeth Apú</td><td>140</td><td>wapu@flores.go.cr</td></tr>
+            <tr><td>Tesorería</td><td>José Vega</td><td>143</td><td>jvega@flores.go.cr</td></tr>
+            <tr><td>Dirección Tributaria</td><td>Natalia García</td><td>112</td><td>ngarcia@flores.go.cr</td></tr>
+            <tr><td>Bienes Inmuebles</td><td>Mario Flores</td><td>111</td><td>mflores@flores.go.cr</td></tr>
+            <tr><td>Plataforma DIP</td><td>Wendy Segura</td><td>102</td><td>wsegura@flores.go.cr</td></tr>
+            <tr><td>Secretaría Alcaldía</td><td>Flor María Vargas</td><td>100</td><td>fvargas@flores.go.cr</td></tr>
+        </table>
+    </div>
 </div>
 
-<!-- FOOTER -->
 <footer>
     Prototipo académico desarrollado por GBSYS S.A. y Jeiron Arroyo Brenes — CTP Flores | Agosto 2026
 </footer>
 
-<!-- CHATBOT BOTÓN -->
 <button id="chat-btn" onclick="toggleChat()">💬 Asistente Virtual</button>
 
-<!-- CHATBOT VENTANA -->
 <div id="chat-window">
     <div class="chat-header">
         🤖 Asistente Virtual
@@ -303,13 +627,52 @@
     </div>
     <div class="powered">Powered by Claude AI · GBSYS S.A.</div>
 </div>
-<script src="config.js"></script>
+
 <script>
+    const BACKEND = 'https://chatbot-flores.onrender.com';
     let historial = [];
+    const galeriasCargadas = {};
+
+    function mostrar(seccion) {
+        document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
+        document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+        document.getElementById(seccion).classList.add('activa');
+        document.getElementById('nav-' + seccion).classList.add('active');
+        window.scrollTo(0, 0);
+
+        // Cargar imágenes si la sección las tiene y no se han cargado
+        const galeriaId = 'galeria-' + seccion;
+        const galeria = document.getElementById(galeriaId);
+        if (galeria && !galeriasCargadas[seccion]) {
+            cargarImagenes(seccion, galeria);
+        }
+    }
+
+    async function cargarImagenes(seccion, contenedor) {
+        try {
+            const resp = await fetch(`${BACKEND}/imagenes/${seccion}`);
+            const data = await resp.json();
+            contenedor.innerHTML = '';
+
+            if (data.imagenes && data.imagenes.length > 0) {
+                data.imagenes.forEach(img => {
+                    const el = document.createElement('img');
+                    el.src = img.src;
+                    el.alt = img.alt || '';
+                    el.onerror = () => el.remove(); // eliminar si no carga
+                    contenedor.appendChild(el);
+                });
+                galeriasCargadas[seccion] = true;
+            } else {
+                contenedor.innerHTML = '';
+            }
+        } catch (e) {
+            contenedor.innerHTML = '';
+        }
+    }
 
     function toggleChat() {
-        const win = document.getElementById('chat-window');
-        win.classList.toggle('open');
+        document.getElementById('chat-window').classList.toggle('open');
     }
 
     function handleKey(e) {
@@ -317,36 +680,29 @@
     }
 
     async function enviarMensaje() {
-    const input = document.getElementById('chat-input');
-    const texto = input.value.trim();
-    if (!texto) return;
+        const input = document.getElementById('chat-input');
+        const texto = input.value.trim();
+        if (!texto) return;
 
-    agregarMensaje(texto, 'user');
-    input.value = '';
+        agregarMensaje(texto, 'user');
+        input.value = '';
+        const loading = agregarMensaje('Consultando...', 'bot loading');
 
-    const loading = agregarMensaje('Consultando...', 'bot loading');
-
-    try {
-        const respuesta = await fetch('https://chatbot-flores.onrender.com/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                pregunta: texto,
-                historial: historial
-            })
-        });
-
-        const data = await respuesta.json();
-        historial = data.historial;
-
-        loading.remove();
-        agregarMensaje(data.respuesta, 'bot');
-
-    } catch (error) {
-        loading.remove();
-        agregarMensaje('Lo siento, ocurrió un error. Por favor intente de nuevo.', 'bot');
+        try {
+            const resp = await fetch(`${BACKEND}/chat`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pregunta: texto, historial })
+            });
+            const data = await resp.json();
+            historial = data.historial;
+            loading.remove();
+            agregarMensaje(data.respuesta, 'bot');
+        } catch (e) {
+            loading.remove();
+            agregarMensaje('Lo siento, ocurrió un error. Por favor intente de nuevo.', 'bot');
+        }
     }
-}
 
     function agregarMensaje(texto, clase) {
         const msgs = document.getElementById('chat-messages');
