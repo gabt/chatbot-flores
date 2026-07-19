@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Municipalidad de Flores - Prototipo GBSYS</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; color: #333; }
+
+        /* HEADER */
+        header {
+            background: #1a5276;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 { font-size: 1.4rem; }
+        header p { font-size: 0.85rem; opacity: 0.85; }
+        .header-logos { font-size: 0.75rem; text-align: right; opacity: 0.8; }
+
+        /* NAV */
+        nav {
+            background: #2e86c1;
+            display: flex;
+            gap: 5px;
+            padding: 0 30px;
+            flex-wrap: wrap;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 12px 15px;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+        nav a:hover { background: #1a5276; }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, #1a5276, #2e86c1);
+            color: white;
+            padding: 60px 30px;
+            text-align: center;
+        }
+        .hero h2 { font-size: 2rem; margin-bottom: 10px; }
+        .hero p { font-size: 1.1rem; opacity: 0.9; margin-bottom: 25px; }
+        .hero-btn {
+            background: white;
+            color: #1a5276;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        /* CARDS */
+        .cards {
+            display: flex;
+            gap: 20px;
+            padding: 40px 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            background: #f4f6f7;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            width: 220px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .card .icon { font-size: 2.5rem; margin-bottom: 10px; }
+        .card h3 { font-size: 1rem; color: #1a5276; margin-bottom: 8px; }
+        .card p { font-size: 0.85rem; color: #666; }
+
+        /* INFO */
+        .info {
+            padding: 40px 30px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .info h2 { color: #1a5276; margin-bottom: 15px; font-size: 1.5rem; }
+        .info p { line-height: 1.7; margin-bottom: 10px; color: #555; }
+
+        /* CONTACTO */
+        .contacto {
+            background: #1a5276;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .contacto h3 { margin-bottom: 10px; }
+        .contacto p { opacity: 0.9; font-size: 0.95rem; }
+
+        /* FOOTER */
+        footer {
+            background: #154360;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        /* CHATBOT */
+        #chat-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #2e86c1;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 14px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 999;
+        }
+        #chat-window {
+            display: none;
+            position: fixed;
+            bottom: 85px;
+            right: 25px;
+            width: 360px;
+            height: 500px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            flex-direction: column;
+            z-index: 998;
+            overflow: hidden;
+        }
+        #chat-window.open { display: flex; }
+        .chat-header {
+            background: #1a5276;
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+        .chat-header span { font-size: 0.8rem; display: block; opacity: 0.85; }
+        #chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .msg {
+            padding: 10px 14px;
+            border-radius: 12px;
+            max-width: 85%;
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+        .msg.bot {
+            background: #eaf4fb;
+            color: #1a5276;
+            align-self: flex-start;
+            border-bottom-left-radius: 3px;
+        }
+        .msg.user {
+            background: #2e86c1;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 3px;
+        }
+        .msg.loading { opacity: 0.6; font-style: italic; }
+        .chat-input {
+            display: flex;
+            border-top: 1px solid #eee;
+            padding: 10px;
+            gap: 8px;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 9px 12px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 0.88rem;
+            outline: none;
+        }
+        .chat-input button {
+            background: #2e86c1;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .powered {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #aaa;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <div>
+        <h1>🏛️ Municipalidad de Flores</h1>
+        <p>San Joaquín de Flores, Heredia, Costa Rica</p>
+    </div>
+    <div class="header-logos">
+        Prototipo desarrollado por<br>
+        <strong>GBSYS S.A.</strong> + <strong>CTP Flores</strong>
+    </div>
+</header>
+
+<!-- NAV -->
+<nav>
+    <a href="#">Inicio</a>
+    <a href="#">Municipalidad</a>
+    <a href="#">Servicios</a>
+    <a href="#">Transparencia</a>
+    <a href="#">Contribuyente</a>
+    <a href="#">Contáctenos</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+    <h2>Bienvenidos al Cantón de Flores</h2>
+    <p>El cantón más pequeño de Costa Rica, con gran corazón</p>
+    <a href="#" class="hero-btn">💬 Consultá al Asistente Virtual</a>
+</div>
+
+<!-- CARDS -->
+<div class="cards">
+    <div class="card">
+        <div class="icon">💳</div>
+        <h3>Pago en Línea</h3>
+        <p>Pagá tus impuestos y tributos desde cualquier lugar</p>
+    </div>
+    <div class="card">
+        <div class="icon">📋</div>
+        <h3>Trámites</h3>
+        <p>Ventanilla única y servicios municipales</p>
+    </div>
+    <div class="card">
+        <div class="icon">🔍</div>
+        <h3>Transparencia</h3>
+        <p>Acceso a información institucional y presupuestos</p>
+    </div>
+    <div class="card">
+        <div class="icon">💼</div>
+        <h3>OMIL</h3>
+        <p>Oportunidades de empleo en el cantón</p>
+    </div>
+    <div class="card">
+        <div class="icon">🏗️</div>
+        <h3>Contrataciones</h3>
+        <p>Licitaciones y contratación administrativa</p>
+    </div>
+</div>
+
+<!-- INFO -->
+<div class="info">
+    <h2>Sobre el Cantón de Flores</h2>
+    <p>Flores se erigió como el cantón número 8 de la provincia de Heredia, por la Ley No.52 del 12 de agosto de 1915. Es el cantón más pequeño de la República de Costa Rica con 6.96 km², y cuenta con tres distritos: San Joaquín, Llorente y Barrantes.</p>
+    <p><strong>Misión:</strong> La Municipalidad de Flores tiene como misión ser una institución transparente, que en estricto apego a los principios éticos y normativos, optimice los recursos disponibles para contribuir a mejorar la calidad de vida y el bienestar de los habitantes del cantón.</p>
+    <p>📅 <strong>Horario de atención:</strong> Lunes a viernes de 7:00 a.m. a 3:00 p.m.</p>
+</div>
+
+<!-- CONTACTO -->
+<div class="contacto">
+    <h3>📞 Contáctenos</h3>
+    <p>Central telefónica: (506) 2265-7109 | info@flores.go.cr</p>
+    <p>Diagonal a la esquina suroeste de la iglesia católica de San Joaquín de Flores, Calle Central</p>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    Prototipo académico desarrollado por GBSYS S.A. y Jeiron Arroyo Brenes — CTP Flores | Agosto 2026
+</footer>
+
+<!-- CHATBOT BOTÓN -->
+<button id="chat-btn" onclick="toggleChat()">💬 Asistente Virtual</button>
+
+<!-- CHATBOT VENTANA -->
+<div id="chat-window">
+    <div class="chat-header">
+        🤖 Asistente Virtual
+        <span>Municipalidad de Flores</span>
+    </div>
+    <div id="chat-messages">
+        <div class="msg bot">¡Hola! Soy el asistente virtual de la Municipalidad de Flores. ¿En qué le puedo ayudar hoy?</div>
+    </div>
+    <div class="chat-input">
+        <input type="text" id="chat-input" placeholder="Escriba su consulta..." onkeypress="handleKey(event)">
+        <button onclick="enviarMensaje()">➤</button>
+    </div>
+    <div class="powered">Powered by Claude AI · GBSYS S.A.</div>
+</div>
+<script src="config.js"></script>
+<script>
+    const API_KEY = window.ANTHROPIC_KEY || '';
+    let historial = [];
+
+    function toggleChat() {
+        const win = document.getElementById('chat-window');
+        win.classList.toggle('open');
+    }
+
+    function handleKey(e) {
+        if (e.key === 'Enter') enviarMensaje();
+    }
+
+    async function enviarMensaje() {
+        const input = document.getElementById('chat-input');
+        const texto = input.value.trim();
+        if (!texto) return;
+
+        agregarMensaje(texto, 'user');
+        input.value = '';
+
+        const loading = agregarMensaje('Consultando...', 'bot loading');
+        historial.push({ role: 'user', content: texto });
+
+        try {
+            const respuesta = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': API_KEY,
+                    'anthropic-version': '2023-06-01',
+                    'anthropic-dangerous-direct-browser-access': 'true'
+                },
+                body: JSON.stringify({
+                    model: 'claude-sonnet-4-6',
+                    max_tokens: 1024,
+                    system: `Sos un asistente virtual de la Municipalidad de Flores, Costa Rica. 
+Respondés preguntas de ciudadanos de forma clara, amable y en español.
+Información clave:
+- Horario: lunes a viernes 7:00 a.m. a 3:00 p.m.
+- Teléfono: (506) 2265-7109
+- Correo: info@flores.go.cr
+- Dirección: Diagonal a la esquina suroeste de la iglesia de San Joaquín de Flores
+- Servicios: pago de impuestos en línea, SINPE Móvil, ventanilla única, OMIL (empleo), transparencia, contrataciones (SICOP)
+- Cantón más pequeño de CR, provincia de Heredia, 3 distritos: San Joaquín, Llorente, Barrantes
+Si no sabés algo, sugerís llamar al 2265-7109.`,
+                    messages: historial
+                })
+            });
+
+            const data = await respuesta.json();
+            const texto_respuesta = data.content[0].text;
+            historial.push({ role: 'assistant', content: texto_respuesta });
+
+            loading.remove();
+            agregarMensaje(texto_respuesta, 'bot');
+
+        } catch (error) {
+            loading.remove();
+            agregarMensaje('Lo siento, ocurrió un error. Por favor intente de nuevo.', 'bot');
+        }
+    }
+
+    function agregarMensaje(texto, clase) {
+        const msgs = document.getElementById('chat-messages');
+        const div = document.createElement('div');
+        div.className = `msg ${clase}`;
+        div.textContent = texto;
+        msgs.appendChild(div);
+        msgs.scrollTop = msgs.scrollHeight;
+        return div;
+    }
+</script>
+
+</body>
+</html>
