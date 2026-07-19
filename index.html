@@ -305,7 +305,6 @@
 </div>
 <script src="config.js"></script>
 <script>
-    const API_KEY = window.ANTHROPIC_KEY || '';
     let historial = [];
 
     function toggleChat() {
@@ -318,54 +317,36 @@
     }
 
     async function enviarMensaje() {
-        const input = document.getElementById('chat-input');
-        const texto = input.value.trim();
-        if (!texto) return;
+    const input = document.getElementById('chat-input');
+    const texto = input.value.trim();
+    if (!texto) return;
 
-        agregarMensaje(texto, 'user');
-        input.value = '';
+    agregarMensaje(texto, 'user');
+    input.value = '';
 
-        const loading = agregarMensaje('Consultando...', 'bot loading');
-        historial.push({ role: 'user', content: texto });
+    const loading = agregarMensaje('Consultando...', 'bot loading');
 
-        try {
-            const respuesta = await fetch('https://api.anthropic.com/v1/messages', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': API_KEY,
-                    'anthropic-version': '2023-06-01',
-                    'anthropic-dangerous-direct-browser-access': 'true'
-                },
-                body: JSON.stringify({
-                    model: 'claude-sonnet-4-6',
-                    max_tokens: 1024,
-                    system: `Sos un asistente virtual de la Municipalidad de Flores, Costa Rica. 
-Respondés preguntas de ciudadanos de forma clara, amable y en español.
-Información clave:
-- Horario: lunes a viernes 7:00 a.m. a 3:00 p.m.
-- Teléfono: (506) 2265-7109
-- Correo: info@flores.go.cr
-- Dirección: Diagonal a la esquina suroeste de la iglesia de San Joaquín de Flores
-- Servicios: pago de impuestos en línea, SINPE Móvil, ventanilla única, OMIL (empleo), transparencia, contrataciones (SICOP)
-- Cantón más pequeño de CR, provincia de Heredia, 3 distritos: San Joaquín, Llorente, Barrantes
-Si no sabés algo, sugerís llamar al 2265-7109.`,
-                    messages: historial
-                })
-            });
+    try {
+        const respuesta = await fetch('https://chatbot-flores.onrender.com/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                pregunta: texto,
+                historial: historial
+            })
+        });
 
-            const data = await respuesta.json();
-            const texto_respuesta = data.content[0].text;
-            historial.push({ role: 'assistant', content: texto_respuesta });
+        const data = await respuesta.json();
+        historial = data.historial;
 
-            loading.remove();
-            agregarMensaje(texto_respuesta, 'bot');
+        loading.remove();
+        agregarMensaje(data.respuesta, 'bot');
 
-        } catch (error) {
-            loading.remove();
-            agregarMensaje('Lo siento, ocurrió un error. Por favor intente de nuevo.', 'bot');
-        }
+    } catch (error) {
+        loading.remove();
+        agregarMensaje('Lo siento, ocurrió un error. Por favor intente de nuevo.', 'bot');
     }
+}
 
     function agregarMensaje(texto, clase) {
         const msgs = document.getElementById('chat-messages');
