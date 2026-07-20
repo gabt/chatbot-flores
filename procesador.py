@@ -15,16 +15,19 @@ def main():
     documentos = []
     for pagina in paginas:
         texto_limpio = limpiar_texto(pagina["contenido"])
-        if len(texto_limpio) > 100:  # ignorar páginas casi vacías
+        if len(texto_limpio) > 100:
             documentos.append({
                 "url": pagina["url"],
-                "contenido": texto_limpio
+                "contenido": texto_limpio,
+                "imagenes": pagina.get("imagenes", [])  # ← conservar imágenes
             })
 
     with open("conocimiento.json", "w", encoding="utf-8") as f:
         json.dump(documentos, f, ensure_ascii=False, indent=2)
 
+    total_imgs = sum(len(d["imagenes"]) for d in documentos)
     print(f"✅ Procesadas {len(documentos)} páginas útiles.")
+    print(f"🖼️ Total imágenes conservadas: {total_imgs}")
     print("Archivo guardado: conocimiento.json")
 
 main()
