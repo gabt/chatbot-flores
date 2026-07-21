@@ -9,12 +9,16 @@ from urllib.parse import urljoin, urlparse
 import json
 import time
 
-URL_BASE = "https://www.flores.go.cr"
+URL_BASE = "https://flores.go.cr"
 
 IGNORAR = [
     "facebook.com", "twitter.com", "instagram.com", "youtube.com",
     "mailto:", "tel:", ".pdf", ".gif", ".zip",
-    "wp-admin", "wp-login", "feed", "xmlrpc"
+    "wp-admin", "wp-login", "feed", "xmlrpc",
+    # Plugin de calendario: genera una URL distinta por cada instancia de evento recurrente
+    "mc-events", "my-calendar", "cid=mc-print-view",
+    # Archivos de bajo valor para el contexto del chatbot
+    "/tag/", "/page/", "/author/", "index.php"
 ]
 
 def debe_ignorar(url):
@@ -23,16 +27,32 @@ def debe_ignorar(url):
             return True
     return False
 
+def dominio_normalizado(url):
+    """Devuelve el dominio sin el prefijo 'www.' para poder comparar
+    www.flores.go.cr y flores.go.cr como el mismo sitio."""
+    netloc = urlparse(url).netloc.lower()
+    if netloc.startswith("www."):
+        netloc = netloc[4:]
+    return netloc
+
 def crear_driver():
     opciones = Options()
-    opciones.add_argument("--headless")  # sin ventana visible
+    opciones.add_argument("--headless=new")  # sin ventana visible
     opciones.add_argument("--no-sandbox")
     opciones.add_argument("--disable-dev-shm-usage")
     opciones.add_argument("--window-size=1920,1080")
     opciones.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+    # Evitar que el sitio detecte que es un navegador automatizado
+    opciones.add_argument("--disable-blink-features=AutomationControlled")
+    opciones.add_experimental_option("excludeSwitches", ["enable-automation"])
+    opciones.add_experimental_option("useAutomationExtension", False)
     driver = webdriver.Chrome(
         service=Service(ChromeDriverManager().install()),
         options=opciones
+    )
+    driver.execute_cdp_cmd(
+        "Page.addScriptToEvaluateOnNewDocument",
+        {"source": "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"}
     )
     return driver
 
@@ -43,7 +63,17 @@ def obtener_contenido(driver, url):
         WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
         )
-        time.sleep(2)  # esperar JavaScript
+
+        # Esperar hasta que desaparezca la pantalla de carga "Un momento…"
+        # (reintenta hasta 15 segundos, revisando cada medio segundo)
+        for _ in range(30):
+            if "un momento" not in (driver.title or "").lower():
+                cuerpo = driver.find_element(By.TAG_NAME, "body").text
+                if len(cuerpo) > 100:
+                    break
+            time.sleep(0.5)
+        else:
+            time.sleep(2)  # último intento por las dudas
 
         # Extraer imágenes
         imagenes = []
@@ -55,8 +85,8 @@ def obtener_contenido(driver, url):
                     and src not in vistas
                     and not debe_ignorar(src)
                     and not any(x in src.lower() for x in [
-                        "logo", "icon", "favicon", "banner",
-                        "avatar", "spinner", "placeholder", "widget"
+                        "logo", "icon", "favicon",
+                        "spinner", "placeholder", "widget"
                     ])):
                 imagenes.append({"src": src, "alt": alt})
                 vistas.add(src)
@@ -67,10 +97,11 @@ def obtener_contenido(driver, url):
                 driver.execute_script("arguments[0].remove()", el)
 
         texto = driver.find_element(By.TAG_NAME, "body").text
+        print(f"   🔎 DEBUG: {len(texto)} caracteres de texto, {len(imagenes)} imágenes crudas, título de página: '{driver.title}'")
         return texto, imagenes
 
     except Exception as e:
-        print(f"  ⚠️ Error en {url}: {e}")
+        print(f"  ⚠️ Error en {url}: {type(e).__name__}: {e}")
         return "", []
 
 def obtener_enlaces(driver, url):
@@ -79,42 +110,50 @@ def obtener_enlaces(driver, url):
         WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
         )
+        for _ in range(30):
+            if "un momento" not in (driver.title or "").lower():
+                break
+            time.sleep(0.5)
         enlaces = set()
         for a in driver.find_elements(By.TAG_NAME, "a"):
             href = a.get_attribute("href") or ""
-            if (urlparse(href).netloc == urlparse(URL_BASE).netloc
+            if (href
+                    and dominio_normalizado(href) == dominio_normalizado(URL_BASE)
                     and not debe_ignorar(href)):
                 enlaces.add(href.split("#")[0].rstrip("/"))
+        print(f"   🔎 DEBUG: {len(enlaces)} enlaces internos encontrados en esta página")
         return enlaces
-    except:
+    except Exception as e:
+        print(f"  ⚠️ Error obteniendo enlaces en {url}: {type(e).__name__}: {e}")
         return set()
 
 # URLs conocidas del mapa de sitio
 URLS_CONOCIDAS = [
-    "https://www.flores.go.cr/",
-    "https://www.flores.go.cr/municipalidad/informacion-general/",
-    "https://www.flores.go.cr/municipalidad/mision-vision/",
-    "https://www.flores.go.cr/municipalidad/organigrama/",
-    "https://www.flores.go.cr/municipalidad/ubicacion/",
-    "https://www.flores.go.cr/municipalidad/recursos-humanos/omil/",
-    "https://www.flores.go.cr/municipalidad/concejo-municipal/",
-    "https://www.flores.go.cr/municipalidad/concejo-municipal/miembros/",
-    "https://www.flores.go.cr/canton-de-flores/",
-    "https://www.flores.go.cr/canton-de-flores/historia/",
-    "https://www.flores.go.cr/contribuyente/servicios/",
-    "https://www.flores.go.cr/contribuyente/pago-en-linea/",
-    "https://www.flores.go.cr/transparencia/",
-    "https://www.flores.go.cr/transparencia/contratacion-administrativa/",
-    "https://www.flores.go.cr/contactenos/",
-    "https://www.flores.go.cr/contactenos/directorio/",
-    "https://www.flores.go.cr/blog/",
+    "https://flores.go.cr/",
+    "https://flores.go.cr/municipalidad/informacion-general/",
+    "https://flores.go.cr/municipalidad/mision-vision/",
+    "https://flores.go.cr/municipalidad/organigrama/",
+    "https://flores.go.cr/municipalidad/ubicacion/",
+    "https://flores.go.cr/municipalidad/recursos-humanos/omil/",
+    "https://flores.go.cr/municipalidad/concejo-municipal/",
+    "https://flores.go.cr/municipalidad/concejo-municipal/miembros/",
+    "https://flores.go.cr/alcaldia-municipal/",
+    "https://flores.go.cr/canton-de-flores/",
+    "https://flores.go.cr/canton-de-flores/historia/",
+    "https://flores.go.cr/contribuyente/servicios/",
+    "https://flores.go.cr/contribuyente/pago-en-linea/",
+    "https://flores.go.cr/transparencia/",
+    "https://flores.go.cr/transparencia/contratacion-administrativa/",
+    "https://flores.go.cr/contactenos/",
+    "https://flores.go.cr/contactenos/directorio/",
+    "https://flores.go.cr/blog/",
 ]
 
 def main():
     print("🚀 Iniciando scraping con Selenium...")
     driver = crear_driver()
 
-    por_visitar = set(URLS_CONOCIDAS)
+    por_visitar = set(u.rstrip("/") for u in URLS_CONOCIDAS)
     visitadas = set()
     paginas = []
 
@@ -142,10 +181,10 @@ def main():
     finally:
         driver.quit()
 
-    with open("contenido_municipal.json", "w", encoding="utf-8") as f:
+    with open("conocimiento.json", "w", encoding="utf-8") as f:
         json.dump(paginas, f, ensure_ascii=False, indent=2)
 
     print(f"\n✅ Listo. Se procesaron {len(paginas)} páginas.")
-    print(f"   Archivo guardado: contenido_municipal.json")
+    print(f"   Archivo guardado: conocimiento.json")
 
 main()
