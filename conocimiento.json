@@ -147,37 +147,6 @@
     ]
   },
   {
-    "url": "https://flores.go.cr/municipalidad/mision-vision",
-    "contenido": "¡Vaya! No se ha podido encontrar esa página.\nParece que no podemos encontrar lo que estás buscando. Quizá buscar pueda ayudar.\nBuscar:\nBuscar …\nWe respect your privacy\nCookies help us improve your experience, deliver personalized content, and analyze traffic. You can choose which cookies to allow by clicking Customize. Click Accept All to consent or Reject All to decline non-essential cookies.\nCUSTOMIZE\nREJECT ALL\nACCEPT ALL\nPowered by",
-    "imagenes": [
-      {
-        "src": "https://flores.go.cr/wp-content/uploads/2018/08/cropped-Escudo_muni-1-4.png",
-        "alt": "Municipalidad de Flores",
-        "contexto": null
-      },
-      {
-        "src": "https://flores.go.cr/wp-content/uploads/2018/12/comit.png",
-        "alt": "",
-        "contexto": "¡Vaya! No se ha podido encontrar esa página."
-      },
-      {
-        "src": "https://flores.go.cr/wp-content/uploads/2019/10/CECUDI2.png",
-        "alt": "",
-        "contexto": "¡Vaya! No se ha podido encontrar esa página."
-      },
-      {
-        "src": "https://flores.go.cr/wp-content/uploads/2018/12/canton.png",
-        "alt": "",
-        "contexto": "¡Vaya! No se ha podido encontrar esa página."
-      },
-      {
-        "src": "https://flores.go.cr/wp-content/plugins/accessibility-onetap/assets/images/spanish.png",
-        "alt": "es",
-        "contexto": "¡Vaya! No se ha podido encontrar esa página."
-      }
-    ]
-  },
-  {
     "url": "https://flores.go.cr/municipalidad/organigrama",
     "contenido": "Organigrama\nMapa organizacional\nNiveles\nWe respect your privacy\nCookies help us improve your experience, deliver personalized content, and analyze traffic. You can choose which cookies to allow by clicking Customize. Click Accept All to consent or Reject All to decline non-essential cookies.\nCUSTOMIZE\nREJECT ALL\nACCEPT ALL\nPowered by",
     "imagenes": [
@@ -328,37 +297,6 @@
         "src": "https://flores.go.cr/wp-content/plugins/accessibility-onetap/assets/images/spanish.png",
         "alt": "es",
         "contexto": "Concejo Municipal"
-      }
-    ]
-  },
-  {
-    "url": "https://flores.go.cr/municipalidad/concejo-municipal/miembros",
-    "contenido": "¡Vaya! No se ha podido encontrar esa página.\nParece que no podemos encontrar lo que estás buscando. Quizá buscar pueda ayudar.\nBuscar:\nBuscar …\nWe respect your privacy\nCookies help us improve your experience, deliver personalized content, and analyze traffic. You can choose which cookies to allow by clicking Customize. Click Accept All to consent or Reject All to decline non-essential cookies.\nCUSTOMIZE\nREJECT ALL\nACCEPT ALL\nPowered by",
-    "imagenes": [
-      {
-        "src": "https://flores.go.cr/wp-content/uploads/2018/08/cropped-Escudo_muni-1-4.png",
-        "alt": "Municipalidad de Flores",
-        "contexto": null
-      },
-      {
-        "src": "https://flores.go.cr/wp-content/uploads/2018/12/comit.png",
-        "alt": "",
-        "contexto": "¡Vaya! No se ha podido encontrar esa página."
-      },
-      {
-        "src": "https://flores.go.cr/wp-content/uploads/2019/10/CECUDI2.png",
-        "alt": "",
-        "contexto": "¡Vaya! No se ha podido encontrar esa página."
-      },
-      {
-        "src": "https://flores.go.cr/wp-content/uploads/2018/12/canton.png",
-        "alt": "",
-        "contexto": "¡Vaya! No se ha podido encontrar esa página."
-      },
-      {
-        "src": "https://flores.go.cr/wp-content/plugins/accessibility-onetap/assets/images/spanish.png",
-        "alt": "es",
-        "contexto": "¡Vaya! No se ha podido encontrar esa página."
       }
     ]
   },
@@ -859,17 +797,17 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/comit.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Tiene un emprendimiento o una idea de negocio y no sabes por dónde empezar"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2019/10/CECUDI2.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Tiene un emprendimiento o una idea de negocio y no sabes por dónde empezar"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/canton.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Tiene un emprendimiento o una idea de negocio y no sabes por dónde empezar"
       },
       {
         "src": "https://flores.go.cr/wp-content/plugins/accessibility-onetap/assets/images/spanish.png",
@@ -1293,17 +1231,17 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/comit.png",
         "alt": "",
-        "contexto": ""
+        "contexto": "Preguntas Frecuentes"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2019/10/CECUDI2.png",
         "alt": "",
-        "contexto": ""
+        "contexto": "Preguntas Frecuentes"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/canton.png",
         "alt": "",
-        "contexto": ""
+        "contexto": "Preguntas Frecuentes"
       },
       {
         "src": "https://flores.go.cr/wp-content/plugins/accessibility-onetap/assets/images/spanish.png",
@@ -1658,12 +1596,12 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2026/07/pdf-300x300.png",
         "alt": "",
-        "contexto": "Spoken Word"
+        "contexto": "Marco de Gestión de Tecnologías de la Información"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2026/04/671585058_1411377124361402_4580848978918560572_n-360x240.jpg",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Marco de Gestión de Tecnologías de la Información"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2026/04/674250915_1413187814180333_8824525014018886550_n-360x240.jpg",
@@ -1683,17 +1621,17 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/comit.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Marco de Gestión de Tecnologías de la Información"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2019/10/CECUDI2.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Marco de Gestión de Tecnologías de la Información"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/canton.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Marco de Gestión de Tecnologías de la Información"
       },
       {
         "src": "https://flores.go.cr/wp-content/plugins/accessibility-onetap/assets/images/spanish.png",
@@ -2484,7 +2422,7 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2025/11/559448329_1250809857084797_7618037588686491101_n-360x240.jpg",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Invitación a la capacitación básica en tecnología 5G para Mipymes."
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2022/02/1-360x240.jpg",
@@ -2499,17 +2437,17 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/comit.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Invitación a la capacitación básica en tecnología 5G para Mipymes."
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2019/10/CECUDI2.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Invitación a la capacitación básica en tecnología 5G para Mipymes."
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/canton.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Invitación a la capacitación básica en tecnología 5G para Mipymes."
       },
       {
         "src": "https://flores.go.cr/wp-content/plugins/accessibility-onetap/assets/images/spanish.png",
@@ -2863,37 +2801,6 @@
     ]
   },
   {
-    "url": "https://flores.go.cr/contactenos/directorio/asanchez@flores.go.cr",
-    "contenido": "¡Vaya! No se ha podido encontrar esa página.\nParece que no podemos encontrar lo que estás buscando. Quizá buscar pueda ayudar.\nBuscar:\nBuscar …\nWe respect your privacy\nCookies help us improve your experience, deliver personalized content, and analyze traffic. You can choose which cookies to allow by clicking Customize. Click Accept All to consent or Reject All to decline non-essential cookies.\nCUSTOMIZE\nREJECT ALL\nACCEPT ALL\nPowered by",
-    "imagenes": [
-      {
-        "src": "https://flores.go.cr/wp-content/uploads/2018/08/cropped-Escudo_muni-1-4.png",
-        "alt": "Municipalidad de Flores",
-        "contexto": null
-      },
-      {
-        "src": "https://flores.go.cr/wp-content/uploads/2018/12/comit.png",
-        "alt": "",
-        "contexto": "¡Vaya! No se ha podido encontrar esa página."
-      },
-      {
-        "src": "https://flores.go.cr/wp-content/uploads/2019/10/CECUDI2.png",
-        "alt": "",
-        "contexto": "¡Vaya! No se ha podido encontrar esa página."
-      },
-      {
-        "src": "https://flores.go.cr/wp-content/uploads/2018/12/canton.png",
-        "alt": "",
-        "contexto": "¡Vaya! No se ha podido encontrar esa página."
-      },
-      {
-        "src": "https://flores.go.cr/wp-content/plugins/accessibility-onetap/assets/images/spanish.png",
-        "alt": "es",
-        "contexto": "¡Vaya! No se ha podido encontrar esa página."
-      }
-    ]
-  },
-  {
     "url": "https://flores.go.cr/category/comunicado",
     "contenido": "Comunicados\nCOMUNICADOS\nDeclaración Jurada del Impuesto de Patentes 2026.\n    Informamos a los patentadoas que la presentación de la Declaración Jurada del Impuesto de Patentes podrá realizarse sin multa en estos plazos:   • Régimen Simplificado: del 8 al 22 de enero 2026. • Régimen Tradicional: hasta el 20 de marzo 2026.   Para presentar su declaración, recuerde Leer más\nPor Administrador, hace 7 meses\nCOMUNICADOS\nEl caracol gigante africano.\nEl caracol gigante africano es una especie invasora y peligrosa para la salud y el ambiente. Este caracol es considerada una plaga que daña los cultivos y cuya propagación es rápida. Además, es peligrosa para la salud de personas y animales, ya que sus bacterias pueden afectarles.¿Qué hacer si observa Leer más\nPor Administrador, hace 8 meses\nCANTÓN DE FLORES\nPolicía Municipal de Flores inició oficialmente en el cantón\nInicialmente cuenta con tres oficiales que además podrán ser capacitados para ser inspectores de tránsito. Video vigilancia en el cantón se modernizará y contará con un total de 33 sectores monitoreados. Lunes 14 de febrero, 2022. El pasado viernes 11 de febrero se presentó de forma oficial la policía municipal Leer más\nPor Carlos Andrés Víquez Vargas, hace 4 años\nCOMUNICADOS\n¡Cuidado con posibles estafas!\nLes recordamos que la Municipalidad de Flores no está solicitando números de cuenta ni ningún otro tipo de datos relacionados a los contribuyentes del cantón ni por correo electrónico ni por llamadas telefónicas. Una persona que se hace llamar José Mondragón está haciéndose pasar por funcionario muncipal y está pidiendo Leer más\nPor Administrador, hace 5 años\nWe respect your privacy\nCookies help us improve your experience, deliver personalized content, and analyze traffic. You can choose which cookies to allow by clicking Customize. Click Accept All to consent or Reject All to decline non-essential cookies.\nCUSTOMIZE\nREJECT ALL\nACCEPT ALL\nPowered by",
     "imagenes": [
@@ -3032,12 +2939,12 @@
       {
         "src": "https://static.xx.fbcdn.net/images/emoji.php/v9/tac/1/16/1f4cc.png",
         "alt": "📌",
-        "contexto": "Spoken Word"
+        "contexto": "Declaración Jurada del Impuesto de Patentes 2026."
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2025/11/578646612_1280444484121334_8023160947488327182_n-1-360x240.jpg",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Declaración Jurada del Impuesto de Patentes 2026."
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2022/02/1-360x240.jpg",
@@ -3052,17 +2959,17 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/comit.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Declaración Jurada del Impuesto de Patentes 2026."
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2019/10/CECUDI2.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Declaración Jurada del Impuesto de Patentes 2026."
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/canton.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Declaración Jurada del Impuesto de Patentes 2026."
       },
       {
         "src": "https://flores.go.cr/wp-content/plugins/accessibility-onetap/assets/images/spanish.png",
@@ -3083,12 +2990,12 @@
       {
         "src": "https://s.w.org/images/core/emoji/17.0.2/svg/1f30e.svg",
         "alt": "🌎",
-        "contexto": "Spoken Word"
+        "contexto": "El cambio comienza con una decisión"
       },
       {
         "src": "https://s.w.org/images/core/emoji/17.0.2/svg/1f49a.svg",
         "alt": "💚",
-        "contexto": "Spoken Word"
+        "contexto": "El cambio comienza con una decisión"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2026/04/671585058_1411377124361402_4580848978918560572_n-360x240.jpg",
@@ -3103,17 +3010,17 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/comit.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "El cambio comienza con una decisión"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2019/10/CECUDI2.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "El cambio comienza con una decisión"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/canton.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "El cambio comienza con una decisión"
       },
       {
         "src": "https://flores.go.cr/wp-content/plugins/accessibility-onetap/assets/images/spanish.png",
@@ -3134,47 +3041,47 @@
       {
         "src": "https://static.xx.fbcdn.net/images/emoji.php/v9/t45/1/16/1f6a8.png",
         "alt": "🚨",
-        "contexto": "Spoken Word"
+        "contexto": "El caracol gigante africano."
       },
       {
         "src": "https://static.xx.fbcdn.net/images/emoji.php/v9/tff/1/16/1f40c.png",
         "alt": "🐌",
-        "contexto": "Spoken Word"
+        "contexto": "El caracol gigante africano."
       },
       {
         "src": "https://static.xx.fbcdn.net/images/emoji.php/v9/tdc/1/16/26a0.png",
         "alt": "⚠️",
-        "contexto": "Spoken Word"
+        "contexto": "El caracol gigante africano."
       },
       {
         "src": "https://static.xx.fbcdn.net/images/emoji.php/v9/tf3/1/16/1f539.png",
         "alt": "🔹",
-        "contexto": "Spoken Word"
+        "contexto": "El caracol gigante africano."
       },
       {
         "src": "https://static.xx.fbcdn.net/images/emoji.php/v9/t4d/1/16/1f4de.png",
         "alt": "📞",
-        "contexto": "Spoken Word"
+        "contexto": "El caracol gigante africano."
       },
       {
         "src": "https://static.xx.fbcdn.net/images/emoji.php/v9/t1e/1/16/1f33f.png",
         "alt": "🌿",
-        "contexto": "Spoken Word"
+        "contexto": "El caracol gigante africano."
       },
       {
         "src": "https://static.xx.fbcdn.net/images/emoji.php/v9/t94/1/16/1f49a.png",
         "alt": "💚",
-        "contexto": "Spoken Word"
+        "contexto": "El caracol gigante africano."
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2025/11/578646612_1280444484121334_8023160947488327182_n-1.jpg",
         "alt": "",
-        "contexto": "Spoken Word"
+        "contexto": "El caracol gigante africano."
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2022/01/20180924151549.patente-1-360x240.jpg",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "El caracol gigante africano."
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2022/02/1-360x240.jpg",
@@ -3189,17 +3096,17 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/comit.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "El caracol gigante africano."
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2019/10/CECUDI2.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "El caracol gigante africano."
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/canton.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "El caracol gigante africano."
       },
       {
         "src": "https://flores.go.cr/wp-content/plugins/accessibility-onetap/assets/images/spanish.png",
@@ -3220,17 +3127,17 @@
       {
         "src": "https://static.xx.fbcdn.net/images/emoji.php/v9/tff/1/16/1f3a5.png",
         "alt": "🎥",
-        "contexto": "Spoken Word"
+        "contexto": "En el día de la eliminación de la violencia contra la mujer"
       },
       {
         "src": "https://static.xx.fbcdn.net/images/emoji.php/v9/t96/1/16/1f49c.png",
         "alt": "💜",
-        "contexto": "Spoken Word"
+        "contexto": "En el día de la eliminación de la violencia contra la mujer"
       },
       {
         "src": "https://static.xx.fbcdn.net/images/emoji.php/v9/t3a/1/16/1f469_200d_1f469_200d_1f467_200d_1f466.png",
         "alt": "👩‍👩‍👧‍👦",
-        "contexto": "Spoken Word"
+        "contexto": "En el día de la eliminación de la violencia contra la mujer"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2026/04/671585058_1411377124361402_4580848978918560572_n-360x240.jpg",
@@ -3245,17 +3152,17 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/comit.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "En el día de la eliminación de la violencia contra la mujer"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2019/10/CECUDI2.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "En el día de la eliminación de la violencia contra la mujer"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/canton.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "En el día de la eliminación de la violencia contra la mujer"
       },
       {
         "src": "https://flores.go.cr/wp-content/plugins/accessibility-onetap/assets/images/spanish.png",
@@ -3276,42 +3183,42 @@
       {
         "src": "https://static.xx.fbcdn.net/images/emoji.php/v9/t15/1/16/1f49b.png",
         "alt": "💛",
-        "contexto": "Spoken Word"
+        "contexto": "Gira a Fraijanes con Personas Adultas Mayores"
       },
       {
         "src": "https://static.xx.fbcdn.net/images/emoji.php/v9/t1e/1/16/1f33f.png",
         "alt": "🌿",
-        "contexto": "Spoken Word"
+        "contexto": "Gira a Fraijanes con Personas Adultas Mayores"
       },
       {
         "src": "https://static.xx.fbcdn.net/images/emoji.php/v9/tf4/1/16/2728.png",
         "alt": "✨",
-        "contexto": "Spoken Word"
+        "contexto": "Gira a Fraijanes con Personas Adultas Mayores"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2025/11/581956342_1287534096745706_7129356036756480732_n.jpg",
         "alt": "",
-        "contexto": "Spoken Word"
+        "contexto": "Gira a Fraijanes con Personas Adultas Mayores"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2025/11/585547244_1287536136745502_3381941678188689535_n.jpg",
         "alt": "",
-        "contexto": "Spoken Word"
+        "contexto": "Gira a Fraijanes con Personas Adultas Mayores"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2025/11/584135894_1287535193412263_8886656305522547779_n.jpg",
         "alt": "",
-        "contexto": "Spoken Word"
+        "contexto": "Gira a Fraijanes con Personas Adultas Mayores"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2025/11/584050947_1287535976745518_8295364372980843122_n.jpg",
         "alt": "",
-        "contexto": "Spoken Word"
+        "contexto": "Gira a Fraijanes con Personas Adultas Mayores"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2025/11/582558802_1287534480079001_9143828991296656115_n.jpg",
         "alt": "",
-        "contexto": "Spoken Word"
+        "contexto": "Gira a Fraijanes con Personas Adultas Mayores"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2026/04/671585058_1411377124361402_4580848978918560572_n-360x240.jpg",
@@ -3326,17 +3233,17 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/comit.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Gira a Fraijanes con Personas Adultas Mayores"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2019/10/CECUDI2.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Gira a Fraijanes con Personas Adultas Mayores"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/canton.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Gira a Fraijanes con Personas Adultas Mayores"
       },
       {
         "src": "https://flores.go.cr/wp-content/plugins/accessibility-onetap/assets/images/spanish.png",
@@ -3357,22 +3264,22 @@
       {
         "src": "https://static.xx.fbcdn.net/images/emoji.php/v9/t94/1/16/1f49a.png",
         "alt": "💚",
-        "contexto": "Spoken Word"
+        "contexto": "La Oficina de Promoción Humana Cantonal abre puertas, genera esperanza y fortalece el bienestar"
       },
       {
         "src": "https://static.xx.fbcdn.net/images/emoji.php/v9/t64/1/16/1f91d.png",
         "alt": "🤝",
-        "contexto": "Spoken Word"
+        "contexto": "La Oficina de Promoción Humana Cantonal abre puertas, genera esperanza y fortalece el bienestar"
       },
       {
         "src": "https://static.xx.fbcdn.net/images/emoji.php/v9/t69/1/16/1f331.png",
         "alt": "🌱",
-        "contexto": "Spoken Word"
+        "contexto": "La Oficina de Promoción Humana Cantonal abre puertas, genera esperanza y fortalece el bienestar"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2026/04/674250915_1413187814180333_8824525014018886550_n-360x240.jpg",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "La Oficina de Promoción Humana Cantonal abre puertas, genera esperanza y fortalece el bienestar"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/08/eb32b3062ef4093ecd0b4204e2445b97e674e7d61eb9134193_1920-360x240.jpg",
@@ -3392,17 +3299,17 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/comit.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "La Oficina de Promoción Humana Cantonal abre puertas, genera esperanza y fortalece el bienestar"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2019/10/CECUDI2.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "La Oficina de Promoción Humana Cantonal abre puertas, genera esperanza y fortalece el bienestar"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/canton.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "La Oficina de Promoción Humana Cantonal abre puertas, genera esperanza y fortalece el bienestar"
       },
       {
         "src": "https://flores.go.cr/wp-content/plugins/accessibility-onetap/assets/images/spanish.png",
@@ -3523,17 +3430,17 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/comit.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "III Congreso Iberoamericano de Áreas Metropolitanas"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2019/10/CECUDI2.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "III Congreso Iberoamericano de Áreas Metropolitanas"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/canton.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "III Congreso Iberoamericano de Áreas Metropolitanas"
       },
       {
         "src": "https://flores.go.cr/wp-content/plugins/accessibility-onetap/assets/images/spanish.png",
@@ -3554,12 +3461,12 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2022/02/GANADOR-concurso-Bandera-1024x1024.jpg",
         "alt": "",
-        "contexto": "Spoken Word"
+        "contexto": "Cantón de Flores ya tiene una bandera"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2026/04/670431683_1411550624344052_730867133416525710_n-360x240.jpg",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Cantón de Flores ya tiene una bandera"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2025/11/559448329_1250809857084797_7618037588686491101_n-360x240.jpg",
@@ -3574,17 +3481,17 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/comit.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Cantón de Flores ya tiene una bandera"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2019/10/CECUDI2.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Cantón de Flores ya tiene una bandera"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/canton.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Cantón de Flores ya tiene una bandera"
       },
       {
         "src": "https://flores.go.cr/wp-content/plugins/accessibility-onetap/assets/images/spanish.png",
@@ -3605,32 +3512,32 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2022/02/273326445_5219575254719908_4897489487265906628_n.jpg",
         "alt": "",
-        "contexto": "Spoken Word"
+        "contexto": "Policía Municipal de Flores inició oficialmente en el cantón"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2022/02/273658140_5219633541380746_3813525600475895421_n.jpg",
         "alt": "",
-        "contexto": "Spoken Word"
+        "contexto": "Policía Municipal de Flores inició oficialmente en el cantón"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2022/02/273692660_366923915253222_3633756897416618085_n-2.jpg",
         "alt": "",
-        "contexto": "Spoken Word"
+        "contexto": "Policía Municipal de Flores inició oficialmente en el cantón"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2022/02/273742784_5219654464711987_8137273932191071281_n.jpg",
         "alt": "",
-        "contexto": "Spoken Word"
+        "contexto": "Policía Municipal de Flores inició oficialmente en el cantón"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2022/02/273802614_5219633464714087_1064237525192747674_n-3.jpg",
         "alt": "",
-        "contexto": "Spoken Word"
+        "contexto": "Policía Municipal de Flores inició oficialmente en el cantón"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2026/04/670431683_1411550624344052_730867133416525710_n-360x240.jpg",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Policía Municipal de Flores inició oficialmente en el cantón"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2025/11/559448329_1250809857084797_7618037588686491101_n-360x240.jpg",
@@ -3645,17 +3552,17 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/comit.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Policía Municipal de Flores inició oficialmente en el cantón"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2019/10/CECUDI2.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Policía Municipal de Flores inició oficialmente en el cantón"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/canton.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Policía Municipal de Flores inició oficialmente en el cantón"
       },
       {
         "src": "https://flores.go.cr/wp-content/plugins/accessibility-onetap/assets/images/spanish.png",
@@ -3676,17 +3583,17 @@
       {
         "src": "https://static.xx.fbcdn.net/images/emoji.php/v9/t6b/1/16/1f333.png",
         "alt": "🌳",
-        "contexto": "Spoken Word"
+        "contexto": "¡Protejamos los árboles en nuestras comunidades!"
       },
       {
         "src": "https://static.xx.fbcdn.net/images/emoji.php/v9/t94/1/16/1f49a.png",
         "alt": "💚",
-        "contexto": "Spoken Word"
+        "contexto": "¡Protejamos los árboles en nuestras comunidades!"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2026/04/670431683_1411550624344052_730867133416525710_n-360x240.jpg",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "¡Protejamos los árboles en nuestras comunidades!"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2022/02/1-360x240.jpg",
@@ -3701,17 +3608,17 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/comit.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "¡Protejamos los árboles en nuestras comunidades!"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2019/10/CECUDI2.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "¡Protejamos los árboles en nuestras comunidades!"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/canton.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "¡Protejamos los árboles en nuestras comunidades!"
       },
       {
         "src": "https://flores.go.cr/wp-content/plugins/accessibility-onetap/assets/images/spanish.png",
@@ -3732,17 +3639,17 @@
       {
         "src": "https://static.xx.fbcdn.net/images/emoji.php/v9/tb4/1/16/2b50.png",
         "alt": "⭐️",
-        "contexto": "Spoken Word"
+        "contexto": "Municipalidad recibe galardón Bandera Azul por segundo año consecutivo"
       },
       {
         "src": "https://static.xx.fbcdn.net/images/emoji.php/v9/t33/1/16/2705.png",
         "alt": "✅",
-        "contexto": "Spoken Word"
+        "contexto": "Municipalidad recibe galardón Bandera Azul por segundo año consecutivo"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2021/06/201993910_2604310883207871_5669213885012803290_n-1024x1024.jpg",
         "alt": "",
-        "contexto": "Spoken Word"
+        "contexto": "Municipalidad recibe galardón Bandera Azul por segundo año consecutivo"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2026/04/671585058_1411377124361402_4580848978918560572_n-360x240.jpg",
@@ -3757,17 +3664,17 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/comit.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Municipalidad recibe galardón Bandera Azul por segundo año consecutivo"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2019/10/CECUDI2.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Municipalidad recibe galardón Bandera Azul por segundo año consecutivo"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/canton.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Municipalidad recibe galardón Bandera Azul por segundo año consecutivo"
       },
       {
         "src": "https://flores.go.cr/wp-content/plugins/accessibility-onetap/assets/images/spanish.png",
@@ -3788,12 +3695,12 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2021/05/Compostaje-Huerta.jpg",
         "alt": "",
-        "contexto": "Spoken Word"
+        "contexto": "Use el abono de su compostera para su huerta"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/08/eb32b3062ef4093ecd0b4204e2445b97e674e7d61eb9134193_1920-360x240.jpg",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Use el abono de su compostera para su huerta"
       },
       {
         "src": "https://s.w.org/images/core/emoji/17.0.2/svg/1f30e.svg",
@@ -3808,17 +3715,17 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/comit.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Use el abono de su compostera para su huerta"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2019/10/CECUDI2.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Use el abono de su compostera para su huerta"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/canton.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "Use el abono de su compostera para su huerta"
       },
       {
         "src": "https://flores.go.cr/wp-content/plugins/accessibility-onetap/assets/images/spanish.png",
@@ -4349,7 +4256,7 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2022/01/20180924151549.patente-1-360x240.jpg",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "¡Cuidado con posibles estafas!"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2025/11/578646612_1280444484121334_8023160947488327182_n-1-360x240.jpg",
@@ -4364,17 +4271,17 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/comit.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "¡Cuidado con posibles estafas!"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2019/10/CECUDI2.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "¡Cuidado con posibles estafas!"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/canton.png",
         "alt": "",
-        "contexto": "Entradas relacionadas"
+        "contexto": "¡Cuidado con posibles estafas!"
       },
       {
         "src": "https://flores.go.cr/wp-content/plugins/accessibility-onetap/assets/images/spanish.png",
@@ -4457,17 +4364,17 @@
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/comit.png",
         "alt": "",
-        "contexto": "Spoken Word"
+        "contexto": "Ley de «Movilidad Peatonal» establece bases para regulación de aceras"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2019/10/CECUDI2.png",
         "alt": "",
-        "contexto": "Spoken Word"
+        "contexto": "Ley de «Movilidad Peatonal» establece bases para regulación de aceras"
       },
       {
         "src": "https://flores.go.cr/wp-content/uploads/2018/12/canton.png",
         "alt": "",
-        "contexto": "Spoken Word"
+        "contexto": "Ley de «Movilidad Peatonal» establece bases para regulación de aceras"
       },
       {
         "src": "https://flores.go.cr/wp-content/plugins/accessibility-onetap/assets/images/spanish.png",
