@@ -695,7 +695,8 @@
             // mostramos siempre, sin importar el tamaño. El filtro de
             // tamaño solo aplica a imágenes sueltas sin link, para sacar
             // logos/íconos decorativos que no aportan nada.
-            if (!img.enlace && elImg.naturalWidth > 0 && elImg.naturalWidth < 200 && elImg.naturalHeight < 200) {
+            const esBotonDelPortalDeActas = img.src.includes('portalmuni.flores.go.cr');
+            if (!esBotonDelPortalDeActas && elImg.naturalWidth > 0 && elImg.naturalWidth < 200 && elImg.naturalHeight < 200) {
                 elemento.remove();
             }
         };
