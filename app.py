@@ -83,8 +83,9 @@ def obtener_imagenes(seccion):
             for img in doc.get("imagenes", []):
                 src = img.get("src", "")
                 alt = img.get("alt", "")
+                contexto = img.get("contexto", "")
                 if src and src not in vistas:
                     vistas.add(src)
-                    imagenes.append({"src": src, "alt": alt})
+                    imagenes.append({"src": src, "alt": alt, "contexto": contexto})
 
     return jsonify({"seccion": seccion, "total": len(imagenes), "imagenes": imagenes})
