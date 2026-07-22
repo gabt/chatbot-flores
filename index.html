@@ -659,34 +659,80 @@
         '1909jlvk7trf56epi7f95/image.png'
     ];
 
+    // Normaliza texto para comparar títulos sin depender de mayúsculas,
+    // acentos o emojis (ej. "🎯 Misión" y "misión" deben poder matchear).
+    function normalizar(texto) {
+        return (texto || '')
+            .toLowerCase()
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9\s]/g, '')
+            .trim();
+    }
+
+    function crearImagenElemento(img) {
+        const el = document.createElement('img');
+        el.src = img.src;
+        el.alt = img.alt || '';
+        el.style.cssText = 'width:100%;max-width:220px;border-radius:8px;display:block;margin:10px auto;';
+        el.onerror = () => el.remove(); // eliminar si no carga
+        el.onload = () => {
+            // Los íconos de navegación del sitio son imágenes pequeñas
+            // (logos, botones, banderas). Las fotos reales de contenido
+            // suelen tener mayor resolución nativa.
+            if (el.naturalWidth > 0 && el.naturalWidth < 200 && el.naturalHeight < 200) {
+                el.remove();
+            }
+        };
+        return el;
+    }
+
     async function cargarImagenes(seccion, contenedor) {
         try {
             const resp = await fetch(`${BACKEND}/imagenes/${seccion}`);
             const data = await resp.json();
             contenedor.innerHTML = '';
 
-            if (data.imagenes && data.imagenes.length > 0) {
-                data.imagenes
-                    .filter(img => !IMAGENES_YA_UBICADAS.some(marca => img.src.includes(marca)))
-                    .forEach(img => {
-                    const el = document.createElement('img');
-                    el.src = img.src;
-                    el.alt = img.alt || '';
-                    el.onerror = () => el.remove(); // eliminar si no carga
-                    el.onload = () => {
-                        // Los íconos de navegación del sitio son imágenes pequeñas
-                        // (logos, botones, banderas). Las fotos reales de contenido
-                        // suelen tener mayor resolución nativa.
-                        if (el.naturalWidth > 0 && el.naturalWidth < 200 && el.naturalHeight < 200) {
-                            el.remove();
-                        }
-                    };
-                    contenedor.appendChild(el);
-                });
+            if (!data.imagenes || data.imagenes.length === 0) {
                 galeriasCargadas[seccion] = true;
-            } else {
-                contenedor.innerHTML = '';
+                return;
             }
+
+            const seccionEl = document.getElementById(seccion);
+            const encabezados = seccionEl ? Array.from(seccionEl.querySelectorAll('h3, h4')) : [];
+            const usadas = new Set();
+
+            data.imagenes
+                .filter(img => !IMAGENES_YA_UBICADAS.some(marca => img.src.includes(marca)))
+                .forEach(img => {
+                    if (!img.contexto) return; // sin contexto: va a la galería genérica
+
+                    const ctxNorm = normalizar(img.contexto);
+                    const destino = encabezados.find(h => {
+                        const hNorm = normalizar(h.textContent);
+                        return hNorm.length > 3 && (ctxNorm.includes(hNorm) || hNorm.includes(ctxNorm));
+                    });
+
+                    if (destino) {
+                        const el = crearImagenElemento(img);
+                        const gridItem = destino.closest('.grid-item');
+                        if (gridItem) {
+                            gridItem.appendChild(el);
+                        } else {
+                            destino.insertAdjacentElement('afterend', el);
+                        }
+                        usadas.add(img.src);
+                    }
+                });
+
+            // Las imágenes sin match (o sin contexto) van a la galería genérica de siempre
+            data.imagenes
+                .filter(img => !usadas.has(img.src))
+                .filter(img => !IMAGENES_YA_UBICADAS.some(marca => img.src.includes(marca)))
+                .forEach(img => {
+                    contenedor.appendChild(crearImagenElemento(img));
+                });
+
+            galeriasCargadas[seccion] = true;
         } catch (e) {
             contenedor.innerHTML = '';
         }
