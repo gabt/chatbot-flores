@@ -670,20 +670,36 @@
     }
 
     function crearImagenElemento(img) {
-        const el = document.createElement('img');
-        el.src = img.src;
-        el.alt = img.alt || '';
-        el.style.cssText = 'width:100%;max-width:220px;border-radius:8px;display:block;margin:10px auto;';
-        el.onerror = () => el.remove(); // eliminar si no carga
-        el.onload = () => {
-            // Los íconos de navegación del sitio son imágenes pequeñas
-            // (logos, botones, banderas). Las fotos reales de contenido
-            // suelen tener mayor resolución nativa.
-            if (el.naturalWidth > 0 && el.naturalWidth < 200 && el.naturalHeight < 200) {
-                el.remove();
+        const elImg = document.createElement('img');
+        elImg.src = img.src;
+        elImg.alt = img.alt || '';
+        elImg.style.cssText = 'width:100%;max-width:220px;border-radius:8px;display:block;margin:10px auto;';
+
+        // Si la imagen original era un botón que llevaba a otra sección del
+        // sitio (ej. "ACTAS", "AGENDA"), la envolvemos en un link real.
+        let elemento = elImg;
+        if (img.enlace) {
+            const a = document.createElement('a');
+            a.href = img.enlace;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.title = 'Ver más en el sitio de la Municipalidad';
+            a.style.cssText = 'display:block;';
+            a.appendChild(elImg);
+            elemento = a;
+        }
+
+        elImg.onerror = () => elemento.remove(); // eliminar si no carga
+        elImg.onload = () => {
+            // Si la imagen es un botón de navegación (tiene enlace), la
+            // mostramos siempre, sin importar el tamaño. El filtro de
+            // tamaño solo aplica a imágenes sueltas sin link, para sacar
+            // logos/íconos decorativos que no aportan nada.
+            if (!img.enlace && elImg.naturalWidth > 0 && elImg.naturalWidth < 200 && elImg.naturalHeight < 200) {
+                elemento.remove();
             }
         };
-        return el;
+        return elemento;
     }
 
     async function cargarImagenes(seccion, contenedor) {

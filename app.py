@@ -36,7 +36,7 @@ INFORMACIÓN DEL SITIO WEB MUNICIPAL:
 
 # Mapa de secciones a palabras clave en URLs
 SECCIONES = {
-    "municipalidad": ["municipalidad", "omil", "concejo", "recursos-humanos", "cecudi", "alcald"],
+    "municipalidad": ["municipalidad", "omil", "concejo", "recursos-humanos", "cecudi", "alcald", "actas", "portalmuni"],
     "canton": ["canton", "historia", "poblacional", "organizaciones"],
     "contribuyente": ["contribuyente", "pago", "servicios", "patentes", "bienes"],
     "transparencia": ["transparencia", "presupuesto", "contratacion", "informes"],
@@ -84,8 +84,9 @@ def obtener_imagenes(seccion):
                 src = img.get("src", "")
                 alt = img.get("alt", "")
                 contexto = img.get("contexto", "")
+                enlace = img.get("enlace", "")
                 if src and src not in vistas:
                     vistas.add(src)
-                    imagenes.append({"src": src, "alt": alt, "contexto": contexto})
+                    imagenes.append({"src": src, "alt": alt, "contexto": contexto, "enlace": enlace})
 
     return jsonify({"seccion": seccion, "total": len(imagenes), "imagenes": imagenes})
