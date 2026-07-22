@@ -675,10 +675,16 @@
         elImg.alt = img.alt || '';
         elImg.style.cssText = 'width:100%;max-width:220px;border-radius:8px;display:block;margin:10px auto;';
 
-        // Si la imagen original era un botón que llevaba a otra sección del
-        // sitio (ej. "ACTAS", "AGENDA"), la envolvemos en un link real.
+        // Solo hacemos clickeables las imágenes del portal de actas: son las
+        // únicas cuyo link real confirmamos que funciona. Los enlaces de
+        // botones del sitio principal (flores.go.cr) suelen apuntar a URLs
+        // rotas o desactualizadas propias del sitio original (IPs directas,
+        // vistas previas de edición de WordPress, etc.), así que esas
+        // imágenes se muestran normales, sin envolver en un link.
+        const esBotonDelPortalDeActas = img.src.includes('portalmuni.flores.go.cr');
+
         let elemento = elImg;
-        if (img.enlace) {
+        if (img.enlace && esBotonDelPortalDeActas) {
             const a = document.createElement('a');
             a.href = img.enlace;
             a.target = '_blank';
@@ -691,11 +697,10 @@
 
         elImg.onerror = () => elemento.remove(); // eliminar si no carga
         elImg.onload = () => {
-            // Si la imagen es un botón de navegación (tiene enlace), la
-            // mostramos siempre, sin importar el tamaño. El filtro de
-            // tamaño solo aplica a imágenes sueltas sin link, para sacar
-            // logos/íconos decorativos que no aportan nada.
-            const esBotonDelPortalDeActas = img.src.includes('portalmuni.flores.go.cr');
+            // Los íconos de navegación del sitio son imágenes pequeñas
+            // (logos, botones, banderas). Las fotos reales de contenido
+            // suelen tener mayor resolución nativa. Los botones del portal
+            // de actas quedan exentos porque sabemos que son legítimos.
             if (!esBotonDelPortalDeActas && elImg.naturalWidth > 0 && elImg.naturalWidth < 200 && elImg.naturalHeight < 200) {
                 elemento.remove();
             }
