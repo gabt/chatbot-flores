@@ -164,6 +164,22 @@
         transition: transform 0.2s;
     }
     .galeria img:hover { transform: scale(1.04); }
+    .galeria-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+    }
+    .galeria-caption {
+        font-size: 0.8rem;
+        color: #666;
+        text-align: center;
+        max-width: 200px;
+    }
+    .galeria-caption.enlace {
+        color: #2e86c1;
+        font-weight: bold;
+    }
 
     /* HERO / INICIO */
     .hero {
@@ -719,7 +735,19 @@ const ARBOL = [
     function renderGaleria(imagenes) {
         const div = document.createElement('div');
         div.className = 'galeria';
-        (imagenes || []).forEach(img => div.appendChild(crearImagenElemento(img)));
+        (imagenes || []).forEach(img => {
+            const item = document.createElement('div');
+            item.className = 'galeria-item';
+            const elemento = crearImagenElemento(img);
+            item.appendChild(elemento);
+            if (img.alt && img.alt.trim()) {
+                const cap = document.createElement('span');
+                cap.className = elemento.tagName === 'A' ? 'galeria-caption enlace' : 'galeria-caption';
+                cap.textContent = img.alt.trim();
+                item.appendChild(cap);
+            }
+            div.appendChild(item);
+        });
         return div;
     }
 
@@ -777,10 +805,22 @@ const ARBOL = [
 
         pane.appendChild(renderGaleria(pagina.imagenes));
 
-        const textoDiv = document.createElement('div');
-        textoDiv.className = 'texto-pagina';
-        textoDiv.innerHTML = formatearTexto(pagina.contenido || '');
-        pane.appendChild(textoDiv);
+        if (!esSoloEtiquetas(pagina.contenido)) {
+            const textoDiv = document.createElement('div');
+            textoDiv.className = 'texto-pagina';
+            textoDiv.innerHTML = formatearTexto(pagina.contenido || '');
+            pane.appendChild(textoDiv);
+        }
+    }
+
+    function esSoloEtiquetas(texto) {
+        // Detecta si el texto scrapeado es solo una lista de etiquetas cortas
+        // (ej. los nombres de íconos de una página tipo "grid de botones"),
+        // sin ninguna oración real - en ese caso, mostrarlo es redundante
+        // porque las mismas etiquetas ya aparecen debajo de cada imagen.
+        const lineas = (texto || '').split('\n').map(l => l.trim()).filter(Boolean);
+        if (lineas.length === 0) return true;
+        return lineas.every(l => l.length < 30 && !/[.!?]$/.test(l));
     }
 
     function renderExterno(nodo, pane) {

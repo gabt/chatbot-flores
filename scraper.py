@@ -181,6 +181,11 @@ def obtener_contenido(driver, url, reintentos=2):
         if idx_cookies != -1:
             texto = texto[:idx_cookies].rstrip()
 
+        # Cortar la etiqueta del botón de accesibilidad "Leer Contenido"
+        # (plugin de lectura en voz alta) que queda pegada al final.
+        if texto.rstrip().endswith("Leer Contenido"):
+            texto = texto.rstrip()[:-len("Leer Contenido")].rstrip()
+
         # Detectar páginas "404 suaves": no dan error de servidor ni de título,
         # pero muestran el mensaje típico de WordPress de página no encontrada.
         FRASES_404 = [
