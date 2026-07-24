@@ -676,14 +676,25 @@ const ARBOL = [
     /* =========================================================
        GALERÍA DE IMÁGENES (reutilizado de versiones anteriores)
        ========================================================= */
+    function esEnlaceConfiable(url) {
+        if (!url) return false;
+        // Descartar IPs directas (ej. http://179.0.210.186:82/...), suelen ser
+        // enlaces viejos/rotos que quedaron del sitio real.
+        if (/^https?:\/\/\d{1,3}(\.\d{1,3}){3}/.test(url)) return false;
+        // Descartar vistas previas de edición de WordPress (requieren login,
+        // no funcionan para un visitante normal).
+        if (url.includes('customize_changeset_uuid')) return false;
+        return true;
+    }
+
     function crearImagenElemento(img) {
         const elImg = document.createElement('img');
         elImg.src = img.src;
         elImg.alt = img.alt || '';
 
-        const esBotonDelPortalDeActas = img.src.includes('portalmuni.flores.go.cr');
+        const enlaceConfiable = esEnlaceConfiable(img.enlace);
         let elemento = elImg;
-        if (img.enlace && esBotonDelPortalDeActas) {
+        if (enlaceConfiable) {
             const a = document.createElement('a');
             a.href = img.enlace;
             a.target = '_blank';
@@ -695,7 +706,10 @@ const ARBOL = [
 
         elImg.onerror = () => elemento.remove();
         elImg.onload = () => {
-            if (!esBotonDelPortalDeActas && elImg.naturalWidth > 0 && elImg.naturalWidth < 200 && elImg.naturalHeight < 200) {
+            // Las imágenes con un link confiable se muestran siempre (son
+            // botones funcionales). Las que no tienen link y son chicas
+            // (logos/íconos decorativos) se filtran.
+            if (!enlaceConfiable && elImg.naturalWidth > 0 && elImg.naturalWidth < 200 && elImg.naturalHeight < 200) {
                 elemento.remove();
             }
         };
