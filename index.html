@@ -181,6 +181,18 @@
         font-weight: bold;
     }
 
+    /* Íconos de botón (clickeables) con círculo verde, como en el sitio real */
+    .galeria-item.boton-icono img {
+        width: 110px;
+        height: 110px;
+        object-fit: contain;
+        border-radius: 50%;
+        background: #8bc34a;
+        padding: 22px;
+        box-shadow: none;
+    }
+    .galeria-item.boton-icono img:hover { transform: scale(1.06); }
+
     /* HERO / INICIO */
     .hero {
         background: linear-gradient(135deg, #1a5276, #2e86c1);
@@ -732,6 +744,14 @@ const ARBOL = [
         return elemento;
     }
 
+    // El sitio real tiene el atributo "alt" mal puesto en algunas imágenes
+    // (dice "Servicios" genérico en vez del nombre real). Los corregimos acá
+    // puntualmente, ya que sabemos cuál es el correcto por el link de destino.
+    const ETIQUETAS_MANUALES = {
+        'https://flores.go.cr/formularios/bienes.php': 'Bienes Inmuebles',
+        'https://flores.go.cr/formularios/utgv.php': 'Gestión Vial Inmuebles',
+    };
+
     function renderGaleria(imagenes) {
         const div = document.createElement('div');
         div.className = 'galeria';
@@ -740,10 +760,14 @@ const ARBOL = [
             item.className = 'galeria-item';
             const elemento = crearImagenElemento(img);
             item.appendChild(elemento);
-            if (img.alt && img.alt.trim()) {
+            if (elemento.tagName === 'A') {
+                item.classList.add('boton-icono');
+            }
+            const etiqueta = ETIQUETAS_MANUALES[img.enlace] || img.alt;
+            if (etiqueta && etiqueta.trim()) {
                 const cap = document.createElement('span');
                 cap.className = elemento.tagName === 'A' ? 'galeria-caption enlace' : 'galeria-caption';
-                cap.textContent = img.alt.trim();
+                cap.textContent = etiqueta.trim();
                 item.appendChild(cap);
             }
             div.appendChild(item);
