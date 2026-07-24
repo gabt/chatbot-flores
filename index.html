@@ -1,307 +1,328 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Municipalidad de Flores - Prototipo GBSYS</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; color: #333; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Municipalidad de Flores - Prototipo GBSYS</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; color: #333; }
 
-        header {
-            background: #1a5276;
-            color: white;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        header h1 { font-size: 1.4rem; }
-        header p { font-size: 0.85rem; opacity: 0.85; }
-        .header-logos { font-size: 0.75rem; text-align: right; opacity: 0.8; }
+    header {
+        background: #1a5276;
+        color: white;
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    header h1 { font-size: 1.4rem; }
+    header p { font-size: 0.85rem; opacity: 0.85; }
+    .header-logos { font-size: 0.75rem; text-align: right; opacity: 0.8; }
 
-        nav {
-            background: #2e86c1;
-            display: flex;
-            gap: 5px;
-            padding: 0 30px;
-            flex-wrap: wrap;
-        }
-        nav a {
-            color: white;
-            text-decoration: none;
-            padding: 12px 15px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        nav a:hover, nav a.active { background: #1a5276; }
+    #menu-toggle {
+        display: none;
+        background: #2e86c1;
+        color: white;
+        border: none;
+        padding: 10px 14px;
+        font-size: 0.95rem;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 
-        .seccion { display: none; }
-        .seccion.activa { display: block; }
+    .layout {
+        display: flex;
+        align-items: flex-start;
+        min-height: calc(100vh - 200px);
+    }
 
-        .hero {
-            background: linear-gradient(135deg, #1a5276, #2e86c1);
-            color: white;
-            padding: 60px 30px;
-            text-align: center;
-        }
-        .hero h2 { font-size: 2rem; margin-bottom: 10px; }
-        .hero p { font-size: 1.1rem; opacity: 0.9; margin-bottom: 25px; }
-        .hero-btn {
-            background: white;
-            color: #1a5276;
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            border: none;
-        }
+    /* ÁRBOL DE NAVEGACIÓN LATERAL */
+    .sidebar {
+        width: 320px;
+        flex-shrink: 0;
+        background: #f4f6f7;
+        border-right: 1px solid #ddd;
+        padding: 15px 10px;
+        position: sticky;
+        top: 0;
+        max-height: 100vh;
+        overflow-y: auto;
+    }
+    .inicio-btn {
+        display: block;
+        background: #1a5276;
+        color: white;
+        text-align: center;
+        padding: 10px;
+        border-radius: 6px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 0.95rem;
+    }
+    .sidebar ul { list-style: none; }
+    .sidebar > ul { padding-left: 0; }
+    .hijos { display: none; padding-left: 16px; }
+    .hijos.abierto { display: block; }
 
-        .cards {
-            display: flex;
-            gap: 20px;
-            padding: 40px 30px;
-            flex-wrap: wrap;
-            justify-content: center;
-            background: #f4f6f7;
-        }
-        .card {
-            background: white;
-            border-radius: 8px;
-            padding: 25px;
-            width: 220px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .card:hover { transform: translateY(-3px); }
-        .card .icon { font-size: 2.5rem; margin-bottom: 10px; }
-        .card h3 { font-size: 1rem; color: #1a5276; margin-bottom: 8px; }
-        .card p { font-size: 0.85rem; color: #666; }
+    .nodo {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        padding: 6px 8px;
+        border-radius: 5px;
+        font-size: 0.88rem;
+        color: #234;
+        line-height: 1.3;
+    }
+    .nodo:hover { background: #e2ecf1; }
+    .nodo.activo { background: #2e86c1; color: white; font-weight: bold; }
+    .flecha {
+        width: 14px;
+        flex-shrink: 0;
+        display: inline-block;
+        font-size: 0.7rem;
+        transition: transform 0.15s;
+        color: #888;
+    }
+    .nodo.activo .flecha { color: white; }
+    .nodo.expandido .flecha { transform: rotate(90deg); }
+    .nivel-badge {
+        font-size: 0.7rem;
+        opacity: 0.7;
+    }
 
-        .contenido {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 40px 30px;
-        }
-        .contenido h2 {
-            color: #1a5276;
-            font-size: 1.6rem;
-            margin-bottom: 20px;
-            border-bottom: 3px solid #2e86c1;
-            padding-bottom: 10px;
-        }
-        .contenido h3 {
-            color: #2e86c1;
-            font-size: 1.2rem;
-            margin: 20px 0 10px;
-        }
-        .contenido p {
-            line-height: 1.8;
-            margin-bottom: 12px;
-            color: #555;
-        }
-        .contenido ul {
-            margin: 10px 0 15px 25px;
-            color: #555;
-            line-height: 1.8;
-        }
+    /* PANEL DE CONTENIDO */
+    .content-pane {
+        flex: 1;
+        padding: 35px 40px;
+        max-width: 900px;
+    }
+    .content-pane h2 {
+        color: #1a5276;
+        font-size: 1.6rem;
+        margin-bottom: 8px;
+        border-bottom: 3px solid #2e86c1;
+        padding-bottom: 10px;
+    }
+    .content-pane .fuente {
+        margin: 8px 0 18px;
+        font-size: 0.85rem;
+    }
+    .content-pane .fuente a { color: #2e86c1; }
+    .texto-pagina p {
+        line-height: 1.8;
+        margin-bottom: 14px;
+        color: #444;
+    }
+    .cargando, .nota, .aviso {
+        color: #666;
+        font-style: italic;
+        margin-top: 10px;
+    }
+    .aviso-externo, .aviso-descarga, .aviso-roto, .aviso-grupo {
+        background: #eaf4fb;
+        border-left: 4px solid #2e86c1;
+        border-radius: 6px;
+        padding: 20px;
+        margin-top: 15px;
+    }
+    .aviso-roto {
+        background: #fdf1f0;
+        border-left-color: #c0392b;
+    }
+    .boton-externo {
+        display: inline-block;
+        margin-top: 12px;
+        background: #2e86c1;
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: bold;
+    }
+    .boton-externo:hover { background: #1a5276; }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        .grid-item {
-            background: #eaf4fb;
-            border-radius: 8px;
-            padding: 20px;
-            border-left: 4px solid #2e86c1;
-        }
-        .grid-item h4 { color: #1a5276; margin-bottom: 8px; }
-        .grid-item p { font-size: 0.9rem; color: #555; margin: 0; }
+    /* GALERÍA DE IMÁGENES */
+    .galeria {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin: 20px 0;
+    }
+    .galeria img {
+        width: 200px;
+        max-height: 160px;
+        object-fit: cover;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        transition: transform 0.2s;
+    }
+    .galeria img:hover { transform: scale(1.04); }
 
-        /* GALERÍA DE IMÁGENES */
-        .galeria {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin: 20px 0;
-        }
-        .galeria img {
-            width: 180px;
-            height: 130px;
-            object-fit: cover;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-            transition: transform 0.2s;
-        }
-        .galeria img:hover { transform: scale(1.05); }
-        .galeria-loading {
-            color: #888;
-            font-style: italic;
-            font-size: 0.9rem;
-            padding: 10px 0;
-        }
+    /* HERO / INICIO */
+    .hero {
+        background: linear-gradient(135deg, #1a5276, #2e86c1);
+        color: white;
+        padding: 60px 30px;
+        text-align: center;
+    }
+    .hero h2 { font-size: 2rem; margin-bottom: 10px; color: white; border: none; }
+    .hero p { font-size: 1.1rem; opacity: 0.9; }
 
-        table {
+    /* Bloques especiales reutilizados (alcaldía, contacto, etc.) */
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+    .grid-item {
+        background: #eaf4fb;
+        border-radius: 8px;
+        padding: 20px;
+        border-left: 4px solid #2e86c1;
+        text-align: center;
+    }
+    .grid-item h4 { color: #1a5276; margin-bottom: 8px; }
+    .grid-item p { font-size: 0.88rem; color: #555; margin: 6px 0 0; text-align: left; }
+    .grid-item img {
+        width: 100%; max-width: 180px; border-radius: 8px;
+        display: block; margin: 0 auto 10px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        font-size: 0.9rem;
+    }
+    th {
+        background: #1a5276;
+        color: white;
+        padding: 10px;
+        text-align: left;
+    }
+    td { padding: 9px 10px; border-bottom: 1px solid #eee; }
+    tr:hover { background: #f4f6f7; }
+
+    .contacto-box {
+        background: #1a5276;
+        color: white;
+        padding: 25px;
+        border-radius: 8px;
+        margin: 15px 0 25px;
+    }
+    .contacto-box p { color: white; margin-bottom: 8px; opacity: 0.95; }
+
+    footer {
+        background: #154360;
+        color: white;
+        text-align: center;
+        padding: 15px;
+        font-size: 0.8rem;
+    }
+
+    #chat-btn {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        background: #2e86c1;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 14px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        z-index: 999;
+    }
+    #chat-window {
+        display: none;
+        position: fixed;
+        bottom: 85px;
+        right: 25px;
+        width: 360px;
+        max-width: 90vw;
+        height: 480px;
+        max-height: 70vh;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+        flex-direction: column;
+        overflow: hidden;
+        z-index: 999;
+    }
+    #chat-window.open { display: flex; }
+    .chat-header {
+        background: #1a5276;
+        color: white;
+        padding: 14px 16px;
+        font-weight: bold;
+    }
+    .chat-header span { display: block; font-size: 0.75rem; font-weight: normal; opacity: 0.85; }
+    #chat-messages {
+        flex: 1;
+        padding: 14px;
+        overflow-y: auto;
+        background: #f7f9fa;
+    }
+    .msg {
+        padding: 9px 13px;
+        border-radius: 12px;
+        margin-bottom: 8px;
+        max-width: 85%;
+        font-size: 0.88rem;
+        line-height: 1.4;
+    }
+    .msg.user { background: #2e86c1; color: white; margin-left: auto; }
+    .msg.bot { background: #e5e9eb; color: #333; }
+    .msg.loading { font-style: italic; opacity: 0.7; }
+    .chat-input {
+        display: flex;
+        border-top: 1px solid #ddd;
+    }
+    .chat-input input {
+        flex: 1;
+        border: none;
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+    .chat-input input:focus { outline: none; }
+    .chat-input button {
+        background: #2e86c1;
+        color: white;
+        border: none;
+        padding: 0 18px;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+    .powered {
+        text-align: center;
+        font-size: 0.68rem;
+        color: #999;
+        padding: 5px;
+        background: #f0f0f0;
+    }
+
+    @media (max-width: 800px) {
+        #menu-toggle { display: inline-block; }
+        .layout { flex-direction: column; }
+        .sidebar {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            font-size: 0.9rem;
-        }
-        th {
-            background: #1a5276;
-            color: white;
-            padding: 10px;
-            text-align: left;
-        }
-        td { padding: 9px 10px; border-bottom: 1px solid #eee; }
-        tr:hover { background: #f4f6f7; }
-
-        .contacto-box {
-            background: #1a5276;
-            color: white;
-            padding: 30px;
-            border-radius: 8px;
-            margin-top: 20px;
-            text-align: center;
-        }
-        .contacto-box p { color: white; margin-bottom: 8px; opacity: 0.95; }
-
-        .seccion-footer {
-            background: #1a5276;
-            color: white;
-            padding: 30px;
-            text-align: center;
-            margin-top: 40px;
-        }
-        .seccion-footer p { opacity: 0.9; font-size: 0.95rem; }
-
-        footer {
-            background: #154360;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            font-size: 0.8rem;
-        }
-
-        .noticia {
-            border-bottom: 1px solid #eee;
-            padding: 15px 0;
-        }
-        .noticia h4 { color: #1a5276; margin-bottom: 5px; }
-        .noticia p { font-size: 0.9rem; color: #666; }
-        .tag {
-            display: inline-block;
-            background: #2e86c1;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.75rem;
-            margin-bottom: 5px;
-        }
-
-        #chat-btn {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background: #2e86c1;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            padding: 14px 20px;
-            font-size: 1rem;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            z-index: 999;
-        }
-        #chat-window {
+            position: static;
+            max-height: none;
             display: none;
-            position: fixed;
-            bottom: 85px;
-            right: 25px;
-            width: 360px;
-            height: 500px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-            flex-direction: column;
-            z-index: 998;
-            overflow: hidden;
         }
-        #chat-window.open { display: flex; }
-        .chat-header {
-            background: #1a5276;
-            color: white;
-            padding: 15px;
-            font-weight: bold;
-            font-size: 0.95rem;
-        }
-        .chat-header span { font-size: 0.8rem; display: block; opacity: 0.85; }
-        #chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .msg {
-            padding: 10px 14px;
-            border-radius: 12px;
-            max-width: 85%;
-            font-size: 0.88rem;
-            line-height: 1.5;
-        }
-        .msg.bot {
-            background: #eaf4fb;
-            color: #1a5276;
-            align-self: flex-start;
-            border-bottom-left-radius: 3px;
-        }
-        .msg.user {
-            background: #2e86c1;
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 3px;
-        }
-        .msg.loading { opacity: 0.6; font-style: italic; }
-        .chat-input {
-            display: flex;
-            border-top: 1px solid #eee;
-            padding: 10px;
-            gap: 8px;
-        }
-        .chat-input input {
-            flex: 1;
-            padding: 9px 12px;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            font-size: 0.88rem;
-            outline: none;
-        }
-        .chat-input button {
-            background: #2e86c1;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 38px;
-            height: 38px;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-        .powered {
-            text-align: center;
-            font-size: 0.7rem;
-            color: #aaa;
-            padding: 5px;
-        }
-    </style>
+        .sidebar.abierta { display: block; }
+        .content-pane { padding: 25px 18px; max-width: 100%; }
+    }
+</style>
 </head>
 <body>
 
@@ -310,305 +331,22 @@
         <h1>🏛️ Municipalidad de Flores</h1>
         <p>San Joaquín de Flores, Heredia, Costa Rica</p>
     </div>
-    <div class="header-logos">
-        Prototipo desarrollado por<br>
-        <strong>GBSYS S.A.</strong> + <strong>CTP Flores</strong>
-    </div>
+    <button id="menu-toggle" onclick="toggleSidebar()">☰ Menú</button>
+    <div class="header-logos">Prototipo desarrollado por<br>GBSYS S.A. + CTP Flores</div>
 </header>
 
-<nav>
-    <a onclick="mostrar('inicio')" class="active" id="nav-inicio">Inicio</a>
-    <a onclick="mostrar('municipalidad')" id="nav-municipalidad">Municipalidad</a>
-    <a onclick="mostrar('canton')" id="nav-canton">Cantón de Flores</a>
-    <a onclick="mostrar('contribuyente')" id="nav-contribuyente">Contribuyente</a>
-    <a onclick="mostrar('transparencia')" id="nav-transparencia">Transparencia</a>
-    <a onclick="mostrar('noticias')" id="nav-noticias">Noticias</a>
-    <a onclick="mostrar('contacto')" id="nav-contacto">Contáctenos</a>
-</nav>
+<div class="layout">
+    <aside class="sidebar" id="sidebar">
+        <div class="inicio-btn" onclick="mostrarInicio()">🏠 Inicio</div>
+        <ul id="arbol-raiz"></ul>
+    </aside>
 
-<!-- INICIO -->
-<div id="inicio" class="seccion activa">
-    <div class="hero">
-        <h2>Bienvenidos al Cantón de Flores</h2>
-        <p>El cantón más pequeño de Costa Rica, con gran corazón</p>
-        <button class="hero-btn" onclick="toggleChat()">💬 Consultá al Asistente Virtual</button>
-    </div>
-    <div class="cards">
-        <div class="card" onclick="mostrar('municipalidad')">
-            <div class="icon">🏛️</div>
-            <h3>Municipalidad</h3>
-            <p>Información institucional, concejo y organigrama</p>
+    <main class="content-pane" id="content-pane">
+        <div class="hero">
+            <h2>Municipalidad de Flores</h2>
+            <p>¡En Flores progresamos juntos! Elegí una sección del menú para comenzar.</p>
         </div>
-        <div class="card" onclick="mostrar('contribuyente')">
-            <div class="icon">💳</div>
-            <h3>Contribuyente</h3>
-            <p>Pagá tus impuestos y tributos desde cualquier lugar</p>
-        </div>
-        <div class="card" onclick="mostrar('transparencia')">
-            <div class="icon">🔍</div>
-            <h3>Transparencia</h3>
-            <p>Acceso a información institucional y presupuestos</p>
-        </div>
-        <div class="card" onclick="mostrar('canton')">
-            <div class="icon">🌿</div>
-            <h3>Cantón de Flores</h3>
-            <p>Historia, población y organizaciones cantonales</p>
-        </div>
-        <div class="card" onclick="mostrar('noticias')">
-            <div class="icon">📰</div>
-            <h3>Noticias</h3>
-            <p>Comunicados y eventos del cantón</p>
-        </div>
-        <div class="card" onclick="mostrar('contacto')">
-            <div class="icon">📞</div>
-            <h3>Contáctenos</h3>
-            <p>Directorio institucional y ubicación</p>
-        </div>
-    </div>
-    <div class="contenido">
-        <h2>Sobre la Municipalidad de Flores</h2>
-        <p>La Municipalidad de Flores tiene como misión ser una institución transparente, que en estricto apego a los principios éticos y normativos, optimice los recursos disponibles para contribuir a mejorar la calidad de vida y el bienestar de los habitantes del cantón.</p>
-        <p>📅 <strong>Horario de atención:</strong> Lunes a viernes de 7:00 a.m. a 3:00 p.m.</p>
-        <p>📞 <strong>Teléfono:</strong> (506) 2265-7109 | ✉️ <strong>Correo:</strong> info@flores.go.cr</p>
-    </div>
-    <div class="seccion-footer">
-        <p>📍 Diagonal a la esquina suroeste de la iglesia católica de San Joaquín de Flores, Calle Central</p>
-    </div>
-</div>
-
-<!-- MUNICIPALIDAD -->
-<div id="municipalidad" class="seccion">
-    <div class="contenido">
-        <h2>🏛️ Municipalidad</h2>
-        <div id="galeria-municipalidad" class="galeria">
-            <p class="galeria-loading">Cargando imágenes...</p>
-        </div>
-        <h3>Información General</h3>
-        <p>La Municipalidad de Flores es el gobierno local del cantón número 8 de la provincia de Heredia, creado por la Ley No.52 del 12 de agosto de 1915.</p>
-        <h3>Misión y Visión</h3>
-        <div class="grid">
-            <div class="grid-item">
-                <h4>🎯 Misión</h4>
-                <p>Ser una institución transparente que, en estricto apego a los principios éticos y normativos, optimice los recursos disponibles para contribuir a mejorar la calidad de vida de los habitantes del cantón.</p>
-            </div>
-            <div class="grid-item">
-                <h4>🔭 Visión</h4>
-                <p>Ser un gobierno local moderno, eficiente y transparente, que brinde servicios de calidad y promueva el desarrollo integral del cantón de Flores.</p>
-            </div>
-        </div>
-        <h3>Autoridades</h3>
-        <div class="grid">
-            <div class="grid-item">
-                <img src="https://dl.dropbox.com/s/p2siexy1t376aiq/Eder.png?dl=0" alt="Alcalde Eder Ramírez" style="width:100%;max-width:180px;border-radius:8px;display:block;margin:0 auto 10px;">
-                <h4>👤 Alcalde</h4>
-                <p><strong>Eder Ramírez</strong><br>📞 Ext. 108 | eramirez@flores.go.cr</p>
-                <p style="font-size:0.85em;color:#555;">Eder José Ramírez Segura, Abogado, de vocación comunalista, Regidor Municipal, Presidente de Asociación de Desarrollo Integral, Vocal 1 en la Unión Cantonal de Asociaciones de Desarrollo de Flores, Presidente del Comité Cantonal de la Persona Joven de Flores, integrante de la Asamblea Nacional de la Persona Joven.</p>
-            </div>
-            <div class="grid-item">
-                <img src="https://dl.dropbox.com/scl/fi/1909jlvk7trf56epi7f95/image.png?rlkey=9togkcplg4jpsbr57uk8qnfpd&st=3y57b90y&dl=0" alt="Vicealcaldesa María de los Ángeles Ulate" style="width:100%;max-width:180px;border-radius:8px;display:block;margin:0 auto 10px;">
-                <h4>👤 Vicealcaldesa</h4>
-                <p><strong>María de los Ángeles Ulate</strong><br>📞 Ext. 109 | maulate@flores.go.cr</p>
-                <p style="font-size:0.85em;color:#555;">María de los Ángeles Ulate Alfaro cuenta con más de 30 años de experiencia en el sector público y en la Municipalidad de Flores. Sus primeros estudios los realizó en el Kinder y Escuela Estados Unidos de América, su secundaria en el Liceo Regional de Flores en el área Técnica de Secretariado y los estudios superiores los realizó en la Universidad Técnica Nacional en Secretariado Ejecutivo, posteriormente continuó con la carrera en Derecho en la Universidad Hispanoamérica. En la Municipalidad participó activamente en capacitaciones de procedimientos parlamentarios municipales y cursó un Diplomado en Gestión Municipal. Ha formado parte de las comisiones municipales de Salud Ocupacional, Comisión de Seguridad Ciudadana y Comisión de Mejora Continua. Formó parte de la Junta Directiva de la Asociación Pro-Ayuda a niñas en Riesgo Social María Dominga Mazzarello-Casa Main y fue miembro fundadora de la Junta Directiva de la Asociación para la Asistencia del Adulto Mayor de Flores.</p>
-            </div>
-        </div>
-        <h3>Servicios Municipales</h3>
-        <div class="grid">
-            <div class="grid-item">
-                <h4>🪟 Ventanilla Única</h4>
-                <p>Atención de todos los trámites de la Dirección de Desarrollo y Control Urbano en jornada continua.</p>
-            </div>
-            <div class="grid-item">
-                <h4>📋 Contraloría de Servicios</h4>
-                <p>Mejora la articulación entre usuarios y funcionarios para optimizar la calidad de los servicios.</p>
-            </div>
-            <div class="grid-item">
-                <h4>💼 OMIL</h4>
-                <p>Oficina Municipal de Intermediación Laboral. Publicación de oportunidades de empleo en el cantón.</p>
-            </div>
-            <div class="grid-item">
-                <h4>👶 CECUDI</h4>
-                <p>Centro de Cuido y Desarrollo Infantil de Flores para niños del cantón.</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- CANTÓN -->
-<div id="canton" class="seccion">
-    <div class="contenido">
-        <h2>🌿 Cantón de Flores</h2>
-        <div id="galeria-canton" class="galeria">
-            <p class="galeria-loading">Cargando imágenes...</p>
-        </div>
-        <h3>Historia</h3>
-        <p>Flores se erigió como el cantón número 8 de la provincia de Heredia, por la Ley No.52 del 12 de agosto de 1915. Es el cantón más pequeño de la República de Costa Rica con apenas 6.96 km².</p>
-        <h3>Información General</h3>
-        <div class="grid">
-            <div class="grid-item">
-                <h4>📍 Ubicación</h4>
-                <p>Provincia de Heredia, Costa Rica</p>
-            </div>
-            <div class="grid-item">
-                <h4>📏 Extensión</h4>
-                <p>6.96 km² — el cantón más pequeño de Costa Rica</p>
-            </div>
-            <div class="grid-item">
-                <h4>👥 Población</h4>
-                <p>Aproximadamente 20,037 habitantes</p>
-            </div>
-            <div class="grid-item">
-                <h4>🏔️ Altitud</h4>
-                <p>1,086 metros sobre el nivel del mar</p>
-            </div>
-        </div>
-        <h3>Distritos</h3>
-        <div class="grid">
-            <div class="grid-item">
-                <h4>🏘️ San Joaquín</h4>
-                <p>Cabecera del cantón. Sede de la Municipalidad y la iglesia parroquial.</p>
-            </div>
-            <div class="grid-item">
-                <h4>🏘️ Llorente</h4>
-                <p>Distrito con importante actividad comercial e industrial.</p>
-            </div>
-            <div class="grid-item">
-                <h4>🏘️ Barrantes</h4>
-                <p>Distrito con zonas residenciales y áreas verdes.</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- CONTRIBUYENTE -->
-<div id="contribuyente" class="seccion">
-    <div class="contenido">
-        <h2>💳 Contribuyente</h2>
-        <div id="galeria-contribuyente" class="galeria">
-            <p class="galeria-loading">Cargando imágenes...</p>
-        </div>
-        <h3>Pago en Línea</h3>
-        <div class="grid">
-            <div class="grid-item">
-                <h4>🏦 Plataformas Bancarias</h4>
-                <p>Realizá tus pagos a través de la banca en línea de tu banco favorito.</p>
-            </div>
-            <div class="grid-item">
-                <h4>📱 SINPE Móvil</h4>
-                <p>Disponible de lunes a viernes de 7:00 a.m. a 1:00 p.m.</p>
-            </div>
-        </div>
-        <h3>Servicios al Contribuyente</h3>
-        <div class="grid">
-            <div class="grid-item">
-                <h4>🏠 Bienes Inmuebles</h4>
-                <p>Consultas y pagos del impuesto de bienes inmuebles.</p>
-            </div>
-            <div class="grid-item">
-                <h4>📜 Patentes Municipales</h4>
-                <p>Trámites relacionados con licencias comerciales y patentes.</p>
-            </div>
-            <div class="grid-item">
-                <h4>♻️ Recolección de Desechos</h4>
-                <p>Información sobre rutas y horarios de recolección y reciclaje.</p>
-            </div>
-            <div class="grid-item">
-                <h4>🏗️ Permisos de Construcción</h4>
-                <p>Trámites APC, planos y requisitos para construcción.</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- TRANSPARENCIA -->
-<div id="transparencia" class="seccion">
-    <div class="contenido">
-        <h2>🔍 Transparencia</h2>
-        <div id="galeria-transparencia" class="galeria">
-            <p class="galeria-loading">Cargando imágenes...</p>
-        </div>
-        <p>La Municipalidad de Flores, en un firme compromiso con la transparencia y la eficiencia administrativa, pone a disposición de la ciudadanía la siguiente información:</p>
-        <div class="grid">
-            <div class="grid-item">
-                <h4>💰 Presupuesto Municipal</h4>
-                <p>Consulta el presupuesto municipal aprobado y su ejecución.</p>
-            </div>
-            <div class="grid-item">
-                <h4>📊 Informes Económicos</h4>
-                <p>Ejecución presupuestaria e informes de labores periódicos.</p>
-            </div>
-            <div class="grid-item">
-                <h4>🛒 Contratación Administrativa</h4>
-                <p>Licitaciones y procesos de contratación a través de SICOP.</p>
-            </div>
-            <div class="grid-item">
-                <h4>👥 Funcionarios</h4>
-                <p>Información sobre funcionarios y años laborados.</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- NOTICIAS -->
-<div id="noticias" class="seccion">
-    <div class="contenido">
-        <h2>📰 Noticias y Comunicados</h2>
-        <div id="galeria-noticias" class="galeria">
-            <p class="galeria-loading">Cargando imágenes...</p>
-        </div>
-        <div class="noticia">
-            <span class="tag">Municipalidad</span>
-            <h4>Marco de Gestión de Tecnologías de la Información</h4>
-            <p>La Municipalidad de Flores adopta oficialmente su nuevo Marco de Gestión de TI.</p>
-        </div>
-        <div class="noticia">
-            <span class="tag">Emprendimiento</span>
-            <h4>Programa Flores Emprende</h4>
-            <p>Programa de acompañamiento y capacitaciones para emprendedores del cantón.</p>
-        </div>
-        <div class="noticia">
-            <span class="tag">Gestión Ambiental</span>
-            <h4>Galardón Bandera Azul</h4>
-            <p>La Municipalidad recibe el galardón Bandera Azul por segundo año consecutivo.</p>
-        </div>
-        <div class="noticia">
-            <span class="tag">Seguridad</span>
-            <h4>Policía Municipal de Flores</h4>
-            <p>La Policía Municipal de Flores inició oficialmente sus operaciones en el cantón.</p>
-        </div>
-        <div class="noticia">
-            <span class="tag">Comunidad</span>
-            <h4>Gira a Fraijanes con Personas Adultas Mayores</h4>
-            <p>Gira al Parque Recreativo de Fraijanes con adultos mayores del cantón.</p>
-        </div>
-    </div>
-</div>
-
-<!-- CONTACTO -->
-<div id="contacto" class="seccion">
-    <div class="contenido">
-        <h2>📞 Contáctenos</h2>
-        <div id="galeria-contacto" class="galeria">
-            <p class="galeria-loading">Cargando imágenes...</p>
-        </div>
-        <div class="contacto-box">
-            <p>📍 <strong>Dirección:</strong> Diagonal a la esquina suroeste de la iglesia católica de San Joaquín de Flores</p>
-            <p>📞 <strong>Teléfono:</strong> (506) 2265-7109</p>
-            <p>✉️ <strong>Correo:</strong> info@flores.go.cr</p>
-            <p>🕐 <strong>Horario:</strong> Lunes a viernes de 7:00 a.m. a 3:00 p.m.</p>
-        </div>
-        <h3>Directorio Institucional</h3>
-        <table>
-            <tr><th>Cargo</th><th>Nombre</th><th>Ext.</th><th>Correo</th></tr>
-            <tr><td>Alcaldía</td><td>Eder Ramírez</td><td>108</td><td>eramirez@flores.go.cr</td></tr>
-            <tr><td>Vicealcaldía</td><td>María de los Ángeles Ulate</td><td>109</td><td>maulate@flores.go.cr</td></tr>
-            <tr><td>Dirección Financiera</td><td>Wilbeth Apú</td><td>140</td><td>wapu@flores.go.cr</td></tr>
-            <tr><td>Tesorería</td><td>José Vega</td><td>143</td><td>jvega@flores.go.cr</td></tr>
-            <tr><td>Dirección Tributaria</td><td>Natalia García</td><td>112</td><td>ngarcia@flores.go.cr</td></tr>
-            <tr><td>Bienes Inmuebles</td><td>Mario Flores</td><td>111</td><td>mflores@flores.go.cr</td></tr>
-            <tr><td>Plataforma DIP</td><td>Wendy Segura</td><td>102</td><td>wsegura@flores.go.cr</td></tr>
-            <tr><td>Secretaría Alcaldía</td><td>Flor María Vargas</td><td>100</td><td>fvargas@flores.go.cr</td></tr>
-        </table>
-    </div>
+    </main>
 </div>
 
 <footer>
@@ -635,54 +373,302 @@
 <script>
     const BACKEND = 'https://chatbot-flores.onrender.com';
     let historial = [];
-    const galeriasCargadas = {};
+    let PAGINAS_CACHE = null;
 
-    function mostrar(seccion) {
-        document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
-        document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
-        document.getElementById(seccion).classList.add('activa');
-        document.getElementById('nav-' + seccion).classList.add('active');
-        window.scrollTo(0, 0);
+    /* =========================================================
+       ÁRBOL DE NAVEGACIÓN - refleja la jerarquía real del sitio
+       ========================================================= */
+    // Árbol de navegación - refleja la jerarquía real de flores.go.cr + portalmuni.flores.go.cr
+// tipo de nodo:
+//   'contenido'  -> se busca la página exacta en /paginas y se muestra su texto + imágenes
+//   'especial-*' -> contenido armado a mano (Alcaldía, Actas, Contacto, Directorio)
+//   'externo'    -> abre el link real en pestaña nueva
+//   'descarga'   -> es una descarga de documento (Drive/Dropbox)
+//   'roto'       -> confirmado caído/con error en el sitio real
 
-        // Cargar imágenes si la sección las tiene y no se han cargado
-        const galeriaId = 'galeria-' + seccion;
-        const galeria = document.getElementById(galeriaId);
-        if (galeria && !galeriasCargadas[seccion]) {
-            cargarImagenes(seccion, galeria);
+const ARBOL = [
+  {
+    id: 'municipalidad', label: 'Municipalidad',
+    children: [
+      {
+        id: 'info-general', label: 'Información General',
+        children: [
+          { id: 'alcaldia', label: 'Alcaldía Municipal', tipo: 'especial-alcaldia', url: 'alcaldia-municipal' },
+          {
+            id: 'organigrama', label: 'Organigrama', tipo: 'contenido', url: 'organigrama',
+            children: [
+              { id: 'mapa-organizacional', label: 'Mapa Organizacional', tipo: 'contenido', url: 'mapa-organizacional' },
+              {
+                id: 'niveles', label: 'Niveles', tipo: 'contenido', url: 'organigrama/niveles',
+                children: [
+                  { id: 'nivel-politico', label: 'Nivel Político', tipo: 'contenido', url: 'nivel-politico' },
+                  { id: 'nivel-fiscalizacion', label: 'Nivel de Fiscalización', tipo: 'contenido', url: 'nivel-de-fiscalizacion' },
+                  { id: 'nivel-sustantivo', label: 'Nivel Sustantivo', tipo: 'contenido', url: 'nivel-sustantivo' },
+                  { id: 'nivel-apoyo', label: 'Nivel de Apoyo', tipo: 'contenido', url: 'nivel-de-apoyo' },
+                ]
+              },
+              { id: 'salarios-base', label: 'Salarios Base 2021', tipo: 'contenido', url: 'salarios-base' },
+            ]
+          },
+          { id: 'mision-vision', label: 'Misión y Visión', tipo: 'contenido', url: 'mision-y-vision' },
+          { id: 'valores', label: 'Nuestros Valores', tipo: 'contenido', url: 'valores' },
+          { id: 'ubicacion', label: 'Ubicación', tipo: 'contenido', url: 'ubicacion' },
+        ]
+      },
+      {
+        id: 'concejo', label: 'Concejo Municipal',
+        children: [
+          { id: 'concejo-info', label: 'Información del Concejo', tipo: 'contenido', url: 'informacion-datos-generales-y-funciones' },
+          { id: 'miembros-concejo', label: 'Miembros del Concejo Municipal', tipo: 'especial-miembros', url: 'miembros-del-concejo-municipal' },
+          { id: 'actas-concejo', label: 'Actas del Concejo', tipo: 'especial-actas', url: 'bgeneral.php' },
+        ]
+      },
+      {
+        id: 'comites', label: 'Comités Municipales', tipo: 'contenido', url: 'comites-municipales',
+        children: [
+          { id: 'comite-joven', label: 'Comité Cantonal de la Persona Joven', tipo: 'contenido', url: 'comite-cantonal-persona-joven' },
+          { id: 'comite-deportes', label: 'Comité Cantonal de Deportes y Recreación', tipo: 'contenido', url: 'comite-de-deportes' },
+        ]
+      },
+      {
+        id: 'marco-normativo', label: 'Marco Normativo', tipo: 'contenido', url: 'marco-normativo',
+        children: [
+          { id: 'documentacion', label: 'Documentación', tipo: 'contenido', url: 'documentacion' },
+          { id: 'plan-regulador-mn', label: 'Plan Regulador de Flores', tipo: 'contenido', url: 'plan-regulador-de-flores' },
+        ]
+      },
+      { id: 'transparencia-link', label: 'Transparencia', tipo: 'externo', href: 'https://flores.go.cr/transparencia/', nota: 'Ver la sección completa "Transparencia" más abajo en este menú' },
+      {
+        id: 'planes-proyectos', label: 'Planes y Proyectos', tipo: 'contenido', url: 'planes-y-proyectos',
+        children: [
+          { id: 'pao', label: 'Plan Anual Operativo', tipo: 'descarga', nota: 'Documento descargable desde Google Drive' },
+          { id: 'pduc', label: 'Plan de Desarrollo Urbano Cantonal', tipo: 'roto' },
+          { id: 'pcdv', label: 'Plan de Conservación y Desarrollo Vial', tipo: 'descarga', nota: 'PDF descargable desde Dropbox' },
+          { id: 'plan-regulador-pp', label: 'Plan Regulador', tipo: 'contenido', url: 'plan-regulador-de-flores' },
+        ]
+      },
+      { id: 'gestion-ambiental', label: 'Gestión Ambiental', tipo: 'contenido', url: 'gestion-ambiental' },
+      { id: 'recursos-humanos', label: 'Recursos Humanos', tipo: 'contenido', url: 'recursos-humanos' },
+    ]
+  },
+  {
+    id: 'contribuyente', label: 'Contribuyente',
+    children: [
+      {
+        id: 'artesanos', label: 'Artesanos',
+        children: [
+          { id: 'plataforma-artesanos', label: 'Plataforma Artesanos', tipo: 'externo', href: 'http://portalmuni.flores.go.cr/artesanos/login.php', nota: 'Requiere usuario y contraseña' },
+          { id: 'solicitud-artesanos', label: 'Solicitud Artesanos', tipo: 'contenido', url: 'solicitud.php' },
+        ]
+      },
+      {
+        id: 'servicios', label: 'Servicios', tipo: 'contenido', url: 'contribuyente/servicios',
+        children: [
+          {
+            id: 'formularios', label: 'Formularios', tipo: 'contenido', url: 'formularios',
+            children: [
+              { id: 'form-acueducto', label: 'Acueducto', tipo: 'externo', href: 'https://flores.go.cr/formularios/acueducto.php' },
+              { id: 'form-catastro', label: 'Catastro', tipo: 'externo', href: 'https://flores.go.cr/formularios/catastro.php', nota: '4 formularios' },
+              { id: 'form-planificacion', label: 'Planificación Urbana', tipo: 'externo', href: 'https://flores.go.cr/formularios/planificacion.php', nota: '7 formularios descargables' },
+              { id: 'form-patentes', label: 'Patentes Municipales', tipo: 'externo', href: 'https://flores.go.cr/formularios/patentes.php', nota: '5 formularios' },
+              { id: 'form-bienes', label: 'Bienes Inmuebles', tipo: 'externo', href: 'https://flores.go.cr/formularios/bienes.php', nota: '7 formularios' },
+              { id: 'form-utgv', label: 'Gestión Vial Inmuebles', tipo: 'externo', href: 'https://flores.go.cr/formularios/utgv.php', nota: '1 formulario' },
+            ]
+          },
+          {
+            id: 'tramites', label: 'Trámites',
+            children: [
+              { id: 'apc-requisitos', label: 'APC Requisitos', tipo: 'externo', href: 'https://sso.cfia.or.cr/sso/?IdSystem=38', nota: 'Conexión directa con el CFIA' },
+              { id: 'certificaciones', label: 'Certificaciones de Registro', tipo: 'contenido', url: 'certificaciones-de-registro' },
+            ]
+          },
+          { id: 'mapa-catastral', label: 'Mapa Catastral del Cantón', tipo: 'externo', href: 'https://flores.go.cr/contribuyente/servicios/mapa-del-canton/', nota: 'Sistema de Información Geográfica navegable' },
+          {
+            id: 'plan-regulador-serv', label: 'Plan Regulador de Flores', tipo: 'contenido', url: 'plan-regulador-de-flores',
+            children: [
+              { id: 'mapa-zonificacion', label: 'Mapa de Zonificación', tipo: 'roto' },
+            ]
+          },
+          { id: 'plan-desarrollo-humano', label: 'Plan Cantonal de Desarrollo Humano Local', tipo: 'descarga', nota: 'PDF descargable desde Dropbox' },
+          { id: 'recoleccion-desechos', label: 'Recolección de desechos y reciclaje', tipo: 'contenido', url: 'recoleccion-de-desechos' },
+        ]
+      },
+      {
+        id: 'pago-linea', label: 'Pago en línea',
+        children: [
+          { id: 'calendario-pagos', label: 'Calendario de pagos', tipo: 'roto' },
+        ]
+      },
+      { id: 'preguntas-frecuentes', label: 'Preguntas Frecuentes', tipo: 'roto' },
+      { id: 'amnistia-tributaria', label: 'Amnistía Tributaria', tipo: 'descarga', nota: 'PDF descargable desde Dropbox' },
+    ]
+  },
+  {
+    id: 'contactenos', label: 'Contáctenos', tipo: 'especial-contacto', url: 'contactenos',
+    children: [
+      { id: 'directorio', label: 'Directorio Institucional', tipo: 'especial-directorio', url: 'directorio' },
+    ]
+  },
+  {
+    id: 'barra-secundaria', label: 'Cantón de Flores y accesos rápidos',
+    nota: 'En el sitio real, estos ítems viven en una barra chica arriba del menú principal',
+    children: [
+      { id: 'info-general-barra', label: 'Información general', tipo: 'contenido', url: 'informacion-general' },
+      {
+        id: 'canton-flores', label: 'Cantón de Flores', tipo: 'contenido', url: 'canton-de-flores',
+        children: [
+          { id: 'actividades', label: 'Actividades', tipo: 'contenido', url: 'actividades-cantonales' },
+          { id: 'historia-canton', label: 'Historia del cantón', tipo: 'contenido', url: 'historia' },
+          { id: 'info-poblacional', label: 'Información poblacional', tipo: 'contenido', url: 'poblacional' },
+          { id: 'organizaciones', label: 'Organizaciones cantonales', tipo: 'contenido', url: 'organizaciones' },
+        ]
+      },
+      { id: 'himno', label: 'Himno al Cantón de Flores', tipo: 'contenido', url: 'himno-al-canton-de-flores' },
+      { id: 'cecudi', label: 'CECUDI', tipo: 'contenido', url: 'cuido-y-desarrollo-infantil' },
+    ]
+  },
+  {
+    id: 'transparencia', label: 'Transparencia',
+    nota: 'Herramienta interinstitucional (Defensoría de los Habitantes de Costa Rica), diseño distinto al resto del sitio',
+    children: [
+      { id: 'acceso-informacion', label: 'Acceso a la Información', tipo: 'externo', href: 'https://flores.go.cr/transparencia/acinfo.php' },
+      {
+        id: 'info-institucional-t', label: 'Información Institucional', tipo: 'externo', href: 'https://flores.go.cr/transparencia/infinst.php',
+        children: [
+          { id: 'info-personal', label: 'Información del personal Institucional', tipo: 'externo', href: 'https://flores.go.cr/transparencia/infpersonal.php' },
+          { id: 'procesos-contratacion', label: 'Procesos de Contratación', tipo: 'externo', href: 'https://flores.go.cr/transparencia/pcontratacion.php' },
+          { id: 'servicios-procesos', label: 'Servicios y Procesos Institucionales', tipo: 'contenido', url: 'contribuyente/servicios' },
+        ]
+      },
+      {
+        id: 'rendicion-cuentas', label: 'Rendición de cuentas', tipo: 'externo', href: 'https://flores.go.cr/transparencia/rcuentas.php',
+        children: [
+          { id: 'informes-institucionales', label: 'Informes Institucionales', tipo: 'externo', href: 'https://flores.go.cr/transparencia/informe.php' },
+          { id: 'presupuesto-municipal', label: 'Presupuesto Municipal', tipo: 'contenido', url: 'presupuesto-municipal' },
+          { id: 'toma-decisiones', label: 'Toma de Decisiones', tipo: 'especial-actas', url: 'bgeneral.php' },
+          { id: 'planes-cumplimiento', label: 'Planes y Cumplimiento', tipo: 'contenido', url: 'planes-y-proyectos' },
+        ]
+      },
+      { id: 'participacion-ciudadana', label: 'Participación ciudadana', tipo: 'externo', href: 'https://flores.go.cr/transparencia/pciudadana.php', nota: 'Formulario' },
+      {
+        id: 'datos-abiertos', label: 'Datos Abiertos', tipo: 'externo', href: 'https://flores.go.cr/transparencia/dabiertos.php',
+        children: [
+          { id: 'presupuesto-publico', label: 'Presupuesto público', tipo: 'externo', href: 'https://flores.go.cr/transparencia/ppublicos.php' },
+          { id: 'ejecucion-presupuesto', label: 'Ejecución del presupuesto', tipo: 'externo', href: 'https://cgrweb.cgr.go.cr/apex/f?p=150200:17:::::P17_COD_INST:3014042091', nota: 'Sitio de la Contraloría General de la República' },
+          { id: 'contratacion-admin', label: 'Contratación administrativa', tipo: 'externo', href: 'https://flores.go.cr/transparencia/SICOP.php' },
+        ]
+      },
+      { id: 'red-transparencia', label: 'Red de Transparencia', tipo: 'externo', href: 'https://flores.go.cr/transparencia/preguntas.php' },
+    ]
+  },
+  { id: 'noticias', label: 'Noticias y Comunicados', tipo: 'especial-noticias' },
+];
+
+
+    /* =========================================================
+       CONSTRUCCIÓN DEL ÁRBOL EN EL DOM
+       ========================================================= */
+    function crearNodoDOM(nodo, nivel) {
+        const li = document.createElement('li');
+        const div = document.createElement('div');
+        div.className = 'nodo nivel-' + nivel;
+
+        const tieneHijos = !!(nodo.children && nodo.children.length);
+        const flecha = document.createElement('span');
+        flecha.className = 'flecha';
+        flecha.textContent = tieneHijos ? '▸' : '·';
+        div.appendChild(flecha);
+
+        const texto = document.createElement('span');
+        texto.textContent = nodo.label;
+        div.appendChild(texto);
+        li.appendChild(div);
+
+        let ulHijos = null;
+        if (tieneHijos) {
+            ulHijos = document.createElement('ul');
+            ulHijos.className = 'hijos';
+            nodo.children.forEach(hijo => ulHijos.appendChild(crearNodoDOM(hijo, nivel + 1)));
+            li.appendChild(ulHijos);
         }
+
+        div.addEventListener('click', () => {
+            if (tieneHijos) {
+                const abierto = ulHijos.classList.toggle('abierto');
+                div.classList.toggle('expandido', abierto);
+            }
+            mostrarNodo(nodo, div);
+        });
+
+        return li;
     }
 
-    // Imágenes que ya están ubicadas a mano en otra parte de la página,
-    // para no mostrarlas duplicadas en la galería genérica de la sección.
-    const IMAGENES_YA_UBICADAS = [
-        'p2siexy1t376aiq/Eder.png',
-        '1909jlvk7trf56epi7f95/image.png'
-    ];
+    document.getElementById('arbol-raiz').append(
+        ...ARBOL.map(nodo => crearNodoDOM(nodo, 0))
+    );
 
-    // Normaliza texto para comparar títulos sin depender de mayúsculas,
-    // acentos o emojis (ej. "🎯 Misión" y "misión" deben poder matchear).
-    function normalizar(texto) {
-        return (texto || '')
-            .toLowerCase()
-            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-            .replace(/[^a-z0-9\s]/g, '')
-            .trim();
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('abierta');
     }
 
+    function mostrarInicio() {
+        document.querySelectorAll('.nodo.activo').forEach(n => n.classList.remove('activo'));
+        document.getElementById('content-pane').innerHTML = `
+            <div class="hero">
+                <h2>Municipalidad de Flores</h2>
+                <p>¡En Flores progresamos juntos! Elegí una sección del menú para comenzar.</p>
+            </div>`;
+        window.scrollTo(0, 0);
+    }
+
+    /* =========================================================
+       CARGA DE PÁGINAS SCRAPEADAS (una sola vez, cacheado)
+       ========================================================= */
+    async function obtenerPaginas() {
+        if (PAGINAS_CACHE) return PAGINAS_CACHE;
+        const resp = await fetch(`${BACKEND}/paginas`);
+        PAGINAS_CACHE = await resp.json();
+        return PAGINAS_CACHE;
+    }
+
+    function normalizarUrl(u) {
+        return u.toLowerCase().replace(/\/$/, '');
+    }
+
+    function buscarPagina(paginas, fragmentoUrl) {
+        const frag = fragmentoUrl.toLowerCase().replace(/\/$/, '');
+        // Primero buscamos coincidencia precisa: la URL real TERMINA con el fragmento
+        // (evita que "organigrama" matchee también sus subpáginas, por ejemplo).
+        let candidatos = paginas.filter(p => normalizarUrl(p.url).endsWith(frag));
+        // Si no hay match preciso, probamos con "contiene" como respaldo más amplio.
+        if (candidatos.length === 0) {
+            candidatos = paginas.filter(p => p.url.toLowerCase().includes(frag));
+        }
+        return candidatos.length ? candidatos[0] : null;
+    }
+
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    function formatearTexto(texto) {
+        return texto
+            .split(/\n{2,}/)
+            .map(p => `<p>${escapeHtml(p).replace(/\n/g, '<br>')}</p>`)
+            .join('');
+    }
+
+    /* =========================================================
+       GALERÍA DE IMÁGENES (reutilizado de versiones anteriores)
+       ========================================================= */
     function crearImagenElemento(img) {
         const elImg = document.createElement('img');
         elImg.src = img.src;
         elImg.alt = img.alt || '';
-        elImg.style.cssText = 'width:100%;max-width:220px;border-radius:8px;display:block;margin:10px auto;';
 
-        // Solo hacemos clickeables las imágenes del portal de actas: son las
-        // únicas cuyo link real confirmamos que funciona. Los enlaces de
-        // botones del sitio principal (flores.go.cr) suelen apuntar a URLs
-        // rotas o desactualizadas propias del sitio original (IPs directas,
-        // vistas previas de edición de WordPress, etc.), así que esas
-        // imágenes se muestran normales, sin envolver en un link.
         const esBotonDelPortalDeActas = img.src.includes('portalmuni.flores.go.cr');
-
         let elemento = elImg;
         if (img.enlace && esBotonDelPortalDeActas) {
             const a = document.createElement('a');
@@ -690,17 +676,12 @@
             a.target = '_blank';
             a.rel = 'noopener noreferrer';
             a.title = 'Ver más en el sitio de la Municipalidad';
-            a.style.cssText = 'display:block;';
             a.appendChild(elImg);
             elemento = a;
         }
 
-        elImg.onerror = () => elemento.remove(); // eliminar si no carga
+        elImg.onerror = () => elemento.remove();
         elImg.onload = () => {
-            // Los íconos de navegación del sitio son imágenes pequeñas
-            // (logos, botones, banderas). Las fotos reales de contenido
-            // suelen tener mayor resolución nativa. Los botones del portal
-            // de actas quedan exentos porque sabemos que son legítimos.
             if (!esBotonDelPortalDeActas && elImg.naturalWidth > 0 && elImg.naturalWidth < 200 && elImg.naturalHeight < 200) {
                 elemento.remove();
             }
@@ -708,58 +689,217 @@
         return elemento;
     }
 
-    async function cargarImagenes(seccion, contenedor) {
-        try {
-            const resp = await fetch(`${BACKEND}/imagenes/${seccion}`);
-            const data = await resp.json();
-            contenedor.innerHTML = '';
+    function renderGaleria(imagenes) {
+        const div = document.createElement('div');
+        div.className = 'galeria';
+        (imagenes || []).forEach(img => div.appendChild(crearImagenElemento(img)));
+        return div;
+    }
 
-            if (!data.imagenes || data.imagenes.length === 0) {
-                galeriasCargadas[seccion] = true;
-                return;
-            }
+    /* =========================================================
+       RENDERIZADORES POR TIPO DE NODO
+       ========================================================= */
+    async function mostrarNodo(nodo, elementoDiv) {
+        document.querySelectorAll('.nodo.activo').forEach(n => n.classList.remove('activo'));
+        if (elementoDiv) elementoDiv.classList.add('activo');
 
-            const seccionEl = document.getElementById(seccion);
-            const encabezados = seccionEl ? Array.from(seccionEl.querySelectorAll('h3, h4')) : [];
-            const usadas = new Set();
+        const pane = document.getElementById('content-pane');
+        pane.innerHTML = '<p class="cargando">Cargando...</p>';
 
-            data.imagenes
-                .filter(img => !IMAGENES_YA_UBICADAS.some(marca => img.src.includes(marca)))
-                .forEach(img => {
-                    if (!img.contexto) return; // sin contexto: va a la galería genérica
+        switch (nodo.tipo) {
+            case 'contenido': await renderContenido(nodo, pane); break;
+            case 'especial-alcaldia': renderAlcaldia(pane); break;
+            case 'especial-miembros': await renderMiembros(nodo, pane); break;
+            case 'especial-actas': await renderActas(nodo, pane); break;
+            case 'especial-contacto': renderContacto(pane); break;
+            case 'especial-directorio': renderDirectorio(pane); break;
+            case 'externo': renderExterno(nodo, pane); break;
+            case 'descarga': renderDescarga(nodo, pane); break;
+            case 'roto': renderRoto(nodo, pane); break;
+            default: renderGrupo(nodo, pane); break;
+        }
+        window.scrollTo(0, 0);
+    }
 
-                    const ctxNorm = normalizar(img.contexto);
-                    const destino = encabezados.find(h => {
-                        const hNorm = normalizar(h.textContent);
-                        return hNorm.length > 3 && (ctxNorm.includes(hNorm) || hNorm.includes(ctxNorm));
-                    });
+    async function renderContenido(nodo, pane) {
+        const paginas = await obtenerPaginas();
+        const pagina = buscarPagina(paginas, nodo.url);
 
-                    if (destino) {
-                        const el = crearImagenElemento(img);
-                        const gridItem = destino.closest('.grid-item');
-                        if (gridItem) {
-                            gridItem.appendChild(el);
-                        } else {
-                            destino.insertAdjacentElement('afterend', el);
-                        }
-                        usadas.add(img.src);
-                    }
-                });
+        if (!pagina) {
+            pane.innerHTML = `
+                <h2>${nodo.label}</h2>
+                <p class="aviso">⚠️ No encontramos esta página en los datos scrapeados. Puede que en el
+                sitio real esté en una URL distinta a la esperada, o falte volver a scrapearla.</p>`;
+            return;
+        }
 
-            // Las imágenes sin match (o sin contexto) van a la galería genérica de siempre
-            data.imagenes
-                .filter(img => !usadas.has(img.src))
-                .filter(img => !IMAGENES_YA_UBICADAS.some(marca => img.src.includes(marca)))
-                .forEach(img => {
-                    contenedor.appendChild(crearImagenElemento(img));
-                });
+        pane.innerHTML = '';
+        const h2 = document.createElement('h2');
+        h2.textContent = nodo.label;
+        pane.appendChild(h2);
 
-            galeriasCargadas[seccion] = true;
-        } catch (e) {
-            contenedor.innerHTML = '';
+        const fuente = document.createElement('p');
+        fuente.className = 'fuente';
+        const a = document.createElement('a');
+        a.href = pagina.url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.textContent = 'Ver en el sitio real ↗';
+        fuente.appendChild(a);
+        pane.appendChild(fuente);
+
+        const textoDiv = document.createElement('div');
+        textoDiv.className = 'texto-pagina';
+        textoDiv.innerHTML = formatearTexto(pagina.contenido || '');
+        pane.appendChild(textoDiv);
+
+        pane.appendChild(renderGaleria(pagina.imagenes));
+    }
+
+    function renderExterno(nodo, pane) {
+        pane.innerHTML = `
+            <h2>${nodo.label}</h2>
+            <div class="aviso-externo">
+                <p>Este contenido vive en una página o sistema externo del sitio real.</p>
+                ${nodo.nota ? `<p class="nota">${escapeHtml(nodo.nota)}</p>` : ''}
+                <a class="boton-externo" href="${nodo.href}" target="_blank" rel="noopener noreferrer">Abrir en el sitio real ↗</a>
+            </div>`;
+    }
+
+    function renderDescarga(nodo, pane) {
+        pane.innerHTML = `
+            <h2>${nodo.label}</h2>
+            <div class="aviso-descarga">
+                <p>📄 ${nodo.nota ? escapeHtml(nodo.nota) : 'Este es un documento descargable en el sitio real.'}</p>
+                <p class="nota">Todavía no tenemos el enlace exacto de descarga capturado en nuestros datos.</p>
+            </div>`;
+    }
+
+    function renderRoto(nodo, pane) {
+        pane.innerHTML = `
+            <h2>${nodo.label}</h2>
+            <div class="aviso-roto">
+                <p>⚠️ Esta página está actualmente caída o con errores en el sitio real de la Municipalidad.</p>
+                <p class="nota">No es un problema de nuestro prototipo - lo confirmamos directamente en flores.go.cr.</p>
+            </div>`;
+    }
+
+    function renderGrupo(nodo, pane) {
+        pane.innerHTML = `
+            <h2>${nodo.label}</h2>
+            <div class="aviso-grupo">
+                <p>Elegí una opción del menú de la izquierda para ver su contenido.</p>
+                ${nodo.nota ? `<p class="nota">${escapeHtml(nodo.nota)}</p>` : ''}
+            </div>`;
+    }
+
+    /* =========================================================
+       BLOQUES ESPECIALES (ya curados a mano en versiones anteriores)
+       ========================================================= */
+    function renderAlcaldia(pane) {
+        pane.innerHTML = `
+            <h2>Alcaldía Municipal</h2>
+            <div class="grid">
+                <div class="grid-item">
+                    <img src="https://dl.dropbox.com/s/p2siexy1t376aiq/Eder.png?dl=0" alt="Alcalde Eder Ramírez">
+                    <h4>👤 Alcalde</h4>
+                    <p><strong>Eder Ramírez</strong><br>📞 Ext. 108 | eramirez@flores.go.cr</p>
+                    <p>Eder José Ramírez Segura, Abogado, de vocación comunalista, Regidor Municipal,
+                    Presidente de Asociación de Desarrollo Integral, Vocal 1 en la Unión Cantonal de
+                    Asociaciones de Desarrollo de Flores, Presidente del Comité Cantonal de la Persona
+                    Joven de Flores, integrante de la Asamblea Nacional de la Persona Joven.</p>
+                </div>
+                <div class="grid-item">
+                    <img src="https://dl.dropbox.com/scl/fi/1909jlvk7trf56epi7f95/image.png?rlkey=9togkcplg4jpsbr57uk8qnfpd&st=3y57b90y&dl=0" alt="Vicealcaldesa María de los Ángeles Ulate">
+                    <h4>👤 Vicealcaldesa</h4>
+                    <p><strong>María de los Ángeles Ulate</strong><br>📞 Ext. 109 | maulate@flores.go.cr</p>
+                    <p>María de los Ángeles Ulate Alfaro cuenta con más de 30 años de experiencia en el
+                    sector público y en la Municipalidad de Flores. Sus primeros estudios los realizó en
+                    el Kinder y Escuela Estados Unidos de América, su secundaria en el Liceo Regional de
+                    Flores en el área Técnica de Secretariado y los estudios superiores los realizó en la
+                    Universidad Técnica Nacional en Secretariado Ejecutivo, posteriormente continuó con la
+                    carrera en Derecho en la Universidad Hispanoamérica. Ha formado parte de las comisiones
+                    municipales de Salud Ocupacional, Seguridad Ciudadana y Mejora Continua.</p>
+                </div>
+            </div>`;
+    }
+
+    async function renderMiembros(nodo, pane) {
+        const paginas = await obtenerPaginas();
+        const pagina = buscarPagina(paginas, nodo.url);
+        pane.innerHTML = `
+            <h2>Miembros del Concejo Municipal</h2>
+            <p>El Concejo Municipal está conformado por regidores y regidoras electos, representando
+            a los distintos partidos políticos con presencia en el cantón.</p>
+            <p class="nota">⚠️ Todavía no tenemos confirmada la asociación exacta entre cada persona y
+            su bandera de partido - por ahora se muestran juntas como referencia general.</p>`;
+        if (pagina) {
+            const fuente = document.createElement('p');
+            fuente.className = 'fuente';
+            fuente.innerHTML = `<a href="${pagina.url}" target="_blank" rel="noopener noreferrer">Ver en el sitio real ↗</a>`;
+            pane.appendChild(fuente);
+            const textoDiv = document.createElement('div');
+            textoDiv.className = 'texto-pagina';
+            textoDiv.innerHTML = formatearTexto(pagina.contenido || '');
+            pane.appendChild(textoDiv);
+            pane.appendChild(renderGaleria(pagina.imagenes));
         }
     }
 
+    async function renderActas(nodo, pane) {
+        const paginas = await obtenerPaginas();
+        const pagina = buscarPagina(paginas, nodo.url);
+        pane.innerHTML = `<h2>Actas del Concejo</h2><p>Accesos directos a las actas, agendas y sesiones del Concejo Municipal.</p>`;
+        if (pagina && pagina.imagenes && pagina.imagenes.length) {
+            const grid = document.createElement('div');
+            grid.className = 'grid';
+            pagina.imagenes.forEach(img => {
+                const item = document.createElement('div');
+                item.className = 'grid-item';
+                const elImg = crearImagenElemento(img);
+                item.appendChild(elImg);
+                const label = document.createElement('h4');
+                label.textContent = img.alt || 'Acceso';
+                item.appendChild(label);
+                grid.appendChild(item);
+            });
+            pane.appendChild(grid);
+        } else {
+            pane.innerHTML += `<p class="aviso">⚠️ No encontramos los botones de esta sección en los datos scrapeados.</p>`;
+        }
+    }
+
+    function renderContacto(pane) {
+        pane.innerHTML = `
+            <h2>📞 Contáctenos</h2>
+            <div class="contacto-box">
+                <p>📍 <strong>Dirección:</strong> Diagonal a la esquina suroeste de la iglesia católica de San Joaquín de Flores</p>
+                <p>📞 <strong>Teléfono:</strong> (506) 2265-7109</p>
+                <p>✉️ <strong>Correo:</strong> info@flores.go.cr</p>
+                <p>🕐 <strong>Horario:</strong> Lunes a viernes de 7:00 a.m. a 3:00 p.m.</p>
+            </div>
+            <p class="nota">En el sitio real, esta página presenta además un formulario de contacto directo.</p>`;
+    }
+
+    function renderDirectorio(pane) {
+        pane.innerHTML = `
+            <h2>Directorio Institucional</h2>
+            <table>
+                <tr><th>Cargo</th><th>Nombre</th><th>Ext.</th><th>Correo</th></tr>
+                <tr><td>Alcaldía</td><td>Eder Ramírez</td><td>108</td><td>eramirez@flores.go.cr</td></tr>
+                <tr><td>Vicealcaldía</td><td>María de los Ángeles Ulate</td><td>109</td><td>maulate@flores.go.cr</td></tr>
+                <tr><td>Dirección Financiera</td><td>Wilbeth Apú</td><td>140</td><td>wapu@flores.go.cr</td></tr>
+                <tr><td>Tesorería</td><td>José Vega</td><td>143</td><td>jvega@flores.go.cr</td></tr>
+                <tr><td>Dirección Tributaria</td><td>Natalia García</td><td>112</td><td>ngarcia@flores.go.cr</td></tr>
+                <tr><td>Bienes Inmuebles</td><td>Mario Flores</td><td>111</td><td>mflores@flores.go.cr</td></tr>
+                <tr><td>Plataforma DIP</td><td>Wendy Segura</td><td>102</td><td>wsegura@flores.go.cr</td></tr>
+                <tr><td>Secretaría Alcaldía</td><td>Flor María Vargas</td><td>100</td><td>fvargas@flores.go.cr</td></tr>
+            </table>`;
+    }
+
+    /* =========================================================
+       CHAT
+       ========================================================= */
     function toggleChat() {
         document.getElementById('chat-window').classList.toggle('open');
     }

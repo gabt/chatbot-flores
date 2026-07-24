@@ -70,6 +70,13 @@ def chat():
 
     return jsonify({"respuesta": texto_respuesta, "historial": nuevo_historial})
 
+@app.route('/paginas', methods=['GET'])
+def obtener_paginas():
+    """Devuelve todas las páginas scrapeadas (url, contenido, imagenes) tal
+    cual están en conocimiento.json. Lo usa el frontend para la navegación
+    en árbol, buscando la página exacta que corresponde a cada nodo."""
+    return jsonify(documentos)
+
 @app.route('/imagenes/<seccion>', methods=['GET'])
 def obtener_imagenes(seccion):
     palabras_clave = SECCIONES.get(seccion, [])
