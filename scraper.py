@@ -173,6 +173,14 @@ def obtener_contenido(driver, url, reintentos=2):
 
         texto = driver.find_element(By.TAG_NAME, "body").text
 
+        # Cortar el banner de consentimiento de cookies (aparece pegado al
+        # final del texto en casi todas las páginas del sitio, en inglés,
+        # inyectado por un plugin de terceros - no es contenido real).
+        MARCA_COOKIES = "We respect your privacy"
+        idx_cookies = texto.find(MARCA_COOKIES)
+        if idx_cookies != -1:
+            texto = texto[:idx_cookies].rstrip()
+
         # Detectar páginas "404 suaves": no dan error de servidor ni de título,
         # pero muestran el mensaje típico de WordPress de página no encontrada.
         FRASES_404 = [

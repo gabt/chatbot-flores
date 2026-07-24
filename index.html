@@ -656,7 +656,20 @@ const ARBOL = [
     function formatearTexto(texto) {
         return texto
             .split(/\n{2,}/)
-            .map(p => `<p>${escapeHtml(p).replace(/\n/g, '<br>')}</p>`)
+            .map(bloque => {
+                const lineas = bloque.split('\n').map(l => l.trim()).filter(Boolean);
+                const html = lineas.map(linea => {
+                    // Heurística: una línea corta, sin punto final, con pocas
+                    // palabras, suele ser un subtítulo suelto (ej. "Misión",
+                    // "Visión") más que una oración real - la mostramos en negrita.
+                    const esSubtitulo = linea.length < 60
+                        && linea.split(' ').length <= 6
+                        && !/[.!?;:,]$/.test(linea);
+                    const escapado = escapeHtml(linea);
+                    return esSubtitulo ? `<strong>${escapado}</strong>` : escapado;
+                }).join('<br>');
+                return `<p>${html}</p>`;
+            })
             .join('');
     }
 
@@ -748,12 +761,12 @@ const ARBOL = [
         fuente.appendChild(a);
         pane.appendChild(fuente);
 
+        pane.appendChild(renderGaleria(pagina.imagenes));
+
         const textoDiv = document.createElement('div');
         textoDiv.className = 'texto-pagina';
         textoDiv.innerHTML = formatearTexto(pagina.contenido || '');
         pane.appendChild(textoDiv);
-
-        pane.appendChild(renderGaleria(pagina.imagenes));
     }
 
     function renderExterno(nodo, pane) {
