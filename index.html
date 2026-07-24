@@ -188,7 +188,7 @@
         object-fit: contain;
         border-radius: 50%;
         background: #8bc34a;
-        padding: 14px;
+        padding: 22px;
         box-shadow: none;
     }
     .galeria-item.boton-icono img:hover { transform: scale(1.06); }
@@ -493,7 +493,7 @@ const ARBOL = [
         id: 'servicios', label: 'Servicios', tipo: 'contenido', url: 'contribuyente/servicios',
         children: [
           {
-            id: 'formularios', label: 'Formularios', tipo: 'contenido', url: 'formularios',
+            id: 'formularios', label: 'Formularios', tipo: 'contenido', url: 'formularios', circuloVerde: true,
             children: [
               { id: 'form-acueducto', label: 'Acueducto', tipo: 'externo', href: 'https://flores.go.cr/formularios/acueducto.php' },
               { id: 'form-catastro', label: 'Catastro', tipo: 'externo', href: 'https://flores.go.cr/formularios/catastro.php', nota: '4 formularios' },
@@ -752,7 +752,7 @@ const ARBOL = [
         'https://flores.go.cr/formularios/utgv.php': 'Gestión Vial Inmuebles',
     };
 
-    function renderGaleria(imagenes) {
+    function renderGaleria(imagenes, circuloVerde) {
         const div = document.createElement('div');
         div.className = 'galeria';
         (imagenes || []).forEach(img => {
@@ -760,7 +760,7 @@ const ARBOL = [
             item.className = 'galeria-item';
             const elemento = crearImagenElemento(img);
             item.appendChild(elemento);
-            if (elemento.tagName === 'A') {
+            if (circuloVerde && elemento.tagName === 'A') {
                 item.classList.add('boton-icono');
             }
             const etiqueta = ETIQUETAS_MANUALES[img.enlace] || img.alt;
@@ -827,7 +827,7 @@ const ARBOL = [
         fuente.appendChild(a);
         pane.appendChild(fuente);
 
-        pane.appendChild(renderGaleria(pagina.imagenes));
+        pane.appendChild(renderGaleria(pagina.imagenes, nodo.circuloVerde));
 
         if (!esSoloEtiquetas(pagina.contenido)) {
             const textoDiv = document.createElement('div');
