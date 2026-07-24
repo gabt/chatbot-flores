@@ -846,27 +846,45 @@ const ARBOL = [
         }
     }
 
-    async function renderActas(nodo, pane) {
-        const paginas = await obtenerPaginas();
-        const pagina = buscarPagina(paginas, nodo.url);
+    function renderActas(nodo, pane) {
+        // Nota: las imágenes originales de estos botones viven en
+        // portalmuni.flores.go.cr, que corre en HTTP puro (sin HTTPS). Como
+        // nuestro sitio corre en HTTPS, el navegador bloquea silenciosamente
+        // esas imágenes (mixed content). Por eso las alojamos nosotros
+        // mismos en /assets, y solo usamos el link real de destino.
+        const BOTONES_ACTAS = [
+            { src: 'assets/actas-municipales.png', alt: 'Actas Municipales', href: 'http://portalmuni.flores.go.cr/actas/buscar.php' },
+            { src: 'assets/agendas-concejo.png', alt: 'Agendas Concejo', href: 'https://drive.google.com/drive/folders/1tAVkW33bhInqpJu4jdb_KXtZyf9rwgMM' },
+            { src: 'assets/canal-youtube.png', alt: 'Canal Concejo Flores', href: 'https://www.youtube.com/@concejomunicipalflores7631' },
+        ];
+
         pane.innerHTML = `<h2>Actas del Concejo</h2><p>Accesos directos a las actas, agendas y sesiones del Concejo Municipal.</p>`;
-        if (pagina && pagina.imagenes && pagina.imagenes.length) {
-            const grid = document.createElement('div');
-            grid.className = 'grid';
-            pagina.imagenes.forEach(img => {
-                const item = document.createElement('div');
-                item.className = 'grid-item';
-                const elImg = crearImagenElemento(img);
-                item.appendChild(elImg);
-                const label = document.createElement('h4');
-                label.textContent = img.alt || 'Acceso';
-                item.appendChild(label);
-                grid.appendChild(item);
-            });
-            pane.appendChild(grid);
-        } else {
-            pane.innerHTML += `<p class="aviso">⚠️ No encontramos los botones de esta sección en los datos scrapeados.</p>`;
-        }
+        const grid = document.createElement('div');
+        grid.className = 'grid';
+        BOTONES_ACTAS.forEach(boton => {
+            const item = document.createElement('div');
+            item.className = 'grid-item';
+
+            const a = document.createElement('a');
+            a.href = boton.href;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.title = 'Ver más en el sitio de la Municipalidad';
+
+            const img = document.createElement('img');
+            img.src = boton.src;
+            img.alt = boton.alt;
+            img.style.cssText = 'max-width:100px;display:block;margin:0 auto;';
+            a.appendChild(img);
+            item.appendChild(a);
+
+            const label = document.createElement('h4');
+            label.textContent = boton.alt;
+            item.appendChild(label);
+
+            grid.appendChild(item);
+        });
+        pane.appendChild(grid);
     }
 
     function renderContacto(pane) {
