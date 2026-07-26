@@ -164,6 +164,7 @@
         transition: transform 0.2s;
     }
     .galeria img:hover { transform: scale(1.04); }
+    .galeria a.zoom-imagen img { cursor: zoom-in; }
     .galeria-item {
         display: flex;
         flex-direction: column;
@@ -738,6 +739,18 @@ const ARBOL = [
             a.title = 'Ver más en el sitio de la Municipalidad';
             a.appendChild(elImg);
             elemento = a;
+        } else {
+            // Las imágenes de contenido (sin link a otra página) se pueden
+            // clickear para ver la versión de tamaño completo en pestaña
+            // nueva - útil para diagramas/organigramas con texto chico.
+            const a = document.createElement('a');
+            a.href = img.src;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.title = 'Ver imagen completa';
+            a.className = 'zoom-imagen';
+            a.appendChild(elImg);
+            elemento = a;
         }
 
         elImg.onerror = () => elemento.remove();
@@ -768,13 +781,14 @@ const ARBOL = [
             item.className = 'galeria-item';
             const elemento = crearImagenElemento(img);
             item.appendChild(elemento);
-            if (circuloVerde && elemento.tagName === 'A') {
+            const esNavegacion = esEnlaceConfiable(img.enlace);
+            if (circuloVerde && esNavegacion) {
                 item.classList.add('boton-icono');
             }
             const etiqueta = ETIQUETAS_MANUALES[img.enlace] || img.alt;
             if (etiqueta && etiqueta.trim()) {
                 const cap = document.createElement('span');
-                cap.className = elemento.tagName === 'A' ? 'galeria-caption enlace' : 'galeria-caption';
+                cap.className = esNavegacion ? 'galeria-caption enlace' : 'galeria-caption';
                 cap.textContent = etiqueta.trim();
                 item.appendChild(cap);
             }
