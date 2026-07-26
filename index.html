@@ -119,6 +119,14 @@
         margin-bottom: 14px;
         color: #444;
     }
+    .texto-pagina ul {
+        margin: 0 0 18px 24px;
+    }
+    .texto-pagina li {
+        line-height: 1.7;
+        margin-bottom: 6px;
+        color: #444;
+    }
     .cargando, .nota, .aviso {
         color: #666;
         font-style: italic;
@@ -690,22 +698,51 @@ const ARBOL = [
         return div.innerHTML;
     }
 
+    function esLineaCorta(linea) {
+        // Una línea corta, sin punto final, con pocas palabras, es candidata
+        // a ser un subtítulo (ej. "Misión") en vez de una oración real.
+        return linea.length < 60
+            && linea.split(' ').length <= 6
+            && !/[.!?;:,]$/.test(linea);
+    }
+
     function formatearTexto(texto) {
         return texto
             .split(/\n{2,}/)
             .map(bloque => {
                 const lineas = bloque.split('\n').map(l => l.trim()).filter(Boolean);
-                const html = lineas.map(linea => {
-                    // Heurística: una línea corta, sin punto final, con pocas
-                    // palabras, suele ser un subtítulo suelto (ej. "Misión",
-                    // "Visión") más que una oración real - la mostramos en negrita.
-                    const esSubtitulo = linea.length < 60
-                        && linea.split(' ').length <= 6
-                        && !/[.!?;:,]$/.test(linea);
-                    const escapado = escapeHtml(linea);
-                    return esSubtitulo ? `<strong>${escapado}</strong>` : escapado;
-                }).join('<br>');
-                return `<p>${html}</p>`;
+                let html = '';
+                let listaAbierta = [];
+                const cerrarLista = () => {
+                    if (listaAbierta.length >= 2) {
+                        html += '<ul>' + listaAbierta.map(l => `<li>${escapeHtml(l)}</li>`).join('') + '</ul>';
+                    } else if (listaAbierta.length === 1) {
+                        html += `<p>${escapeHtml(listaAbierta[0])}</p>`;
+                    }
+                    listaAbierta = [];
+                };
+                lineas.forEach((linea, i) => {
+                    const siguiente = lineas[i + 1];
+                    const corta = esLineaCorta(linea);
+                    // Solo es un título real si es corta Y la línea siguiente
+                    // es un párrafo largo real (distingue un título de un
+                    // ítem de lista, que suele ir seguido de otro ítem corto).
+                    const esSubtitulo = corta && siguiente && !esLineaCorta(siguiente);
+                    if (esSubtitulo) {
+                        cerrarLista();
+                        html += `<p><strong>${escapeHtml(linea)}</strong></p>`;
+                    } else if (corta) {
+                        // Varias líneas cortas seguidas: probablemente una
+                        // lista (numerada o con viñetas en el sitio real,
+                        // aunque perdimos esa numeración al extraer texto).
+                        listaAbierta.push(linea);
+                    } else {
+                        cerrarLista();
+                        html += `<p>${escapeHtml(linea)}</p>`;
+                    }
+                });
+                cerrarLista();
+                return html;
             })
             .join('');
     }
