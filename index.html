@@ -624,6 +624,11 @@ const ARBOL = [
             if (tieneHijos) {
                 const abierto = ulHijos.classList.toggle('abierto');
                 div.classList.toggle('expandido', abierto);
+            } else if (window.innerWidth <= 800) {
+                // En celular, si es un nodo final (sin hijos), cerramos el
+                // menú lateral para que el contenido se vea de una vez,
+                // sin tener que escrolear más allá del árbol.
+                document.getElementById('sidebar').classList.remove('abierta');
             }
             mostrarNodo(nodo, div);
         });
@@ -646,6 +651,9 @@ const ARBOL = [
                 <h2>Municipalidad de Flores</h2>
                 <p>¡En Flores progresamos juntos! Elegí una sección del menú para comenzar.</p>
             </div>`;
+        if (window.innerWidth <= 800) {
+            document.getElementById('sidebar').classList.remove('abierta');
+        }
         window.scrollTo(0, 0);
     }
 
