@@ -147,6 +147,12 @@ def obtener_contenido(driver, url, reintentos=2):
         vistas = set()
         for img in driver.find_elements(By.TAG_NAME, "img"):
             src = img.get_attribute("src") or ""
+            # Algunas imágenes del sitio real quedaron mal configuradas y
+            # apuntan a "localhost" (de cuando armaron el sitio en un servidor
+            # de pruebas) en vez del dominio real. Las corregimos acá.
+            if "localhost/muniflorespw" in src:
+                src = src.replace("https://localhost/muniflorespw", "https://flores.go.cr")
+                src = src.replace("http://localhost/muniflorespw", "https://flores.go.cr")
             alt = img.get_attribute("alt") or ""
             if (src.startswith("http")
                     and src not in vistas
