@@ -114,6 +114,40 @@
         font-size: 0.85rem;
     }
     .content-pane .fuente a { color: #2e86c1; }
+    .content-pane h3 {
+        color: #1a5276;
+        font-size: 1.05rem;
+        margin: 22px 0 8px;
+    }
+    .roster-subhead {
+        font-size: 0.85rem;
+        color: #666;
+        font-style: italic;
+        margin: 10px 0 2px;
+    }
+    .roster-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 4px;
+    }
+    .roster-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .roster-item img {
+        width: 32px;
+        height: 20px;
+        object-fit: cover;
+        border-radius: 3px;
+        border: 1px solid #ccc;
+        flex-shrink: 0;
+    }
+    .roster-item span {
+        color: #444;
+        font-size: 0.95rem;
+    }
     .texto-pagina p {
         line-height: 1.5;
         margin-bottom: 14px;
@@ -974,26 +1008,83 @@ const ARBOL = [
             </div>`;
     }
 
+    // Banderas de partidos políticos con presencia en el Concejo (no son banderas
+    // de países). La asociación nombre↔bandera se confirmó leyendo la tabla real
+    // del sitio (flores.go.cr/.../miembros-del-concejo-municipal/), donde cada
+    // fila empareja el nombre con su bandera - algo que nuestro scraper no
+    // capturó porque extrae el texto y las imágenes por separado (perdiendo la
+    // relación fila a fila de la tabla original).
+    const BANDERA_LIBERACION = 'https://dl.dropbox.com/s/05lo83v8tdyem5e/Liberacion.jpg?dl=0';
+    const BANDERA_ALMA_FLORENA = 'https://dl.dropbox.com/scl/fi/30raari8w2k844c6esaog/Bandera-Alma-Flore-a.png?rlkey=d1m901jh6xdjalbgvay6me0q7&st=ptar5n19&dl=0';
+    const BANDERA_PNG_GENERICA = 'https://dl.dropbox.com/scl/fi/qjm1ekcqzdttuauv1uw73/PNG-Bandera.png?rlkey=jsh5r6d5fpuisunddwqiwq8bo&st=00itiikx&dl=0';
+    const BANDERA_UNIDAD = 'https://dl.dropbox.com/scl/fi/f8j3pzyc1snra7a1atmko/Bandera-Unidad.png?rlkey=p8az8bhkve7pyqlfcxvbk5ak5&st=d3n8q0jz&dl=0';
+
+    const REGIDORES_PROPIETARIOS = [
+        { nombre: 'Andrés Ugalde Brenes', bandera: BANDERA_LIBERACION },
+        { nombre: 'Yorlene Víquez Estevanovich', bandera: BANDERA_LIBERACION },
+        { nombre: 'Luis Guillermo Barquero Víquez', bandera: BANDERA_ALMA_FLORENA },
+        { nombre: 'Marlen Ivonne Barrantes Rojas', bandera: BANDERA_PNG_GENERICA },
+        { nombre: 'Ivannia Ugalde Gomez', bandera: BANDERA_UNIDAD },
+    ];
+    const REGIDORES_SUPLENTES = [
+        { nombre: 'Mario Alberto Murillo Chavez', bandera: BANDERA_LIBERACION },
+        { nombre: 'Carmen Elena Barrantes Núñez', bandera: BANDERA_LIBERACION },
+        { nombre: 'Luis Roberto Hidalgo Vargas', bandera: BANDERA_ALMA_FLORENA },
+        { nombre: 'Adriana Raquel Espinoza Meléndez', bandera: BANDERA_PNG_GENERICA },
+        { nombre: 'Ricardo Jara Núñez', bandera: BANDERA_UNIDAD },
+    ];
+    const SINDICOS_POR_DISTRITO = [
+        {
+            distrito: 'San Joaquín',
+            propietario: { nombre: 'Yorleny Esquivel Alfaro', bandera: BANDERA_ALMA_FLORENA },
+            suplente: { nombre: 'Ronald Oviedo Masís', bandera: BANDERA_ALMA_FLORENA },
+        },
+        {
+            distrito: 'Barrantes',
+            propietario: { nombre: 'Carlos Camacho Alfaro', bandera: BANDERA_LIBERACION },
+            suplente: { nombre: 'Paulina Morales Alfaro', bandera: BANDERA_LIBERACION },
+        },
+        {
+            distrito: 'Llorente',
+            propietario: { nombre: 'Vera Alcázar Quesada', bandera: BANDERA_LIBERACION },
+            suplente: { nombre: 'Walter Murillo Álvarez', bandera: BANDERA_LIBERACION },
+        },
+    ];
+
+    function renderFilaRoster({ nombre, bandera }) {
+        return `<div class="roster-item">
+            <img src="${bandera}" alt="Bandera del partido político" loading="lazy">
+            <span>${escapeHtml(nombre)}</span>
+        </div>`;
+    }
+
+    function renderListaRoster(personas) {
+        return `<div class="roster-list">${personas.map(renderFilaRoster).join('')}</div>`;
+    }
+
     async function renderMiembros(nodo, pane) {
         const paginas = await obtenerPaginas();
         const pagina = buscarPagina(paginas, nodo.url);
-        pane.innerHTML = `
+
+        let html = `
             <h2>Miembros del Concejo Municipal</h2>
             <p>El Concejo Municipal está conformado por regidores y regidoras electos, representando
-            a los distintos partidos políticos con presencia en el cantón.</p>
-            <p class="nota">⚠️ Todavía no tenemos confirmada la asociación exacta entre cada persona y
-            su bandera de partido - por ahora se muestran juntas como referencia general.</p>`;
+            a los distintos partidos políticos con presencia en el cantón. Junto a cada nombre se
+            muestra la bandera del partido político al que representa.</p>`;
         if (pagina) {
-            const fuente = document.createElement('p');
-            fuente.className = 'fuente';
-            fuente.innerHTML = `<a href="${pagina.url}" target="_blank" rel="noopener noreferrer">Ver en el sitio real ↗</a>`;
-            pane.appendChild(fuente);
-            const textoDiv = document.createElement('div');
-            textoDiv.className = 'texto-pagina';
-            textoDiv.innerHTML = formatearTexto(pagina.contenido || '');
-            pane.appendChild(textoDiv);
-            pane.appendChild(renderGaleria(pagina.imagenes));
+            html += `<p class="fuente"><a href="${pagina.url}" target="_blank" rel="noopener noreferrer">Ver en el sitio real ↗</a></p>`;
         }
+
+        html += `<h3>Regidores Propietarios</h3>${renderListaRoster(REGIDORES_PROPIETARIOS)}`;
+        html += `<h3>Regidores Suplentes</h3>${renderListaRoster(REGIDORES_SUPLENTES)}`;
+
+        SINDICOS_POR_DISTRITO.forEach(({ distrito, propietario, suplente }) => {
+            html += `<h3>Síndicos Distrito ${escapeHtml(distrito)}</h3>`;
+            html += `<p class="roster-subhead">Propietario</p>${renderListaRoster([propietario])}`;
+            html += `<p class="roster-subhead">Suplente</p>${renderListaRoster([suplente])}`;
+        });
+
+        pane.innerHTML = html;
     }
 
     function renderActas(nodo, pane) {
