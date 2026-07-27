@@ -254,6 +254,27 @@
         padding-top: 14px;
         border-bottom: none;
     }
+    .lista-enlaces {
+        margin: 0 0 18px 4px;
+        list-style: none;
+        padding: 0;
+    }
+    .lista-enlaces li {
+        margin-bottom: 8px;
+        padding-left: 18px;
+        position: relative;
+    }
+    .lista-enlaces li::before {
+        content: '📄';
+        position: absolute;
+        left: 0;
+        font-size: 0.8rem;
+    }
+    .lista-enlaces a {
+        color: #2e86c1;
+        text-decoration: none;
+    }
+    .lista-enlaces a:hover { text-decoration: underline; }
 
     /* Íconos de botón (clickeables) con círculo verde, como en el sitio real */
     .galeria-item.boton-icono img {
@@ -556,7 +577,73 @@ const ARBOL = [
       {
         id: 'marco-normativo', label: 'Marco Normativo',
         children: [
-          { id: 'documentacion', label: 'Documentación', tipo: 'contenido', url: 'documentacion', lineasOmitir: ['Documentación'] },
+          { id: 'documentacion', label: 'Documentación', tipo: 'contenido', url: 'documentacion', lineasOmitir: ['Documentación'],
+            listasEnlaces: {
+              anclaInicio: 'Leyes',
+              anclaFin: null,
+              categorias: [
+                {
+                  titulo: 'Leyes',
+                  enlaces: [
+                    { texto: 'Código municipal.', href: 'https://drive.google.com/file/d/1Qx1AS-Jxuor_K4Y0kuHdscFvXLKNY1V4/view?usp=sharing' },
+                    { texto: 'Plan regulador urbano de Flores.', href: 'https://flores.go.cr/contribuyente/plan-regulador-de-flores/' },
+                    { texto: 'Ley de patentes de la Municipalidad de Flores.', href: 'https://drive.google.com/file/d/1Ntl08jplWvOhIn7fzvuibECm3pLBgEuB/view?usp=sharing' },
+                  ]
+                },
+                {
+                  titulo: 'Políticas',
+                  enlaces: [
+                    { texto: 'Política del agua para el cantón de Flores.', href: 'https://drive.google.com/file/d/1k4r0Fh_-z8v4gMsvzvUMw5Fu1yx1HXFF/view?usp=sharing' },
+                    { texto: 'Política para cesión de porcentaje de terreno.', href: 'https://drive.google.com/file/d/1fSlNwiu1-svu2iLUTWAcH-YG0W4KyElG/view?usp=sharing' },
+                  ]
+                },
+                {
+                  titulo: 'Reglamentos',
+                  enlaces: [
+                    { texto: 'Reforma integral al reglamento municipal a la ley 7476 ley contra el hostigamiento sexual en el empleo y la docencia.', href: 'https://drive.google.com/file/d/19NwMLh1UBvCazPARBtWcdDLC74Iln6Pr/view?usp=sharing' },
+                    { texto: 'Reglamento Colosevi-Flores.', href: 'https://drive.google.com/file/d/1QjRVylBZtHjG5xrd9uRqJphqOUqe1e2x/view?usp=sharing' },
+                    { texto: 'Reglamento concejos de distrito de Flores.', href: 'https://drive.google.com/file/d/1nDQmT28e_igB1AuPLOmp4M3qr8JILSnk/view?usp=sharing' },
+                    { texto: 'Reglamento de acueducto.', href: 'https://drive.google.com/file/d/187rtECTs0vl5XPpLD2PBfODSN1YeAdRs/view?usp=sharing' },
+                    { texto: 'Reglamento de becas de Flores.', href: 'https://drive.google.com/file/d/1VN1dCRnxRf-44Sds3oGk_WDDDtd2A7gj/view?usp=sharing' },
+                    { texto: 'Reglamento de caja chica Municipalidad de Flores.', href: 'https://drive.google.com/file/d/1hRgEgOUy4ztvrkSz7v31tqTVieNASBPH/view?usp=sharing' },
+                    { texto: 'Reglamento de Cementerio Municipal.', href: 'https://drive.google.com/file/d/1InzRHz3OO1HYKHGW72kQr9-5B-CrVzhe/view?usp=sharing' },
+                    { texto: 'Reglamento Adjudicación de Derechos Nuevos Cementerio Municipal.', href: 'https://drive.google.com/file/d/1Ns8akiOqRmDgTqy28e-PjeNZ3E38c6A4/view?usp=sharing' },
+                    { texto: 'Reglamento de cobro judicial y administrativo.', href: 'https://drive.google.com/file/d/1saoJnOBjngXK-XLcbiBEDIY2DJMsP-sd/view?usp=sharing' },
+                    { texto: 'Reglamento de dedicación exclusiva.', href: 'https://drive.google.com/file/d/1G0x3Pw_dUmOoj9zrU1irNJ9rWyWeuDRe/view?usp=sharing' },
+                    { texto: 'Reglamento de la auditoría interna.', href: 'https://drive.google.com/file/d/1MPR2mbM6OSFjKdFiC9uJy4o64kD7ZfH3/view?usp=sharing' },
+                    { texto: 'Reglamento de patentes.', href: 'https://drive.google.com/file/d/1bT686_8kXX-vKcCTPSDGCTnCUd4VO4C4/view?usp=sharing' },
+                    { texto: 'Reglamento de sesiones del concejo Municipal de Flores.', href: 'https://drive.google.com/file/d/148EmZEUlEYZWaLpiqApxbXiE4kvdwlPm/view?usp=sharing' },
+                    { texto: 'Reglamento de uso de vehículos.', href: 'https://drive.google.com/file/d/1Qfctx3-2rewiO_BxV6ZjoU84B6rsxjy8/view?usp=sharing' },
+                    { texto: 'Reglamento de elección, organización y funcionamiento del Comité Cantonal de Deportes y Recreación de Flores.', href: 'https://drive.google.com/file/d/1xkc0uXRbP5F94quPC5ZEQftyGkv7DPbV/view?usp=sharing' },
+                    { texto: 'Reglamento de Lotes Baldíos.', href: 'https://drive.google.com/file/d/1ka5y6Cfp6Wkbmp9-0iBQte7wu7Hjkp81/view?usp=sharing' },
+                    { texto: 'Reglamento de Aseo y Ornato.', href: 'https://drive.google.com/file/d/1ecBl2Ewkz292FRhZ9HoCXoJo3-i0ssgU/view?usp=sharing' },
+                    { texto: 'Reglamento para el otorgamiento de idoneidad.', href: 'https://drive.google.com/file/d/1pASwi8TtBHFClLA3M5Xp489cyYJQDa8O/view?usp=sharing' },
+                    { texto: 'Reglamento para karaoke y similares.', href: 'https://drive.google.com/file/d/1UytpPasKvdlfsHuznf8UfAtXMpkTyT2p/view?usp=sharing' },
+                    { texto: 'Reglamento para regular el trámite y aprobación de modificaciones presupuestarias de la Municipalidad de Flores.', href: 'https://drive.google.com/file/d/1fMHd6Lv6kp8ncxFvFGERYXDSL3JCQOCT/view?usp=sharing' },
+                    { texto: 'Reglamento para la instalación de casetas de seguridad y mecanismos de vigilancia para el acceso de urbanizaciones y barrios residenciales de la Municipalidad de Flores.', href: 'https://drive.google.com/file/d/1gUC5FiXxaey9e__n3a85a2es9g_S5Jqv/view?usp=sharing' },
+                    { texto: 'Reglamento de obras menores.', href: 'https://drive.google.com/file/d/1ZeNI7GmBndddQs-OX1FJ7m_vMwHa-CY5/view?usp=sharing' },
+                    { texto: 'Reglamento municipal para la Gestión Integral de Residuos Ordinarios en el cantón de Flores.', href: 'https://drive.google.com/file/d/15FjXSc2A-WBYhjf57BUx5v67E4eCvZ7A/view?usp=sharing' },
+                    { texto: 'Reglamento de sesiones y acuerdos de la Junta de Planificación Cantonal (JUPLACA) del cantón de Flores.', href: 'https://drive.google.com/file/d/1kUMJfe2Sg5Kad9HZhgiKTQqYuVohrmmd/view?usp=sharing' },
+                    { texto: 'Reglamento de utilización de derecho de vía municipal, cortes viales y trámites afines.', href: 'https://drive.google.com/file/d/1OT0TuzaEXY78TVZBGSEmdEeYnbnC87DX/view?usp=sharing' },
+                    { texto: 'Reglamento para el cobro de la tasa sobre el servicio de limpieza de vías públicas.', href: 'https://drive.google.com/file/d/1-yj4E_DoKzSnrQ8haeO4U18POKfrPmwX/view?usp=sharing' },
+                    { texto: 'Reglamento de activos de la Municipalidad de Flores.', href: 'https://drive.google.com/file/d/1-ePvZFNul0gJwIy_zWsyOJr9dNdy3ZGO/view' },
+                  ]
+                },
+                {
+                  titulo: 'Recursos Humanos',
+                  enlaces: [
+                    { texto: 'Manual descriptivo de puestos Municipalidad de Flores.', href: 'https://drive.google.com/file/d/1a5EWkQjrWmR9mMimgVwcj-IvmZ2oMvNK/view' },
+                  ]
+                },
+                {
+                  titulo: 'Normativas',
+                  enlaces: [
+                    { texto: 'Marco Gestión de Tecnologías de la Información.', href: 'https://drive.google.com/file/d/1EyAsghfwGzjG5jCJUvrKgF24BylZ2Fo3/view' },
+                  ]
+                },
+              ]
+            }
+          },
           { id: 'plan-regulador-mn', label: 'Plan Regulador de Flores', tipo: 'contenido', url: 'plan-regulador-de-flores' },
         ]
       },
@@ -966,8 +1053,14 @@ const ARBOL = [
     function extraerYQuitarBloque(contenido, anclaInicio, anclaFin) {
         const lineas = (contenido || '').split('\n');
         const idxInicio = lineas.findIndex(l => l.trim() === anclaInicio);
-        const idxFin = lineas.findIndex(l => l.trim() === anclaFin);
-        if (idxInicio === -1 || idxFin === -1 || idxFin < idxInicio) return null;
+        if (idxInicio === -1) return null;
+        let idxFin;
+        if (anclaFin) {
+            idxFin = lineas.findIndex(l => l.trim() === anclaFin);
+            if (idxFin === -1 || idxFin < idxInicio) return null;
+        } else {
+            idxFin = lineas.length - 1; // sin ancla de fin: hasta el final del texto
+        }
         return {
             antes: lineas.slice(0, idxInicio).join('\n'),
             despues: lineas.slice(idxFin + 1).join('\n'),
@@ -987,6 +1080,21 @@ const ARBOL = [
                 <thead><tr>${columnas.map(c => `<th>${escapeHtml(c)}</th>`).join('')}</tr></thead>
                 <tbody>${filasHtml}</tbody>
             </table>`;
+    }
+
+    // Algunas páginas son, en el fondo, listas de texto con hipervínculo
+    // (ej. leyes/reglamentos que enlazan a un PDF en Drive), que el scraper
+    // no captura porque solo extrae `href` de imágenes, nunca de texto (ver
+    // nota en resumen_para_continuar.md). nodo.listasEnlaces reemplaza ese
+    // bloque de texto plano por listas reales con sus links, agrupadas por
+    // categoría (ej. "Leyes", "Reglamentos").
+    function renderListasEnlaces(categorias) {
+        return categorias.map(cat => {
+            const items = cat.enlaces.map(e =>
+                `<li><a href="${e.href}" target="_blank" rel="noopener noreferrer">${escapeHtml(e.texto)}</a></li>`
+            ).join('');
+            return `<h3>${escapeHtml(cat.titulo)}</h3><ul class="lista-enlaces">${items}</ul>`;
+        }).join('');
     }
 
     async function renderContenido(nodo, pane) {
@@ -1058,7 +1166,15 @@ const ARBOL = [
                     tablaHtml = renderTablaTexto(nodo.tablaTexto);
                 }
             }
-            textoDiv.innerHTML = tablaHtml + formatearTexto(contenidoTexto);
+            let listasEnlacesHtml = '';
+            if (nodo.listasEnlaces) {
+                const extraido = extraerYQuitarBloque(contenidoTexto, nodo.listasEnlaces.anclaInicio, nodo.listasEnlaces.anclaFin);
+                if (extraido) {
+                    contenidoTexto = extraido.antes + '\n\n' + extraido.despues;
+                    listasEnlacesHtml = renderListasEnlaces(nodo.listasEnlaces.categorias);
+                }
+            }
+            textoDiv.innerHTML = tablaHtml + formatearTexto(contenidoTexto) + listasEnlacesHtml;
             imagenesInline.forEach(({ regla, imagen }) => {
                 const parrafos = Array.from(textoDiv.querySelectorAll('p'));
                 const objetivo = parrafos.find(p => p.textContent.includes(regla.despuesDeTexto));
