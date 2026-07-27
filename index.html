@@ -223,6 +223,36 @@
         color: #2e86c1;
         font-weight: bold;
     }
+    .galeria.galeria-inline {
+        margin: 4px 0 16px;
+    }
+    .tabla-roster {
+        border-collapse: collapse;
+        margin: 6px 0 20px;
+        width: 100%;
+        max-width: 480px;
+    }
+    .tabla-roster th, .tabla-roster td {
+        text-align: left;
+        padding: 6px 16px 6px 0;
+        border-bottom: 1px solid #dde3ea;
+    }
+    .tabla-roster th {
+        color: #1a5276;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+    .tabla-roster td {
+        color: #444;
+        font-size: 0.95rem;
+    }
+    .tabla-roster tr.seccion td {
+        font-weight: bold;
+        color: #1a5276;
+        padding-top: 14px;
+        border-bottom: none;
+    }
 
     /* Íconos de botón (clickeables) con círculo verde, como en el sitio real */
     .galeria-item.boton-icono img {
@@ -498,7 +528,27 @@ const ARBOL = [
         id: 'comites', label: 'Comités Municipales',
         children: [
           { id: 'comite-joven', label: 'Comité Cantonal de la Persona Joven', tipo: 'contenido', url: 'comite-cantonal-persona-joven', galeriaAlFinal: true },
-          { id: 'comite-deportes', label: 'Comité Cantonal de Deportes y Recreación', tipo: 'contenido', url: 'comite-de-deportes' },
+          { id: 'comite-deportes', label: 'Comité Cantonal de Deportes y Recreación', tipo: 'contenido', url: 'comite-de-deportes',
+            imagenesEnTexto: [
+              { contieneEnlace: 'youtube.com', despuesDeTexto: 'canal de Youtube' },
+            ],
+            tablaTexto: {
+              anclaInicio: 'Junta Directiva CCDRF',
+              anclaFin: 'Matias Alaniz Salas Vocal',
+              titulo: 'Junta Directiva CCDRF',
+              columnas: ['Nombre', 'Puesto'],
+              filas: [
+                { valores: ['Maria Arias Viquez', 'Presidente'] },
+                { valores: ['Jennifer Arias Campos', 'Vicepresidente'] },
+                { valores: ['Juan Arguedas Sanchez', 'Secretario'] },
+                { valores: ['Mauricio Cortes Camacho', 'Tesorero'] },
+                { valores: ['Miguel Espinoza Rodriguez', 'Fiscal'] },
+                { seccion: 'Representantes de la persona joven' },
+                { valores: ['Francella Ortega Chavez', 'Vocal'] },
+                { valores: ['Matias Alaniz Salas', 'Vocal'] },
+              ]
+            }
+          },
         ]
       },
       {
@@ -904,6 +954,39 @@ const ARBOL = [
         window.scrollTo(0, 0);
     }
 
+    // Algunas secciones del sitio real son tablas de verdad (ej. "Nombre /
+    // Puesto" de una junta directiva, o un directorio de personal), pero el
+    // scraper las aplana a líneas de texto sueltas y pierden la estructura de
+    // columnas. nodo.tablaTexto permite ubicar ese bloque por sus líneas ancla
+    // de inicio/fin, quitarlo del texto plano, y reemplazarlo por una tabla
+    // HTML real con los datos ya curados a mano. Reutilizable en cualquier
+    // nodo con el mismo patrón (ej. Directorio Institucional más adelante).
+    function extraerYQuitarBloque(contenido, anclaInicio, anclaFin) {
+        const lineas = (contenido || '').split('\n');
+        const idxInicio = lineas.findIndex(l => l.trim() === anclaInicio);
+        const idxFin = lineas.findIndex(l => l.trim() === anclaFin);
+        if (idxInicio === -1 || idxFin === -1 || idxFin < idxInicio) return null;
+        return {
+            antes: lineas.slice(0, idxInicio).join('\n'),
+            despues: lineas.slice(idxFin + 1).join('\n'),
+        };
+    }
+
+    function renderTablaTexto({ titulo, columnas, filas }) {
+        const filasHtml = filas.map(fila => {
+            if (fila.seccion) {
+                return `<tr class="seccion"><td colspan="${columnas.length}">${escapeHtml(fila.seccion)}</td></tr>`;
+            }
+            return `<tr>${fila.valores.map(v => `<td>${escapeHtml(v)}</td>`).join('')}</tr>`;
+        }).join('');
+        return `
+            ${titulo ? `<h3>${escapeHtml(titulo)}</h3>` : ''}
+            <table class="tabla-roster">
+                <thead><tr>${columnas.map(c => `<th>${escapeHtml(c)}</th>`).join('')}</tr></thead>
+                <tbody>${filasHtml}</tbody>
+            </table>`;
+    }
+
     async function renderContenido(nodo, pane) {
         const paginas = await obtenerPaginas();
         const pagina = buscarPagina(paginas, nodo.url);
@@ -931,17 +1014,48 @@ const ARBOL = [
         fuente.appendChild(a);
         pane.appendChild(fuente);
 
-        // Por defecto la galería va antes del texto (funciona bien cuando la
-        // imagen ES el contenido principal, ej. diagramas). Algunas páginas
-        // tipo blog tienen fotos que ilustran un evento descrito en el texto
-        // (ej. "Comité de la Persona Joven" con fotos del Vive Flores Fest) -
-        // para esas, nodo.galeriaAlFinal:true invierte el orden SOLO en ese
-        // nodo, sin afectar el resto de las páginas de contenido.
-        const galeria = renderGaleria(pagina.imagenes, nodo.circuloVerde);
+        // Algunas imágenes no son "la foto principal de la página" ni tampoco
+        // "una foto de evento al final" (ver galeriaAlFinal) - son un botón/
+        // link que el texto menciona en un punto específico (ej. "canal de
+        // Youtube" en medio del párrafo). nodo.imagenesEnTexto permite sacar
+        // esa imagen puntual de la galería general e insertarla justo después
+        // del párrafo que la menciona. Opt-in por nodo, no afecta otras páginas.
+        const reglasInline = nodo.imagenesEnTexto || [];
+        let imagenesGaleria = pagina.imagenes || [];
+        const imagenesInline = [];
+        reglasInline.forEach(regla => {
+            const idx = imagenesGaleria.findIndex(img => img.enlace && img.enlace.includes(regla.contieneEnlace));
+            if (idx !== -1) {
+                imagenesInline.push({ regla, imagen: imagenesGaleria[idx] });
+                imagenesGaleria = imagenesGaleria.filter((_, i) => i !== idx);
+            }
+        });
+
+        const galeria = renderGaleria(imagenesGaleria, nodo.circuloVerde);
         const textoDiv = document.createElement('div');
         textoDiv.className = 'texto-pagina';
         const hayTexto = !esSoloEtiquetas(pagina.contenido);
-        if (hayTexto) textoDiv.innerHTML = formatearTexto(pagina.contenido || '');
+        if (hayTexto) {
+            let contenidoTexto = pagina.contenido || '';
+            let tablaHtml = '';
+            if (nodo.tablaTexto) {
+                const extraido = extraerYQuitarBloque(contenidoTexto, nodo.tablaTexto.anclaInicio, nodo.tablaTexto.anclaFin);
+                if (extraido) {
+                    contenidoTexto = extraido.antes + '\n\n' + extraido.despues;
+                    tablaHtml = renderTablaTexto(nodo.tablaTexto);
+                }
+            }
+            textoDiv.innerHTML = tablaHtml + formatearTexto(contenidoTexto);
+            imagenesInline.forEach(({ regla, imagen }) => {
+                const parrafos = Array.from(textoDiv.querySelectorAll('p'));
+                const objetivo = parrafos.find(p => p.textContent.includes(regla.despuesDeTexto));
+                if (objetivo) {
+                    const miniGaleria = renderGaleria([imagen]);
+                    miniGaleria.classList.add('galeria-inline');
+                    objetivo.insertAdjacentElement('afterend', miniGaleria);
+                }
+            });
+        }
 
         if (nodo.galeriaAlFinal) {
             if (hayTexto) pane.appendChild(textoDiv);
