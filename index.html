@@ -497,7 +497,7 @@ const ARBOL = [
       {
         id: 'comites', label: 'Comités Municipales',
         children: [
-          { id: 'comite-joven', label: 'Comité Cantonal de la Persona Joven', tipo: 'contenido', url: 'comite-cantonal-persona-joven' },
+          { id: 'comite-joven', label: 'Comité Cantonal de la Persona Joven', tipo: 'contenido', url: 'comite-cantonal-persona-joven', galeriaAlFinal: true },
           { id: 'comite-deportes', label: 'Comité Cantonal de Deportes y Recreación', tipo: 'contenido', url: 'comite-de-deportes' },
         ]
       },
@@ -740,6 +740,16 @@ const ARBOL = [
             && !/[.!?;:,]$/.test(linea);
     }
 
+    function esTodoMayusculas(linea) {
+        // Una línea escrita enteramente en mayúsculas (ej. "EVENTOS GESTIONADOS")
+        // es casi siempre un título real en el sitio real, incluso si la línea
+        // que sigue es OTRA línea corta (ej. otro título, o el primer nombre de
+        // una lista) - caso que la regla de "siguiente línea larga" no detecta,
+        // porque solo mira un renglón hacia adelante.
+        const letras = linea.replace(/[^A-Za-zÁÉÍÓÚÑáéíóúñÜü]/g, '');
+        return letras.length >= 3 && letras === letras.toUpperCase() && letras !== letras.toLowerCase();
+    }
+
     function formatearTexto(texto) {
         return texto
             .split(/\n{2,}/)
@@ -758,10 +768,11 @@ const ARBOL = [
                 lineas.forEach((linea, i) => {
                     const siguiente = lineas[i + 1];
                     const corta = esLineaCorta(linea);
-                    // Solo es un título real si es corta Y la línea siguiente
-                    // es un párrafo largo real (distingue un título de un
-                    // ítem de lista, que suele ir seguido de otro ítem corto).
-                    const esSubtitulo = corta && siguiente && !esLineaCorta(siguiente);
+                    // Es un título real si es corta Y (la línea siguiente es un
+                    // párrafo largo real - distingue un título de un ítem de
+                    // lista - O la línea está toda en mayúsculas, señal fuerte
+                    // de título independientemente de lo que venga después).
+                    const esSubtitulo = corta && ((siguiente && !esLineaCorta(siguiente)) || esTodoMayusculas(linea));
                     if (esSubtitulo) {
                         cerrarLista();
                         html += `<p><strong>${escapeHtml(linea)}</strong></p>`;
@@ -920,13 +931,24 @@ const ARBOL = [
         fuente.appendChild(a);
         pane.appendChild(fuente);
 
-        pane.appendChild(renderGaleria(pagina.imagenes, nodo.circuloVerde));
+        // Por defecto la galería va antes del texto (funciona bien cuando la
+        // imagen ES el contenido principal, ej. diagramas). Algunas páginas
+        // tipo blog tienen fotos que ilustran un evento descrito en el texto
+        // (ej. "Comité de la Persona Joven" con fotos del Vive Flores Fest) -
+        // para esas, nodo.galeriaAlFinal:true invierte el orden SOLO en ese
+        // nodo, sin afectar el resto de las páginas de contenido.
+        const galeria = renderGaleria(pagina.imagenes, nodo.circuloVerde);
+        const textoDiv = document.createElement('div');
+        textoDiv.className = 'texto-pagina';
+        const hayTexto = !esSoloEtiquetas(pagina.contenido);
+        if (hayTexto) textoDiv.innerHTML = formatearTexto(pagina.contenido || '');
 
-        if (!esSoloEtiquetas(pagina.contenido)) {
-            const textoDiv = document.createElement('div');
-            textoDiv.className = 'texto-pagina';
-            textoDiv.innerHTML = formatearTexto(pagina.contenido || '');
-            pane.appendChild(textoDiv);
+        if (nodo.galeriaAlFinal) {
+            if (hayTexto) pane.appendChild(textoDiv);
+            pane.appendChild(galeria);
+        } else {
+            pane.appendChild(galeria);
+            if (hayTexto) pane.appendChild(textoDiv);
         }
     }
 
