@@ -533,6 +533,7 @@ const ARBOL = [
             imagenesEnTexto: [
               { contieneEnlace: 'youtube.com', despuesDeTexto: 'canal de Youtube' },
             ],
+            lineasOmitir: ['Comité Cantonal de Deportes y Recreación'],
             tablaTexto: {
               anclaInicio: 'Junta Directiva CCDRF',
               anclaFin: 'Matias Alaniz Salas Vocal',
@@ -1038,6 +1039,17 @@ const ARBOL = [
         const hayTexto = !esSoloEtiquetas(pagina.contenido);
         if (hayTexto) {
             let contenidoTexto = pagina.contenido || '';
+            // Opt-in por nodo: algunas páginas repiten el título como primera
+            // línea del texto scrapeado y ESO está bien (ej. "Nivel Político"
+            // se usa a propósito como subtítulo real) - pero en otras es pura
+            // redundancia con el <h2> de arriba. nodo.lineasOmitir permite
+            // sacar esas líneas puntuales solo donde hace falta.
+            if (nodo.lineasOmitir && nodo.lineasOmitir.length) {
+                contenidoTexto = contenidoTexto
+                    .split('\n')
+                    .filter(l => !nodo.lineasOmitir.includes(l.trim()))
+                    .join('\n');
+            }
             let tablaHtml = '';
             if (nodo.tablaTexto) {
                 const extraido = extraerYQuitarBloque(contenidoTexto, nodo.tablaTexto.anclaInicio, nodo.tablaTexto.anclaFin);
