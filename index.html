@@ -651,9 +651,9 @@ const ARBOL = [
       {
         id: 'planes-proyectos', label: 'Planes y Proyectos', tipo: 'contenido', url: 'planes-y-proyectos',
         children: [
-          { id: 'pao', label: 'Plan Anual Operativo', tipo: 'descarga', nota: 'Documento descargable desde Google Drive' },
+          { id: 'pao', label: 'Plan Anual Operativo', tipo: 'descarga', nota: 'Documento descargable desde Google Drive', href: 'https://drive.google.com/file/d/1-kh8ur1aMGwosVo6fTuWgu6f-PjGMwIw/view?usp=sharing' },
           { id: 'pduc', label: 'Plan de Desarrollo Urbano Cantonal', tipo: 'roto' },
-          { id: 'pcdv', label: 'Plan de Conservación y Desarrollo Vial', tipo: 'descarga', nota: 'PDF descargable desde Dropbox' },
+          { id: 'pcdv', label: 'Plan de Conservación y Desarrollo Vial', tipo: 'descarga', nota: 'PDF descargable desde Dropbox', href: 'https://dl.dropbox.com/scl/fi/i1vkcfsock7473fohesv1/Documento-PVQCD-FLORES-2022-2026.pdf?rlkey=q06mpjo5gw6znpwocv1xhj4d2&st=rrenvliq&dl=0' },
           { id: 'plan-regulador-pp', label: 'Plan Regulador', tipo: 'contenido', url: 'plan-regulador-de-flores' },
         ]
       },
@@ -1216,12 +1216,21 @@ const ARBOL = [
     }
 
     function renderDescarga(nodo, pane) {
-        pane.innerHTML = `
-            <h2>${nodo.label}</h2>
-            <div class="aviso-descarga">
-                <p>📄 ${nodo.nota ? escapeHtml(nodo.nota) : 'Este es un documento descargable en el sitio real.'}</p>
-                <p class="nota">Todavía no tenemos el enlace exacto de descarga capturado en nuestros datos.</p>
-            </div>`;
+        if (nodo.href) {
+            pane.innerHTML = `
+                <h2>${nodo.label}</h2>
+                <div class="aviso-descarga">
+                    <p>📄 ${nodo.nota ? escapeHtml(nodo.nota) : 'Este es un documento descargable en el sitio real.'}</p>
+                    <a class="boton-externo" href="${nodo.href}" target="_blank" rel="noopener noreferrer">Descargar / Abrir documento ↗</a>
+                </div>`;
+        } else {
+            pane.innerHTML = `
+                <h2>${nodo.label}</h2>
+                <div class="aviso-descarga">
+                    <p>📄 ${nodo.nota ? escapeHtml(nodo.nota) : 'Este es un documento descargable en el sitio real.'}</p>
+                    <p class="nota">Todavía no tenemos el enlace exacto de descarga capturado en nuestros datos.</p>
+                </div>`;
+        }
     }
 
     function renderRoto(nodo, pane) {
