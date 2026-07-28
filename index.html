@@ -275,6 +275,53 @@
         text-decoration: none;
     }
     .lista-enlaces a:hover { text-decoration: underline; }
+    .lista-blog {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        margin-top: 12px;
+    }
+    .post-blog {
+        display: flex;
+        gap: 18px;
+        padding-bottom: 22px;
+        border-bottom: 1px solid #eee;
+    }
+    .post-blog-img {
+        flex-shrink: 0;
+        width: 160px;
+        height: 107px;
+        display: block;
+    }
+    .post-blog-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 6px;
+    }
+    .post-blog-texto { flex: 1; }
+    .post-blog-titulo {
+        display: block;
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #1a5276;
+        text-decoration: none;
+        margin-bottom: 6px;
+    }
+    .post-blog-titulo:hover { text-decoration: underline; }
+    .post-blog-texto p {
+        color: #444;
+        font-size: 0.92rem;
+        margin: 4px 0;
+    }
+    .post-blog-fecha {
+        color: #888 !important;
+        font-size: 0.82rem !important;
+    }
+    @media (max-width: 600px) {
+        .post-blog { flex-direction: column; }
+        .post-blog-img { width: 100%; height: 160px; }
+    }
 
     /* Íconos de botón (clickeables) con círculo verde, como en el sitio real */
     .galeria-item.boton-icono img {
@@ -657,7 +704,31 @@ const ARBOL = [
           { id: 'plan-regulador-pp', label: 'Plan Regulador', tipo: 'contenido', url: 'plan-regulador-de-flores', galeriaAlFinal: true, lineasOmitir: ['Plan Regulador de Flores'] },
         ]
       },
-      { id: 'gestion-ambiental', label: 'Gestión Ambiental', tipo: 'contenido', url: 'gestion-ambiental' },
+      { id: 'gestion-ambiental', label: 'Gestión Ambiental', tipo: 'especial-blog', fuenteUrl: 'https://flores.go.cr/category/municipalidad/gestion-ambiental/',
+        posts: [
+          {
+            imagen: 'https://flores.go.cr/wp-content/uploads/2018/08/eb32b3062ef4093ecd0b4204e2445b97e674e7d61eb9134193_1920-360x240.jpg',
+            titulo: 'El cambio comienza con una decisión',
+            resumen: 'Decir NO al plástico de un solo uso. Botellas, bolsas y envoltorios que usamos por minutos permanecen en el ambiente por cientos de años. Trabajemos juntos para reducir su impacto y promover alternativas sostenibles. Sumate al cambio. Pequeñas acciones, grandes resultados.',
+            fecha: 'hace 7 meses',
+            href: 'https://flores.go.cr/el-cambio-comienza-con-una-decision/'
+          },
+          {
+            imagen: 'https://flores.go.cr/wp-content/uploads/2021/06/Bandera-azul-360x240.jpg',
+            titulo: 'Municipalidad recibe galardón Bandera Azul por segundo año consecutivo',
+            resumen: 'La Municipalidad de Flores obtiene el galardón de Bandera Azul Ecológica por segundo año consecutivo con un puntaje perfecto (100%) y con cuatro estrellas. Se premió la labor de la institución en la disminución de consumos de recursos como agua, energía eléctrica, residuos, innovación, educación ambiental, entre otros.',
+            fecha: 'hace 5 años',
+            href: 'https://flores.go.cr/municipalidad-recibe-galardon-bandera-azul-por-segundo-ano-consecutivo/'
+          },
+          {
+            imagen: 'https://flores.go.cr/wp-content/uploads/2021/05/compostaje.jpg',
+            titulo: 'Use el abono de su compostera para su huerta',
+            resumen: 'El abono que usted produce en su compostera le sirve para la huerta que puede tener en su propia casa. Si no es parte del proyecto cantonal de tratamiento de desechos orgánicos por medio del #Compostaje le invitamos a participar. Haga su registro en el siguiente enlace: https://tinyurl.com/yxckpmgh',
+            fecha: 'hace 5 años',
+            href: 'https://flores.go.cr/use-el-abono-de-su-compostera-para-su-huerta/'
+          },
+        ]
+      },
       { id: 'recursos-humanos', label: 'Recursos Humanos', tipo: 'contenido', url: 'recursos-humanos' },
     ]
   },
@@ -1033,6 +1104,7 @@ const ARBOL = [
             case 'especial-alcaldia': renderAlcaldia(pane); break;
             case 'especial-miembros': await renderMiembros(nodo, pane); break;
             case 'especial-actas': await renderActas(nodo, pane); break;
+            case 'especial-blog': renderBlog(nodo, pane); break;
             case 'especial-contacto': renderContacto(pane); break;
             case 'especial-directorio': renderDirectorio(pane); break;
             case 'externo': renderExterno(nodo, pane); break;
@@ -1400,6 +1472,36 @@ const ARBOL = [
             grid.appendChild(item);
         });
         pane.appendChild(grid);
+    }
+
+    // Listados de blog (ej. categorías del blog real como "Gestión Ambiental" o
+    // futuras categorías de "Noticias y Comunicados"). El scraper desfasa el
+    // "contexto" de cada imagen una posición (la imagen de cada post viene ANTES
+    // de su propio título en el HTML real, así que el scraper le asigna el
+    // título del post ANTERIOR) y además pierde la primera imagen de la lista
+    // por completo. Por eso nodo.posts trae los datos ya curados a mano,
+    // confirmados directo contra el sitio real.
+    function renderBlog(nodo, pane) {
+        let html = `<h2>${escapeHtml(nodo.label)}</h2>`;
+        if (nodo.fuenteUrl) {
+            html += `<p class="fuente"><a href="${nodo.fuenteUrl}" target="_blank" rel="noopener noreferrer">Ver en el sitio real ↗</a></p>`;
+        }
+        html += '<div class="lista-blog">';
+        nodo.posts.forEach(post => {
+            html += `
+                <div class="post-blog">
+                    <a href="${post.href}" target="_blank" rel="noopener noreferrer" class="post-blog-img">
+                        <img src="${post.imagen}" alt="${escapeHtml(post.titulo)}" loading="lazy">
+                    </a>
+                    <div class="post-blog-texto">
+                        <a href="${post.href}" target="_blank" rel="noopener noreferrer" class="post-blog-titulo">${escapeHtml(post.titulo)}</a>
+                        <p>${escapeHtml(post.resumen)}</p>
+                        <p class="post-blog-fecha">Por Administrador, ${escapeHtml(post.fecha)}</p>
+                    </div>
+                </div>`;
+        });
+        html += '</div>';
+        pane.innerHTML = html;
     }
 
     function renderContacto(pane) {
