@@ -1,1 +1,6 @@
+
 .env
+config.js
+__pycache__/
+conocimiento_backup.json
+/respaldos/
