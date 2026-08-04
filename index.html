@@ -739,11 +739,11 @@ const ARBOL = [
         id: 'artesanos', label: 'Artesanos',
         children: [
           { id: 'plataforma-artesanos', label: 'Plataforma Artesanos', tipo: 'externo', href: 'http://portalmuni.flores.go.cr/artesanos/login.php', nota: 'Requiere usuario y contraseña' },
-          { id: 'solicitud-artesanos', label: 'Solicitud Artesanos', tipo: 'contenido', url: 'solicitud.php' },
+          { id: 'solicitud-artesanos', label: 'Solicitud Artesanos', tipo: 'externo', href: 'http://portalmuni.flores.go.cr/artesanos/formularios/solicitud.php' },
         ]
       },
       {
-        id: 'servicios', label: 'Servicios', tipo: 'contenido', url: 'contribuyente/servicios',
+        id: 'servicios', label: 'Servicios',
         children: [
           {
             id: 'formularios', label: 'Formularios', tipo: 'contenido', url: 'formularios', circuloVerde: true,
@@ -765,23 +765,23 @@ const ARBOL = [
           },
           { id: 'mapa-catastral', label: 'Mapa Catastral del Cantón', tipo: 'externo', href: 'https://flores.go.cr/contribuyente/servicios/mapa-del-canton/', nota: 'Sistema de Información Geográfica navegable' },
           {
-            id: 'plan-regulador-serv', label: 'Plan Regulador de Flores', tipo: 'contenido', url: 'plan-regulador-de-flores',
+            id: 'plan-regulador-serv', label: 'Plan Regulador de Flores', tipo: 'contenido', url: 'plan-regulador-de-flores', galeriaAlFinal: true, lineasOmitir: ['Plan Regulador de Flores'],
             children: [
-              { id: 'mapa-zonificacion', label: 'Mapa de Zonificación', tipo: 'roto' },
+              { id: 'mapa-zonificacion', label: 'Mapa de Zonificación', tipo: 'descarga', nota: 'PDF (Mapa de Zonificación Actualizada del Plan Regulador de Flores, 18 de mayo 2018)', href: 'pdfs/mapa-zonificacion.pdf' },
             ]
           },
-          { id: 'plan-desarrollo-humano', label: 'Plan Cantonal de Desarrollo Humano Local', tipo: 'descarga', nota: 'PDF descargable desde Dropbox' },
+          { id: 'plan-desarrollo-humano', label: 'Plan Cantonal de Desarrollo Humano Local', tipo: 'descarga', nota: 'PDF (Plan de Desarrollo Humano Local 2010-2020, Cantón de Flores)', href: 'pdfs/plan-desarrollo-humano-local.pdf' },
           { id: 'recoleccion-desechos', label: 'Recolección de desechos y reciclaje', tipo: 'contenido', url: 'recoleccion-de-desechos' },
         ]
       },
       {
         id: 'pago-linea', label: 'Pago en línea',
         children: [
-          { id: 'calendario-pagos', label: 'Calendario de pagos', tipo: 'roto' },
+          { id: 'calendario-pagos', label: 'Calendario de pagos', tipo: 'contenido', url: 'calendario-de-pagos' },
         ]
       },
       { id: 'preguntas-frecuentes', label: 'Preguntas Frecuentes', tipo: 'roto' },
-      { id: 'amnistia-tributaria', label: 'Amnistía Tributaria', tipo: 'descarga', nota: 'PDF descargable desde Dropbox' },
+      { id: 'amnistia-tributaria', label: 'Amnistía Tributaria', tipo: 'descarga', nota: 'PDF (Acuerdo Municipal MF-CM-SEC-AC-1629-122-21, Plan de Condonación)', href: 'pdfs/amnistia-tributaria.pdf' },
     ]
   },
   {
