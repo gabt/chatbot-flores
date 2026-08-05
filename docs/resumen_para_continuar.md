@@ -129,16 +129,19 @@ Todos son opcionales y se activan solo agregando la propiedad al nodo en el árb
    DOS nodos todavía sin revisar: "Plan Regulador" (bajo Planes y Proyectos) y "Plan Regulador de
    Flores" (bajo Contribuyente > Servicios) - muy probablemente necesiten el mismo fix.
 
-### Municipalidad → Transparencia (nodo top-level aparte) ✅ COMPLETO
-✅ Confirmado: el "Transparencia" chiquito dentro del dropdown de Municipalidad es un atajo
-   externo a propósito (con nota de "ver la sección completa más abajo") - NO es un bug, es un
-   nodo distinto al "Transparencia" de nivel superior (que sí tiene todos los hijos mapeados).
-✅ Todos los hijos externos (Acceso a la Información, Información Institucional, Rendición de
+### Municipalidad → Transparencia ✅ COMPLETO (⚠️ ARQUITECTURA CAMBIÓ 2026-08-05, ver más abajo)
+⚠️ **DESACTUALIZADO** - lo descrito abajo (nodo top-level "Transparencia" con ~15 hijos mapeados
+   uno por uno) fue la versión de sesiones anteriores. **El 2026-08-05 se revirtió por completo**
+   a pedido del usuario: ya NO existe el nodo top-level "Transparencia" con submenú. Ahora es
+   UN SOLO nodo "Transparencia" dentro del dropdown de Municipalidad, tipo `externo`, que apunta
+   a `https://flores.go.cr/transparencia_accesibilidad/`. Ver sección "Sesión 2026-08-05" más
+   abajo para el detalle completo y el motivo de la decisión. Se deja el texto original acá tal
+   cual (tachado en la práctica) como registro histórico de lo que se probó y no se usó:
+   ~~Todos los hijos externos (Acceso a la Información, Información Institucional, Rendición de
    cuentas, Participación ciudadana, Datos Abiertos, Red de Transparencia) muestran correctamente
-   "Abrir en el sitio real".
-✅ Los 4 hijos que reutilizan contenido real (Servicios y Procesos Institucionales, Presupuesto
-   Municipal, Toma de Decisiones, Planes y Cumplimiento) muestran contenido real (Excel/PDF según
-   corresponda), confirmado por el usuario.
+   "Abrir en el sitio real". Los 4 hijos que reutilizan contenido real (Servicios y Procesos
+   Institucionales, Presupuesto Municipal, Toma de Decisiones, Planes y Cumplimiento) muestran
+   contenido real (Excel/PDF según corresponda).~~
 
 ### Municipalidad → Planes y Proyectos ✅ COMPLETO
 ✅ Plan Anual Operativo - tenía placeholder "enlace pendiente" pese a que el link real ya estaba
@@ -173,16 +176,124 @@ Las 7 secciones de Municipalidad están revisadas y confirmadas: Información Ge
 Municipal, Comités Municipales, Marco Normativo, Transparencia (el atajo), Planes y Proyectos,
 Gestión Ambiental, Recursos Humanos.
 
-### Siguiente paso inmediato: sección "Contribuyente"
-Según `mapa_organizado.md`: Artesanos (Plataforma/Solicitud), Servicios (Formularios, Trámites,
-Mapa Catastral, Plan Regulador de Flores - mismo caso pendiente de arriba, Plan Cantonal de
-Desarrollo Humano Local, Recolección de desechos), Pago en línea (Calendario de pagos - marcado
-como caído), Preguntas Frecuentes (marcado como caído), Amnistía Tributaria.
+### Estado de "Contribuyente" — 🎉 100% TERMINADO (2026-08-05)
+Artesanos (Plataforma/Solicitud), Servicios completo (Formularios, Trámites, Mapa Catastral,
+Plan Regulador de Flores, Plan Cantonal de Desarrollo Humano Local, Recolección de desechos),
+Pago en línea (Calendario de pagos), Amnistía Tributaria, y **Preguntas Frecuentes** (cerrado en
+esta sesión, ver sección 7 más abajo).
 
-**PAUSADO 2026-07-26**: el usuario notó inconsistencias en el sitio real que sugieren que lo
-están actualizando activamente (ver nota de "Documentación" arriba, modificada 3 días antes de
-esta sesión) y decidió parar acá para retomar con cabeza fresca, verificando primero qué cambió
-antes de seguir con Planes y Proyectos.
+**PAUSADO 2026-07-26** (nota de sesión anterior, ya resuelto en la sesión del 2026-08-05): el
+usuario había notado inconsistencias en el sitio real que sugerían actualización activa. Se
+retomó normalmente.
+
+## Sesión 2026-08-05: PDFs propios, cierre de Contribuyente, Transparencia simplificada
+Resumen de lo trabajado hoy (se omiten a propósito 3 ítems que Jeiron pidió excluir por estar
+ya registrados en otro lado: el arreglo del link de "Solicitud de Artesanos", el cierre del
+"Plan Regulador de Flores", y la revisión de "Formularios" y "Trámites").
+
+### 1. Tres PDFs propios reemplazan links frágiles a Dropbox
+Jeiron subió 3 PDFs reales (`ZONIFICAC-ACTUL-PRF.pdf`, el de Amnistía Tributaria, y el Plan de
+Desarrollo Humano Local) y ahora viven en la carpeta `pdfs/` del repo, en vez de depender de
+links externos a Dropbox:
+- `pdfs/mapa-zonificacion.pdf` → nodo "Mapa de Zonificación" (antes `roto`, ahora `descarga`).
+- `pdfs/amnistia-tributaria.pdf` → nodo "Amnistía Tributaria".
+- `pdfs/plan-desarrollo-humano-local.pdf` → nodo "Plan Cantonal de Desarrollo Humano Local".
+
+⚠️ Nota de troubleshooting para la próxima vez: al principio dieron 404 en GitHub Pages porque
+los PDFs se habían subido al repo con sus nombres de archivo originales, no con los nombres
+exactos que espera el código (`mapa-zonificacion.pdf`, etc.). Se resolvió con `Rename-Item` +
+`git add` (git lo detecta como "renamed", no hace falta re-subirlos de cero).
+
+### 2. "Plan de Desarrollo Urbano Cantonal" resuelto (ya no está `roto`)
+Investigado y confirmado por Jeiron: en el sitio real, ese link apunta al MISMO PDF que "Plan de
+Desarrollo Humano Local" (el sitio real simplemente le pone una etiqueta distinta al mismo
+archivo de Dropbox). Se conectó al mismo `pdfs/plan-desarrollo-humano-local.pdf` que ya
+teníamos - no hizo falta ningún PDF nuevo.
+
+### 3. Botón "Ver en el sitio real" ahora en TODA la web
+Antes solo aparecía en los tipos `contenido`, `externo` y `descarga`, y en Miembros del Concejo
+y Blog. Se agregó donde faltaba:
+- Alcaldía Municipal, Contáctenos, Directorio Institucional (funciones bespoke que no lo tenían).
+- Tipo `roto`: ahora acepta un campo opcional `hrefReal` - si la página SÍ funciona en el sitio
+  real pero todavía no la tenemos incorporada al prototipo, muestra igual el botón (con aviso
+  claro de que está pendiente de incorporar, no que está rota). Activado para "Preguntas
+  Frecuentes" (`hrefReal: 'https://flores.go.cr/contribuyente/preguntas/'`).
+
+### 4. Corregido el mensaje engañoso de "esto es contenido externo"
+Jeiron notó (con capturas) que el mensaje de las páginas tipo `externo` decía básicamente "esto
+vive fuera del sitio real", cuando en realidad son páginas del propio `flores.go.cr` que
+simplemente no tenemos incorporadas como contenido embebido - no son ajenas al sitio real.
+
+**Arreglo (en la función `renderExterno`, no nodo por nodo - aplica automático a toda la web):**
+ahora detecta el dominio del link. Si es `flores.go.cr` o `*.flores.go.cr` (incluye
+`portalmuni.flores.go.cr`) dice *"Esta información SÍ es parte del sitio real de la Municipalidad
+de Flores - vive en otra sección de flores.go.cr que todavía no incorporamos dentro de este
+prototipo"* con botón "Ver esta sección en flores.go.cr ↗". Si es un dominio de verdad ajeno
+(CFIA, Google Maps, Contraloría) mantiene el mensaje de sistema externo real, con botón "Abrir
+el sistema externo ↗". Este único cambio de función corrige automáticamente el mensaje en las
+~9 secciones que usan tipo `externo` en toda la web (Ubicación, Plataforma Artesanos, Catastro/
+Planificación/Patentes bajo Formularios, APC Requisitos, Mapa Catastral, Transparencia, etc.).
+
+### 5. Transparencia: se probó embeber contenido real, pero se revirtió a un solo link
+Se intentó convertir varios hijos de "Transparencia" (Acceso a la Información, Rendición de
+cuentas, Presupuesto público, etc.) de `externo` a `contenido` embebido, usando texto ya
+scrapeado en `conocimiento.json`. **Jeiron decidió revertir todo esto** y simplificar: eliminado
+por completo el nodo top-level "Transparencia" con su submenú de ~15 hijos. Ahora queda UN SOLO
+nodo "Transparencia", dentro del dropdown de Municipalidad, tipo `externo`, apuntando a
+`https://flores.go.cr/transparencia_accesibilidad/` (URL confirmada por Jeiron, distinta a la
+que se venía usando antes). Si en el futuro se quiere retomar la idea de contenido embebido para
+Transparencia, el texto ya scrapeado para varias de esas páginas existe en `conocimiento.json`
+bajo las URLs `transparencia/*.php` - no hay que volver a scrapear, solo reconectar los nodos.
+
+### 6. Infraestructura nueva agregada (queda disponible aunque hoy no se usa activamente)
+Se agregó al código un mecanismo de **navegación interna** (`tipo: 'interno'`, propiedad
+`destino: '<id de otro nodo>'`, función `irANodo()`): permite que un nodo, en vez de redirigir
+afuera del prototipo, salte directamente a otro nodo que ya existe en el propio árbol
+(expandiendo el sidebar automáticamente hasta ahí). Se usó primero para el atajo de Transparencia
+y después se revirtió junto con el resto de esa sección (ver punto 5), pero el mecanismo en sí
+quedó en el código, reutilizable para casos similares en el futuro (ej. si otro nodo resulta ser
+un "atajo" a una sección que ya existe en otra parte del árbol).
+
+### 7. Preguntas Frecuentes cerrado — Contribuyente queda 100% (2026-08-05, sesión de cierre)
+La página índice `/contribuyente/preguntas/` en el sitio real SÍ funciona (no está `roto` como
+se pensaba) y lista las 6 categorías con botones "Más información". Se confirmó vía `web_fetch`
+que 4 de los 6 links reales de esas categorías NO usan las URLs `/contribuyente/preguntas/<slug>/`
+que se habían anotado antes, sino un subdominio de contenido antiguo distinto:
+`flores.go.cr/rfw/Frecuentes/<Nombre>.html`. Las URLs reales confirmadas, botón por botón:
+- Bienes Inmuebles → `rfw/Frecuentes/bienes.html` ✅ (ya estaba en `conocimiento.json`, contenido completo)
+- Acueducto → `rfw/Frecuentes/Acueducto.html` ✅ (ya estaba en `conocimiento.json`, contenido completo)
+- Catastro → `rfw/Frecuentes/catastro.html` ✅ (ya estaba en `conocimiento.json`, contenido completo)
+- Cobros → `/contribuyente/cobros` ✅ (ya estaba en `conocimiento.json`, contenido completo)
+- Cementerio Municipal → el botón de la página real SÍ apunta a `/contribuyente/preguntas/...cementerio-municipal/`,
+  pero esa página está vacía en el sitio real (solo bookmarks de editor, sin texto) - dentro de
+  ella hay un link secundario a `rfw/Frecuentes/cementerio.html` que SÍ tiene el contenido real
+  completo (adjudicación/traspaso/eliminación de derecho). No estaba en `conocimiento.json` -
+  **agregado ahora** vía `web_fetch` al sitio real.
+- Patentes Municipales → mismo patrón: el botón real apunta a `/contribuyente/preguntas/patentes/`
+  (vacía en el sitio real), que a su vez señala a `rfw/Frecuentes/patentes.html`, que sí tiene el
+  contenido real completo (requisitos de actividades comerciales, traspaso, traslado, espectáculos
+  públicos). No estaba en `conocimiento.json` - **agregado ahora** vía `web_fetch`.
+
+**Cambios aplicados:** 2 entradas nuevas en `conocimiento.json` (`rfw/Frecuentes/cementerio.html`
+y `rfw/Frecuentes/patentes.html`). El nodo `preguntas-frecuentes` en `index.html` pasó de
+`tipo: 'roto'` a `tipo: 'contenido'` (usa el texto real ya scrapeado de `/contribuyente/preguntas`,
+que es el índice con las 6 tarjetas) con 6 hijos tipo `contenido`, mismo patrón que "Formularios".
+Verificado localmente con Playwright (servidor local + `conocimiento.json` de prueba): las 6
+categorías cargan su contenido real correctamente al hacer clic.
+
+**Pendiente de decisión con Jeiron:** el "Índice de Preguntas Frecuentes" real (`/contribuyente/preguntas/`)
+solo tiene pregunta-teaser + botón para 4 de las 6 categorías (Cementerio y Patentes muestran la
+tarjeta pero su página de destino real está vacía, como se explicó arriba) - no es un bug nuestro,
+es así en el sitio real. No requiere acción, es solo para tenerlo presente si Jeiron pregunta por
+qué esas dos páginas del sitio real "no tienen nada" cuando las compare en `flores.go.cr` directo.
+
+### Pendiente para la próxima sesión
+1. **Detalles estéticos solicitados por Jeiron pero NO implementados todavía**: quitar emojis del
+   sitio (empezando por el emoji al lado de "Municipalidad de Flores" en el encabezado, que se
+   reemplazaría por el escudo oficial del cantón - Jeiron ya adjuntó la imagen del escudo),
+   y cambiar la paleta de colores (hoy predominan los azules) por tonos que combinen con
+   "Flores" y el cantón: marrones, amarillos, verdes, algo de rosa, celeste cielo, blanco. Esto
+   quedó pendiente de sesión a sesión sin llegar a aplicarse - **retomar esto apenas se pueda**.
 
 ## Limitación conocida, aceptada por ahora (posible mejora futura)
 Las listas ANIDADAS del sitio real (ítem padre con sub-ítems debajo, y la lista sigue en el

@@ -780,7 +780,17 @@ const ARBOL = [
           { id: 'calendario-pagos', label: 'Calendario de pagos', tipo: 'contenido', url: 'calendario-de-pagos' },
         ]
       },
-      { id: 'preguntas-frecuentes', label: 'Preguntas Frecuentes', tipo: 'roto', hrefReal: 'https://flores.go.cr/contribuyente/preguntas/' },
+      {
+        id: 'preguntas-frecuentes', label: 'Preguntas Frecuentes', tipo: 'contenido', url: 'contribuyente/preguntas',
+        children: [
+          { id: 'preg-bienes-inmuebles', label: 'Bienes Inmuebles', tipo: 'contenido', url: 'rfw/frecuentes/bienes.html' },
+          { id: 'preg-acueducto', label: 'Acueducto', tipo: 'contenido', url: 'rfw/frecuentes/acueducto.html' },
+          { id: 'preg-cementerio', label: 'Cementerio Municipal', tipo: 'contenido', url: 'rfw/frecuentes/cementerio.html' },
+          { id: 'preg-patentes', label: 'Patentes Municipales', tipo: 'contenido', url: 'rfw/frecuentes/patentes.html' },
+          { id: 'preg-catastro', label: 'Catastro', tipo: 'contenido', url: 'rfw/frecuentes/catastro.html' },
+          { id: 'preg-cobros', label: 'Gestión de Cobros', tipo: 'contenido', url: 'contribuyente/cobros' },
+        ]
+      },
       { id: 'amnistia-tributaria', label: 'Amnistía Tributaria', tipo: 'descarga', nota: 'PDF (Acuerdo Municipal MF-CM-SEC-AC-1629-122-21, Plan de Condonación)', href: 'pdfs/amnistia-tributaria.pdf' },
     ]
   },

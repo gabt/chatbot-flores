@@ -80,7 +80,16 @@ dentro de Municipalidad, o una portada distinta - falta confirmar cuál.
   - Recolección de desechos y reciclaje (⚠️ dando error) — /contribuyente/servicios/recoleccion-de-desechos/
 - Pago en línea
   - Calendario de pagos (⚠️ CAÍDO) — /contribuyente/calendario-de-pagos/
-- Preguntas Frecuentes (⚠️ CAÍDO, sin submenú) — /contribuyente/preguntas/
+- Preguntas Frecuentes (✅ CERRADO 2026-08-05, submenú con 6 categorías) — /contribuyente/preguntas/
+  - Bienes Inmuebles — /rfw/Frecuentes/bienes.html
+  - Acueducto — /rfw/Frecuentes/Acueducto.html
+  - Cementerio Municipal — /rfw/Frecuentes/cementerio.html (⚠️ el link real de la tarjeta apunta a
+    /contribuyente/preguntas/informacion-sobre-tramites-y-servicios-del-cementerio-municipal/, que
+    está vacía en el sitio real; el contenido de verdad vive en esta URL secundaria)
+  - Patentes Municipales — /rfw/Frecuentes/patentes.html (mismo caso: la tarjeta real apunta a
+    /contribuyente/preguntas/patentes/, vacía; contenido real en esta URL secundaria)
+  - Catastro — /rfw/Frecuentes/catastro.html
+  - Gestión de Cobros — /contribuyente/cobros
 - Amnistía Tributaria (PDF vía Dropbox)
 
 ---
