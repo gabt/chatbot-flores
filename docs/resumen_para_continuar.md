@@ -186,6 +186,11 @@ esta sesión, ver sección 7 más abajo).
 usuario había notado inconsistencias en el sitio real que sugerían actualización activa. Se
 retomó normalmente.
 
+### Estado de "Noticias y Comunicados" — 🎉 TERMINADO (2026-08-05)
+Estaba roto (`tipo: 'especial-noticias'` sin implementar). Cerrado con el mismo patrón de
+"Gestión Ambiental" (`especial-blog`), 6 categorías, 21 posts curados y confirmados contra el
+sitio real. Ver sección 8 más abajo.
+
 ## Sesión 2026-08-05: PDFs propios, cierre de Contribuyente, Transparencia simplificada
 Resumen de lo trabajado hoy (se omiten a propósito 3 ítems que Jeiron pidió excluir por estar
 ya registrados en otro lado: el arreglo del link de "Solicitud de Artesanos", el cierre del
@@ -287,13 +292,47 @@ tarjeta pero su página de destino real está vacía, como se explicó arriba) -
 es así en el sitio real. No requiere acción, es solo para tenerlo presente si Jeiron pregunta por
 qué esas dos páginas del sitio real "no tienen nada" cuando las compare en `flores.go.cr` directo.
 
+### 8. Noticias y Comunicados cerrado (2026-08-05, sesión de cierre)
+El nodo `noticias` tenía `tipo: 'especial-noticias'`, un tipo que NUNCA se implementó en el
+switch de `mostrarNodo()` (no existe `case 'especial-noticias'`), así que caía al `default:
+renderGrupo(nodo, pane)` - y como el nodo no tenía `children`, mostraba únicamente "Elegí una
+opción del menú de la izquierda para ver su contenido" sin ninguna opción real que elegir. Es
+decir, la sección estaba rota (no solo pendiente de pulir).
+
+Se resolvió reutilizando el mismo mecanismo ya probado en "Gestión Ambiental" (`tipo:
+'especial-blog'` + `renderBlog`, posts curados a mano). `noticias` pasó a ser un nodo padre puro
+con 6 hijos, uno por categoría real del blog, confirmadas y actualizadas directo contra
+`flores.go.cr` vía `web_fetch` el mismo día: Sin categoría (3 posts), Cantón de Flores (4),
+Municipalidad (7, categoría agregadora - ver nota abajo), Comunicados (3), Gestión Ambiental (3,
+mismos posts que "Municipalidad > Gestión Ambiental", repetidos porque el sitio real también la
+expone desde acá), Leyes (1). Detalle completo en `mapa_organizado.md`.
+
+**Nota sobre "Municipalidad" como categoría:** en el sitio real, dos posts ("III Congreso
+Iberoamericano de Áreas Metropolitanas" y "La Oficina de Promoción Humana Cantonal...") están
+etiquetados ÚNICAMENTE con la categoría "Municipalidad" - no aparecen en ninguna otra categoría.
+El resto de los posts que muestra esa categoría en el sitio real están duplicados de Comunicados
+y Gestión Ambiental (el sitio real permite que un post tenga más de una categoría a la vez). Se
+mantuvo tal cual el comportamiento real y se dejó una `nota` visible en el nodo explicándolo, en
+vez de "limpiar" la duplicación y arriesgarnos a que no coincida con lo que Jeiron ve al comparar
+contra `flores.go.cr` directo.
+
+**Verificado con Playwright** (servidor local + `conocimiento.json` de prueba): las 6 categorías
+cargan sus posts correctamente, ARBOL parsea sin errores, 21 posts en total repartidos en 6
+categorías.
+
+**Aplicado en paralelo a `index_prueba.html`** (mismo contenido/estructura, adaptado a su
+render de pastillas en vez de sidebar) - a pedido de Jeiron, para que si Gerardo aprueba el
+rediseño visual no haya que repetir este trabajo de contenido ahí.
+
 ### Pendiente para la próxima sesión
-1. **Detalles estéticos solicitados por Jeiron pero NO implementados todavía**: quitar emojis del
-   sitio (empezando por el emoji al lado de "Municipalidad de Flores" en el encabezado, que se
-   reemplazaría por el escudo oficial del cantón - Jeiron ya adjuntó la imagen del escudo),
-   y cambiar la paleta de colores (hoy predominan los azules) por tonos que combinen con
-   "Flores" y el cantón: marrones, amarillos, verdes, algo de rosa, celeste cielo, blanco. Esto
-   quedó pendiente de sesión a sesión sin llegar a aplicarse - **retomar esto apenas se pueda**.
+1. **Detalles estéticos solicitados por Jeiron pero NO implementados todavía en el `index.html`
+   real**: quitar emojis del sitio (empezando por el emoji al lado de "Municipalidad de Flores"
+   en el encabezado, que se reemplazaría por el escudo oficial del cantón), y cambiar la paleta
+   de colores (hoy predominan los azules) por tonos que combinen con "Flores" y el cantón:
+   marrones, amarillos, verdes, algo de rosa, celeste cielo, blanco. **Esto SÍ se implementó,
+   pero solo en el prototipo experimental `index_prueba.html`** (rediseño de navegación con
+   pastillas en vez de sidebar, pendiente de que Gerardo lo revise y apruebe antes de tocar el
+   `index.html` real) - ver contexto aparte, no documentado en detalle acá a pedido de Jeiron.
 
 ## Limitación conocida, aceptada por ahora (posible mejora futura)
 Las listas ANIDADAS del sitio real (ítem padre con sub-ítems debajo, y la lista sigue en el

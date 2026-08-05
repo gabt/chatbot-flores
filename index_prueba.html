@@ -6,10 +6,18 @@
 <title>Municipalidad de Flores - Prototipo GBSYS</title>
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Arial, sans-serif; color: #333; }
+    html, body { height: 100%; }
+    body {
+        font-family: Arial, sans-serif;
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
 
     header {
-        background: #1a5276;
+        flex-shrink: 0;
+        background: #6b4423;
         color: white;
         padding: 15px 30px;
         display: flex;
@@ -19,103 +27,213 @@
         gap: 10px;
     }
     header h1 { font-size: 1.4rem; }
+    .header-titulo { display: flex; align-items: center; gap: 12px; }
+    .header-escudo { flex-shrink: 0; height: 46px; width: auto; }
     header p { font-size: 0.85rem; opacity: 0.85; }
     .header-logos { font-size: 0.75rem; text-align: right; opacity: 0.8; }
 
-    #menu-toggle {
-        display: none;
-        background: #2e86c1;
-        color: white;
-        border: none;
-        padding: 10px 14px;
-        font-size: 0.95rem;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
     .layout {
-        display: flex;
-        align-items: flex-start;
-        min-height: calc(100vh - 200px);
-    }
-
-    /* ÁRBOL DE NAVEGACIÓN LATERAL */
-    .sidebar {
-        width: 320px;
-        flex-shrink: 0;
-        background: #f4f6f7;
-        border-right: 1px solid #ddd;
-        padding: 15px 10px;
-        position: sticky;
-        top: 0;
-        max-height: 100vh;
-        overflow-y: auto;
-    }
-    .inicio-btn {
         display: block;
-        background: #1a5276;
-        color: white;
-        text-align: center;
-        padding: 10px;
-        border-radius: 6px;
-        margin-bottom: 12px;
-        cursor: pointer;
-        font-weight: bold;
-        font-size: 0.95rem;
+        flex: 1 0 auto;
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 20px;
     }
-    .sidebar ul { list-style: none; }
-    .sidebar > ul { padding-left: 0; }
-    .hijos { display: none; padding-left: 16px; }
-    .hijos.abierto { display: block; }
 
-    .nodo {
+    /* ===== CUADRO PRINCIPAL (banner con foto de fondo) ===== */
+    .hero-nav {
+        margin-top: 22px;
+        border-radius: 14px;
+        overflow: hidden;
+        position: relative;
+        background-image: url('assets/fondo-hero.jpg');
+        background-size: cover;
+        background-position: center;
+        min-height: 200px;
         display: flex;
         align-items: center;
-        gap: 6px;
+        justify-content: center;
+        box-shadow: 0 6px 22px rgba(0,0,0,0.18);
+    }
+    .hero-nav-overlay {
+        width: 100%;
+        text-align: center;
+        padding: 48px 30px;
+        color: white;
+    }
+    .hero-nav-overlay h2 {
+        font-size: 2.1rem;
+        margin-bottom: 10px;
+        color: white;
+        border: none;
+        text-shadow: 0 2px 6px rgba(0,0,0,0.55), 0 0 18px rgba(0,0,0,0.35);
+    }
+    .hero-nav-overlay p {
+        font-size: 1.05rem;
+        opacity: 0.98;
+        max-width: 650px;
+        margin: 0 auto;
+        text-shadow: 0 1px 5px rgba(0,0,0,0.6), 0 0 14px rgba(0,0,0,0.3);
+    }
+
+    /* Botón flotante de Inicio (esquina inferior izquierda, siempre visible) */
+    #inicio-flotante {
+        position: fixed;
+        bottom: 25px;
+        left: 25px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #6b4423;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 14px 22px;
+        font-size: 1rem;
+        font-weight: bold;
         cursor: pointer;
-        padding: 6px 8px;
-        border-radius: 5px;
-        font-size: 0.88rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        z-index: 999;
+    }
+    #inicio-flotante:hover { background: #d68910; }
+
+    /* Imagen grande (mapas/infografías legibles sin necesidad de zoom) */
+    .galeria.galeria-grande { justify-content: center; }
+    .galeria.galeria-grande .galeria-item img {
+        width: auto;
+        max-width: 100%;
+        height: auto;
+        max-height: none;
+    }
+    .imagen-grande-wrap {
+        text-align: center;
+        margin: 20px 0;
+    }
+    .imagen-grande-wrap img {
+        max-width: 100%;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    /* ===== FILAS DE PASTILLAS (navegación) ===== */
+    .pastillas-fila {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        margin: 22px 0;
+    }
+    .pastillas-fila.nivel1 { margin-top: 10px; }
+    .pastilla-wrap {
+        position: relative;
+    }
+    .pastilla-grupo {
+        display: flex;
+        align-items: stretch;
+        background: white;
+        border: 1px solid #e6d3b8;
+        border-radius: 24px;
+        box-shadow: 0 2px 6px rgba(107,68,35,0.08);
+        overflow: hidden;
+        transition: box-shadow 0.15s, border-color 0.15s;
+    }
+    .pastilla-grupo:hover { box-shadow: 0 4px 12px rgba(107,68,35,0.18); border-color: #d68910; }
+    .pastilla {
+        background: none;
+        border: none;
+        color: #6b4423;
+        font-weight: bold;
+        font-size: 0.95rem;
+        padding: 12px 20px;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+    .pastilla-caret {
+        display: flex;
+        align-items: center;
+        padding: 0 14px;
+        color: #d68910;
+        cursor: pointer;
+        border-left: 1px solid #f5ede0;
+        font-size: 0.75rem;
+        user-select: none;
+    }
+    .pastilla-caret:hover { background: #fdf3e2; }
+    .pastilla-wrap.activa .pastilla-grupo {
+        background: #6b4423;
+        border-color: #6b4423;
+    }
+    .pastilla-wrap.activa .pastilla { color: white; }
+    .pastilla-wrap.activa .pastilla-caret { color: white; border-left-color: rgba(255,255,255,0.3); }
+
+    .pastilla-dropdown {
+        display: none;
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 50%;
+        transform: translateX(-50%);
+        min-width: 260px;
+        max-width: 340px;
+        max-height: 340px;
+        overflow-y: auto;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        border: 1px solid #dde3ea;
+        padding: 8px 0;
+        z-index: 50;
+        text-align: left;
+    }
+    .pastilla-dropdown.abierto { display: block; }
+    .drop-header {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #8a97a3;
+        font-weight: bold;
+        padding: 9px 16px 4px;
+    }
+    .drop-item {
+        padding: 9px 16px;
+        font-size: 0.9rem;
         color: #234;
-        line-height: 1.3;
+        cursor: pointer;
     }
-    .nodo:hover { background: #e2ecf1; }
-    .nodo.activo { background: #2e86c1; color: white; font-weight: bold; }
-    .flecha {
-        width: 14px;
-        flex-shrink: 0;
-        display: inline-block;
-        font-size: 0.7rem;
-        transition: transform 0.15s;
-        color: #888;
-    }
-    .nodo.activo .flecha { color: white; }
-    .nodo.expandido .flecha { transform: rotate(90deg); }
-    .nivel-badge {
-        font-size: 0.7rem;
-        opacity: 0.7;
-    }
+    .drop-item:hover { background: #fdf3e2; color: #6b4423; }
+    .drop-item.activo { background: #d68910; color: white; }
 
     /* PANEL DE CONTENIDO */
     .content-pane {
-        flex: 1;
-        padding: 35px 40px;
-        max-width: 900px;
+        margin: 0 auto;
+        padding: 10px 10px 45px;
+        max-width: 860px;
     }
     .content-pane h2 {
-        color: #1a5276;
+        color: #6b4423;
         font-size: 1.6rem;
-        margin-bottom: 8px;
-        border-bottom: 3px solid #2e86c1;
-        padding-bottom: 10px;
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+        text-align: center;
+        position: relative;
+    }
+    .content-pane h2::after {
+        content: '';
+        display: block;
+        width: 70px;
+        height: 3px;
+        background: #7a9c4e;
+        margin: 12px auto 0;
+        border-radius: 3px;
     }
     .content-pane .fuente {
         margin: 8px 0 18px;
         font-size: 0.85rem;
+        text-align: center;
     }
-    .content-pane .fuente a { color: #2e86c1; }
+    .content-pane .fuente a { color: #4a8fa8; }
     .content-pane h3 {
-        color: #1a5276;
+        color: #6b4423;
         font-size: 1.05rem;
         margin: 22px 0 8px;
     }
@@ -167,8 +285,8 @@
         margin-top: 10px;
     }
     .aviso-externo, .aviso-descarga, .aviso-roto, .aviso-grupo {
-        background: #eaf4fb;
-        border-left: 4px solid #2e86c1;
+        background: #fdf3e2;
+        border-left: 4px solid #d68910;
         border-radius: 6px;
         padding: 20px;
         margin-top: 15px;
@@ -180,7 +298,7 @@
     .boton-externo {
         display: inline-block;
         margin-top: 12px;
-        background: #2e86c1;
+        background: #d68910;
         color: white;
         text-decoration: none;
         padding: 10px 20px;
@@ -188,12 +306,13 @@
         font-size: 0.9rem;
         font-weight: bold;
     }
-    .boton-externo:hover { background: #1a5276; }
+    .boton-externo:hover { background: #6b4423; }
 
     /* GALERÍA DE IMÁGENES */
     .galeria {
         display: flex;
         flex-wrap: wrap;
+        justify-content: center;
         gap: 12px;
         margin: 20px 0;
     }
@@ -220,7 +339,7 @@
         max-width: 200px;
     }
     .galeria-caption.enlace {
-        color: #2e86c1;
+        color: #c76b83;
         font-weight: bold;
     }
     .galeria.galeria-inline {
@@ -228,7 +347,7 @@
     }
     .tabla-roster {
         border-collapse: collapse;
-        margin: 6px 0 20px;
+        margin: 6px auto 20px;
         width: 100%;
         max-width: 480px;
     }
@@ -239,7 +358,7 @@
     }
     .tabla-roster th {
         background: transparent;
-        color: #1a5276;
+        color: #6b4423;
         font-size: 0.78rem;
         text-transform: uppercase;
         letter-spacing: 0.03em;
@@ -250,7 +369,7 @@
     }
     .tabla-roster tr.seccion td {
         font-weight: bold;
-        color: #1a5276;
+        color: #6b4423;
         padding-top: 14px;
         border-bottom: none;
     }
@@ -265,13 +384,17 @@
         position: relative;
     }
     .lista-enlaces li::before {
-        content: '📄';
+        content: '';
         position: absolute;
         left: 0;
-        font-size: 0.8rem;
+        top: 7px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #d68910;
     }
     .lista-enlaces a {
-        color: #2e86c1;
+        color: #d68910;
         text-decoration: none;
     }
     .lista-enlaces a:hover { text-decoration: underline; }
@@ -304,7 +427,7 @@
         display: block;
         font-size: 1.1rem;
         font-weight: bold;
-        color: #1a5276;
+        color: #6b4423;
         text-decoration: none;
         margin-bottom: 6px;
     }
@@ -329,21 +452,11 @@
         height: 110px;
         object-fit: contain;
         border-radius: 50%;
-        background: #8bc34a;
+        background: #7a9c4e;
         padding: 22px;
         box-shadow: none;
     }
     .galeria-item.boton-icono img:hover { transform: scale(1.06); }
-
-    /* HERO / INICIO */
-    .hero {
-        background: linear-gradient(135deg, #1a5276, #2e86c1);
-        color: white;
-        padding: 60px 30px;
-        text-align: center;
-    }
-    .hero h2 { font-size: 2rem; margin-bottom: 10px; color: white; border: none; }
-    .hero p { font-size: 1.1rem; opacity: 0.9; }
 
     /* Bloques especiales reutilizados (alcaldía, contacto, etc.) */
     .grid {
@@ -353,13 +466,13 @@
         margin-top: 20px;
     }
     .grid-item {
-        background: #eaf4fb;
+        background: #fdf3e2;
         border-radius: 8px;
         padding: 20px;
-        border-left: 4px solid #2e86c1;
+        border-left: 4px solid #d68910;
         text-align: center;
     }
-    .grid-item h4 { color: #1a5276; margin-bottom: 8px; }
+    .grid-item h4 { color: #6b4423; margin-bottom: 8px; }
     .grid-item p { font-size: 0.88rem; color: #555; margin: 6px 0 0; text-align: left; }
     .grid-item img {
         width: 100%; max-width: 180px; border-radius: 8px;
@@ -373,7 +486,7 @@
         font-size: 0.9rem;
     }
     th {
-        background: #1a5276;
+        background: #6b4423;
         color: white;
         padding: 10px;
         text-align: left;
@@ -382,7 +495,7 @@
     tr:hover { background: #f4f6f7; }
 
     .contacto-box {
-        background: #1a5276;
+        background: #6b4423;
         color: white;
         padding: 25px;
         border-radius: 8px;
@@ -391,18 +504,24 @@
     .contacto-box p { color: white; margin-bottom: 8px; opacity: 0.95; }
 
     footer {
-        background: #154360;
+        flex-shrink: 0;
+        background: #3f2a15;
         color: white;
         text-align: center;
-        padding: 15px;
+        padding: 16px 235px 18px;
         font-size: 0.8rem;
+    }
+    /* En pantallas angostas los botones flotantes no dejan una franja central
+       segura, así que se vuelve a reservar espacio vertical en vez de horizontal */
+    @media (max-width: 700px) {
+        footer { padding: 14px 15px 80px; }
     }
 
     #chat-btn {
         position: fixed;
         bottom: 25px;
         right: 25px;
-        background: #2e86c1;
+        background: #d68910;
         color: white;
         border: none;
         border-radius: 50px;
@@ -430,7 +549,7 @@
     }
     #chat-window.open { display: flex; }
     .chat-header {
-        background: #1a5276;
+        background: #6b4423;
         color: white;
         padding: 14px 16px;
         font-weight: bold;
@@ -450,7 +569,7 @@
         font-size: 0.88rem;
         line-height: 1.4;
     }
-    .msg.user { background: #2e86c1; color: white; margin-left: auto; }
+    .msg.user { background: #d68910; color: white; margin-left: auto; }
     .msg.bot { background: #e5e9eb; color: #333; }
     .msg.loading { font-style: italic; opacity: 0.7; }
     .chat-input {
@@ -465,7 +584,7 @@
     }
     .chat-input input:focus { outline: none; }
     .chat-input button {
-        background: #2e86c1;
+        background: #d68910;
         color: white;
         border: none;
         padding: 0 18px;
@@ -481,53 +600,61 @@
     }
 
     @media (max-width: 800px) {
-        #menu-toggle { display: inline-block; }
-        .layout { flex-direction: column; }
-        .sidebar {
-            width: 100%;
-            position: static;
-            max-height: none;
-            display: none;
-        }
-        .sidebar.abierta { display: block; }
-        .content-pane { padding: 25px 18px; max-width: 100%; }
+        .layout { padding: 0 12px; }
+        .hero-nav { margin-top: 14px; min-height: 150px; border-radius: 10px; }
+        .hero-nav-overlay { padding: 30px 18px; }
+        .hero-nav-overlay h2 { font-size: 1.4rem; }
+        .hero-nav-overlay p { font-size: 0.92rem; }
+        .pastillas-fila { gap: 8px; margin: 16px 0; }
+        .pastilla { padding: 10px 14px; font-size: 0.85rem; }
+        .pastilla-caret { padding: 0 10px; }
+        .content-pane { padding: 15px 6px 35px; max-width: 100%; }
     }
 </style>
 </head>
 <body>
 
 <header>
-    <div>
-        <h1>🏛️ Municipalidad de Flores</h1>
-        <p>San Joaquín de Flores, Heredia, Costa Rica</p>
+    <div class="header-titulo">
+        <img class="header-escudo" src="assets/escudo-flores.png" alt="Escudo del Cantón de Flores">
+        <div>
+            <h1>Municipalidad de Flores</h1>
+            <p>San Joaquín de Flores, Heredia, Costa Rica</p>
+        </div>
     </div>
-    <button id="menu-toggle" onclick="toggleSidebar()">☰ Menú</button>
     <div class="header-logos">Prototipo desarrollado por<br>GBSYS S.A. + CTP Flores</div>
 </header>
 
 <div class="layout">
-    <aside class="sidebar" id="sidebar">
-        <div class="inicio-btn" onclick="mostrarInicio()">🏠 Inicio</div>
-        <ul id="arbol-raiz"></ul>
-    </aside>
-
-    <main class="content-pane" id="content-pane">
-        <div class="hero">
-            <h2>Municipalidad de Flores</h2>
-            <p>¡En Flores progresamos juntos! Elegí una sección del menú para comenzar.</p>
+    <div class="hero-nav" id="hero-nav">
+        <div class="hero-nav-overlay">
+            <h2 id="hero-titulo">Municipalidad de Flores</h2>
+            <p id="hero-subtitulo">¡En Flores progresamos juntos! Elegí una sección para comenzar.</p>
         </div>
-    </main>
+    </div>
+
+    <nav class="pastillas-fila nivel0" id="pastillas-nivel0"></nav>
+    <nav class="pastillas-fila nivel1" id="pastillas-nivel1"></nav>
+
+    <main class="content-pane" id="content-pane"></main>
 </div>
 
 <footer>
     Prototipo académico desarrollado por GBSYS S.A. y Jeiron Arroyo Brenes — CTP Flores | Agosto 2026
 </footer>
 
-<button id="chat-btn" onclick="toggleChat()">💬 Asistente Virtual</button>
+<button id="inicio-flotante" onclick="mostrarInicio()">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M3 11 L12 3 L21 11" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M5.5 9.5 V20 H18.5 V9.5" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+    </svg>
+    Inicio
+</button>
+<button id="chat-btn" onclick="toggleChat()">Asistente Virtual</button>
 
 <div id="chat-window">
     <div class="chat-header">
-        🤖 Asistente Virtual
+        Asistente Virtual
         <span>Municipalidad de Flores</span>
     </div>
     <div id="chat-messages">
@@ -535,7 +662,7 @@
     </div>
     <div class="chat-input">
         <input type="text" id="chat-input" placeholder="Escriba su consulta..." onkeypress="handleKey(event)">
-        <button onclick="enviarMensaje()">➤</button>
+        <button onclick="enviarMensaje()">Enviar</button>
     </div>
     <div class="powered">Powered by Claude AI · GBSYS S.A.</div>
 </div>
@@ -567,7 +694,7 @@ const ARBOL = [
           {
             id: 'organigrama', label: 'Organigrama',
             children: [
-              { id: 'mapa-organizacional', label: 'Mapa Organizacional', tipo: 'contenido', url: 'mapa-organizacional' },
+              { id: 'mapa-organizacional', label: 'Mapa Organizacional', tipo: 'contenido', url: 'mapa-organizacional', imagenGrande: true },
               {
                 id: 'niveles', label: 'Niveles',
                 children: [
@@ -581,7 +708,7 @@ const ARBOL = [
             ]
           },
           { id: 'mision-vision', label: 'Misión y Visión', tipo: 'contenido', url: 'mision-y-vision' },
-          { id: 'valores', label: 'Nuestros Valores', tipo: 'contenido', url: 'valores' },
+          { id: 'valores', label: 'Nuestros Valores', tipo: 'contenido', url: 'valores', imagenGrande: true },
           { id: 'ubicacion', label: 'Ubicación', tipo: 'externo', href: 'https://www.google.com/maps/search/?api=1&query=Municipalidad+de+Flores+San+Joaqu%C3%ADn+Heredia+Costa+Rica', nota: 'El sitio real usa un mapa interactivo de Waze (pensado para celular); acá te llevamos directo a Google Maps.' },
         ]
       },
@@ -760,27 +887,37 @@ const ARBOL = [
             id: 'tramites', label: 'Trámites',
             children: [
               { id: 'apc-requisitos', label: 'APC Requisitos', tipo: 'externo', href: 'https://sso.cfia.or.cr/sso/?IdSystem=38', nota: 'Conexión directa con el CFIA' },
-              { id: 'certificaciones', label: 'Certificaciones de Registro', tipo: 'contenido', url: 'certificaciones-de-registro' },
+              { id: 'certificaciones', label: 'Certificaciones de Registro', tipo: 'contenido', url: 'certificaciones-de-registro', imagenGrande: true },
             ]
           },
           { id: 'mapa-catastral', label: 'Mapa Catastral del Cantón', tipo: 'externo', href: 'https://flores.go.cr/contribuyente/servicios/mapa-del-canton/', nota: 'Sistema de Información Geográfica navegable' },
           {
             id: 'plan-regulador-serv', label: 'Plan Regulador de Flores', tipo: 'contenido', url: 'plan-regulador-de-flores', galeriaAlFinal: true, lineasOmitir: ['Plan Regulador de Flores'],
             children: [
-              { id: 'mapa-zonificacion', label: 'Mapa de Zonificación', tipo: 'descarga', nota: 'PDF (Mapa de Zonificación Actualizada del Plan Regulador de Flores, 18 de mayo 2018)', href: 'pdfs/mapa-zonificacion.pdf' },
+              { id: 'mapa-zonificacion', label: 'Mapa de Zonificación', tipo: 'imagen', imagen: 'assets/mapa-zonificacion.jpg', hrefOriginal: 'pdfs/mapa-zonificacion.pdf', nota: 'Mapa de Zonificación Actualizada del Plan Regulador de Flores, 18 de mayo 2018' },
             ]
           },
           { id: 'plan-desarrollo-humano', label: 'Plan Cantonal de Desarrollo Humano Local', tipo: 'descarga', nota: 'PDF (Plan de Desarrollo Humano Local 2010-2020, Cantón de Flores)', href: 'pdfs/plan-desarrollo-humano-local.pdf' },
-          { id: 'recoleccion-desechos', label: 'Recolección de desechos y reciclaje', tipo: 'contenido', url: 'recoleccion-de-desechos' },
+          { id: 'recoleccion-desechos', label: 'Recolección de desechos y reciclaje', tipo: 'contenido', url: 'recoleccion-de-desechos', imagenGrande: true },
         ]
       },
       {
         id: 'pago-linea', label: 'Pago en línea',
         children: [
-          { id: 'calendario-pagos', label: 'Calendario de pagos', tipo: 'contenido', url: 'calendario-de-pagos' },
+          { id: 'calendario-pagos', label: 'Calendario de pagos', tipo: 'contenido', url: 'calendario-de-pagos', imagenGrande: true },
         ]
       },
-      { id: 'preguntas-frecuentes', label: 'Preguntas Frecuentes', tipo: 'roto', hrefReal: 'https://flores.go.cr/contribuyente/preguntas/' },
+      {
+        id: 'preguntas-frecuentes', label: 'Preguntas Frecuentes', tipo: 'contenido', url: 'contribuyente/preguntas',
+        children: [
+          { id: 'preg-bienes-inmuebles', label: 'Bienes Inmuebles', tipo: 'contenido', url: 'rfw/frecuentes/bienes.html' },
+          { id: 'preg-acueducto', label: 'Acueducto', tipo: 'contenido', url: 'rfw/frecuentes/acueducto.html' },
+          { id: 'preg-cementerio', label: 'Cementerio Municipal', tipo: 'contenido', url: 'rfw/frecuentes/cementerio.html' },
+          { id: 'preg-patentes', label: 'Patentes Municipales', tipo: 'contenido', url: 'rfw/frecuentes/patentes.html' },
+          { id: 'preg-catastro', label: 'Catastro', tipo: 'contenido', url: 'rfw/frecuentes/catastro.html' },
+          { id: 'preg-cobros', label: 'Gestión de Cobros', tipo: 'contenido', url: 'contribuyente/cobros' },
+        ]
+      },
       { id: 'amnistia-tributaria', label: 'Amnistía Tributaria', tipo: 'descarga', nota: 'PDF (Acuerdo Municipal MF-CM-SEC-AC-1629-122-21, Plan de Condonación)', href: 'pdfs/amnistia-tributaria.pdf' },
     ]
   },
@@ -804,7 +941,7 @@ const ARBOL = [
           { id: 'organizaciones', label: 'Organizaciones cantonales', tipo: 'contenido', url: 'organizaciones' },
         ]
       },
-      { id: 'himno', label: 'Himno al Cantón de Flores', tipo: 'contenido', url: 'himno-al-canton-de-flores' },
+      { id: 'himno', label: 'Himno al Cantón de Flores', tipo: 'contenido', url: 'himno-al-canton-de-flores', imagenGrande: true },
       { id: 'cecudi', label: 'CECUDI', tipo: 'contenido', url: 'cuido-y-desarrollo-infantil' },
     ]
   },
@@ -1015,67 +1152,183 @@ const ARBOL = [
     indexarNodos(ARBOL);
 
     /* =========================================================
-       CONSTRUCCIÓN DEL ÁRBOL EN EL DOM
+       NAVEGACIÓN NUEVA: cuadro con foto + 2 filas de pastillas
+       -----------------------------------------------------------
+       Nivel 0: las secciones principales (Municipalidad, Contribuyente...)
+       se muestran siempre como pastillas fijas debajo del cuadro con foto.
+       Al elegir una, el cuadro cambia su título por el de esa sección y la
+       fila de abajo (nivel 1) se llena con sus hijos directos.
+       Si una pastilla (de cualquiera de las 2 filas) tiene a su vez más
+       subdivisiones, en vez de abrir un tercer nivel de pastillas, se
+       muestra un cuadrito pequeño (desplegable) debajo de esa pastilla con
+       TODAS sus opciones, sin importar cuántas capas tenga por debajo.
        ========================================================= */
-    function crearNodoDOM(nodo, nivel) {
-        const li = document.createElement('li');
-        const div = document.createElement('div');
-        div.className = 'nodo nivel-' + nivel;
-        div.dataset.id = nodo.id;
+    const TITULO_INICIO = 'Municipalidad de Flores';
+    const SUBTITULO_INICIO = '¡En Flores progresamos juntos! Elegí una sección para comenzar.';
 
+    function esClickeable(nodo) {
+        return !!nodo.tipo;
+    }
+
+    // Aplana recursivamente las opciones de un nodo (y sus descendientes)
+    // para el cuadrito desplegable: los nodos con tipo propio son
+    // clickeables, los que son puro agrupador (sin tipo) se muestran como
+    // subtítulo no clickeable dentro del mismo cuadrito.
+    function generarOpcionesDropdown(nodo, profundidad) {
+        let html = '';
         const tieneHijos = !!(nodo.children && nodo.children.length);
-        const flecha = document.createElement('span');
-        flecha.className = 'flecha';
-        flecha.textContent = tieneHijos ? '▸' : '·';
-        div.appendChild(flecha);
-
-        const texto = document.createElement('span');
-        texto.textContent = nodo.label;
-        div.appendChild(texto);
-        li.appendChild(div);
-
-        let ulHijos = null;
+        const clickeable = esClickeable(nodo);
+        const sangria = 16 + profundidad * 14;
+        if (clickeable) {
+            html += `<div class="drop-item" data-id="${nodo.id}" style="padding-left:${sangria}px">${escapeHtml(nodo.label)}</div>`;
+        } else {
+            html += `<div class="drop-header" style="padding-left:${sangria}px">${escapeHtml(nodo.label)}</div>`;
+        }
         if (tieneHijos) {
-            ulHijos = document.createElement('ul');
-            ulHijos.className = 'hijos';
-            nodo.children.forEach(hijo => ulHijos.appendChild(crearNodoDOM(hijo, nivel + 1)));
-            li.appendChild(ulHijos);
+            nodo.children.forEach(hijo => { html += generarOpcionesDropdown(hijo, profundidad + 1); });
+        }
+        return html;
+    }
+
+    function cerrarTodosLosDropdowns() {
+        document.querySelectorAll('.pastilla-dropdown.abierto').forEach(d => d.classList.remove('abierto'));
+    }
+
+    // Crea una pastilla de NIVEL 1 (hijos de la sección elegida). Si el nodo
+    // tiene contenido propio (nodo.tipo), el botón principal muestra ese
+    // contenido. Si además (o en cambio) tiene hijos propios, se agrega un
+    // cuadrito desplegable con TODAS sus opciones aplanadas - nunca se abre
+    // un tercer nivel de pastillas.
+    function crearPastillaNivel1(nodo) {
+        const tieneHijos = !!(nodo.children && nodo.children.length);
+        const clickeable = esClickeable(nodo);
+
+        const wrap = document.createElement('div');
+        wrap.className = 'pastilla-wrap';
+        wrap.dataset.id = nodo.id;
+
+        const grupo = document.createElement('div');
+        grupo.className = 'pastilla-grupo';
+
+        const btn = document.createElement('button');
+        btn.className = 'pastilla';
+        btn.textContent = nodo.label;
+        grupo.appendChild(btn);
+
+        let dropdown = null;
+        const toggleDropdown = (ev) => {
+            ev.stopPropagation();
+            const yaAbierto = dropdown.classList.contains('abierto');
+            cerrarTodosLosDropdowns();
+            if (!yaAbierto) dropdown.classList.add('abierto');
+        };
+
+        if (tieneHijos) {
+            const caret = document.createElement('span');
+            caret.className = 'pastilla-caret';
+            caret.textContent = '▾';
+            grupo.appendChild(caret);
+
+            dropdown = document.createElement('div');
+            dropdown.className = 'pastilla-dropdown';
+            dropdown.innerHTML = nodo.children.map(hijo => generarOpcionesDropdown(hijo, 0)).join('');
+            wrap.appendChild(dropdown);
+
+            caret.addEventListener('click', toggleDropdown);
+
+            dropdown.addEventListener('click', (ev) => {
+                const item = ev.target.closest('.drop-item');
+                if (!item) return;
+                const hijoNodo = NODOS_POR_ID[item.dataset.id];
+                if (!hijoNodo) return;
+                document.querySelectorAll('.drop-item.activo').forEach(x => x.classList.remove('activo'));
+                item.classList.add('activo');
+                document.querySelectorAll('#pastillas-nivel1 .pastilla-wrap.activa').forEach(x => x.classList.remove('activa'));
+                mostrarNodo(hijoNodo, null);
+                dropdown.classList.remove('abierto');
+            });
         }
 
-        div.addEventListener('click', () => {
-            if (tieneHijos) {
-                const abierto = ulHijos.classList.toggle('abierto');
-                div.classList.toggle('expandido', abierto);
-            } else if (window.innerWidth <= 800) {
-                // En celular, si es un nodo final (sin hijos), cerramos el
-                // menú lateral para que el contenido se vea de una vez,
-                // sin tener que escrolear más allá del árbol.
-                document.getElementById('sidebar').classList.remove('abierta');
+        btn.addEventListener('click', (ev) => {
+            if (clickeable) {
+                document.querySelectorAll('#pastillas-nivel1 .pastilla-wrap.activa').forEach(x => x.classList.remove('activa'));
+                wrap.classList.add('activa');
+                mostrarNodo(nodo, null);
+                cerrarTodosLosDropdowns();
+            } else if (tieneHijos) {
+                // Nodo puro agrupador (sin contenido propio): el botón
+                // principal simplemente abre el mismo cuadrito que el ▾.
+                toggleDropdown(ev);
             }
-            mostrarNodo(nodo, div);
         });
 
-        return li;
+        wrap.appendChild(grupo);
+        return wrap;
     }
 
-    document.getElementById('arbol-raiz').append(
-        ...ARBOL.map(nodo => crearNodoDOM(nodo, 0))
-    );
+    document.addEventListener('click', cerrarTodosLosDropdowns);
 
-    function toggleSidebar() {
-        document.getElementById('sidebar').classList.toggle('abierta');
+    // ---- Fila de nivel 1 (hijos de la sección elegida) ----
+    function renderNivel1(nodos) {
+        const fila = document.getElementById('pastillas-nivel1');
+        fila.innerHTML = '';
+        if (!nodos || !nodos.length) return;
+        nodos.forEach(nodo => fila.appendChild(crearPastillaNivel1(nodo)));
     }
+
+    // ---- Fila de nivel 0 (secciones principales) ----
+    // A nivel 0 SIEMPRE se "entra" a la sección al hacer clic (nunca se
+    // abre un cuadrito acá): el título del cuadro cambia y sus hijos pasan
+    // a ser las pastillas de la fila de abajo (nivel 1). Una vez adentro,
+    // la fila de nivel 0 desaparece por completo (ya cumplió su función) y
+    // solo queda la fila de nivel 1 debajo del cuadro. El botón "Inicio"
+    // flotante (esquina inferior izquierda) es la única forma de volver a
+    // elegir otra sección principal.
+    function entrarSeccion(nodo) {
+        document.getElementById('hero-titulo').textContent = nodo.label;
+        document.getElementById('hero-subtitulo').textContent = nodo.nota || 'Elegí una opción para ver el contenido.';
+
+        document.getElementById('pastillas-nivel0').style.display = 'none';
+        renderNivel1(nodo.children || []);
+        document.getElementById('pastillas-nivel1').style.display = 'flex';
+
+        if (esClickeable(nodo)) {
+            mostrarNodo(nodo, null);
+        } else {
+            document.getElementById('content-pane').innerHTML = '';
+        }
+        window.scrollTo(0, 0);
+    }
+
+    function renderNivel0() {
+        const fila = document.getElementById('pastillas-nivel0');
+        fila.innerHTML = '';
+
+        ARBOL.forEach(nodo => {
+            const wrap = document.createElement('div');
+            wrap.className = 'pastilla-wrap';
+            wrap.dataset.id = nodo.id;
+            const grupo = document.createElement('div');
+            grupo.className = 'pastilla-grupo';
+            const btn = document.createElement('button');
+            btn.className = 'pastilla';
+            btn.textContent = nodo.label;
+            btn.addEventListener('click', () => entrarSeccion(nodo));
+            grupo.appendChild(btn);
+            wrap.appendChild(grupo);
+            fila.appendChild(wrap);
+        });
+    }
+    renderNivel0();
+    document.getElementById('pastillas-nivel1').style.display = 'none';
 
     function mostrarInicio() {
-        document.querySelectorAll('.nodo.activo').forEach(n => n.classList.remove('activo'));
-        document.getElementById('content-pane').innerHTML = `
-            <div class="hero">
-                <h2>Municipalidad de Flores</h2>
-                <p>¡En Flores progresamos juntos! Elegí una sección del menú para comenzar.</p>
-            </div>`;
-        if (window.innerWidth <= 800) {
-            document.getElementById('sidebar').classList.remove('abierta');
-        }
+        document.getElementById('hero-titulo').textContent = TITULO_INICIO;
+        document.getElementById('hero-subtitulo').textContent = SUBTITULO_INICIO;
+        document.getElementById('pastillas-nivel1').innerHTML = '';
+        document.getElementById('pastillas-nivel1').style.display = 'none';
+        document.getElementById('pastillas-nivel0').style.display = 'flex';
+        document.getElementById('content-pane').innerHTML = '';
         window.scrollTo(0, 0);
     }
 
@@ -1234,9 +1487,28 @@ const ARBOL = [
         'https://flores.go.cr/formularios/utgv.php': 'Gestión Vial Inmuebles',
     };
 
-    function renderGaleria(imagenes, circuloVerde) {
+    // Si la página scrapeada repite el título como primera línea del texto
+    // (algo muy común: el sitio real vuelve a poner el título dentro del
+    // cuerpo), lo quitamos automáticamente - el <h2> de arriba ya lo
+    // muestra, así que dejarlo también en el cuerpo es puro duplicado.
+    function quitarLineaDuplicadaDelTitulo(texto, titulo) {
+        const lineas = (texto || '').split('\n');
+        let i = 0;
+        while (i < lineas.length && lineas[i].trim() === '') i++;
+        if (i < lineas.length && titulo && lineas[i].trim().toLowerCase() === titulo.trim().toLowerCase()) {
+            lineas.splice(i, 1);
+        }
+        return lineas.join('\n');
+    }
+
+    // tituloPagina: si la etiqueta/caption de una imagen es idéntica al
+    // título de la página, no la repetimos debajo de la imagen (mismo
+    // criterio de "no duplicar el título" que en el texto).
+    // imagenGrande: para infografías/mapas donde el detalle solo se lee si
+    // la imagen se muestra grande, sin necesitar hacer zoom.
+    function renderGaleria(imagenes, circuloVerde, tituloPagina, imagenGrande) {
         const div = document.createElement('div');
-        div.className = 'galeria';
+        div.className = 'galeria' + (imagenGrande ? ' galeria-grande' : '');
         (imagenes || []).forEach(img => {
             const item = document.createElement('div');
             item.className = 'galeria-item';
@@ -1247,7 +1519,9 @@ const ARBOL = [
                 item.classList.add('boton-icono');
             }
             const etiqueta = ETIQUETAS_MANUALES[img.enlace] || img.alt;
-            if (etiqueta && etiqueta.trim()) {
+            const esDuplicadoDelTitulo = tituloPagina && etiqueta &&
+                etiqueta.trim().toLowerCase() === tituloPagina.trim().toLowerCase();
+            if (etiqueta && etiqueta.trim() && !esDuplicadoDelTitulo) {
                 const cap = document.createElement('span');
                 cap.className = esNavegacion ? 'galeria-caption enlace' : 'galeria-caption';
                 cap.textContent = etiqueta.trim();
@@ -1266,27 +1540,14 @@ const ARBOL = [
     // un ítem de "Municipalidad" que apunta a la sección completa
     // "Transparencia" que vive aparte, en el menú principal). Expande los
     // <ul> ancestros necesarios para que el nodo destino quede visible.
+    // Navegación interna (tipo 'interno'): no se usa activamente hoy, pero
+    // se deja disponible para el futuro. Con el nuevo esquema de pastillas
+    // ya no hay un árbol lateral que expandir - simplemente mostramos el
+    // contenido del nodo destino directamente.
     function irANodo(id) {
         const objetivo = NODOS_POR_ID[id];
-        const divObjetivo = document.querySelector(`[data-id="${id}"]`);
-        if (!objetivo || !divObjetivo) return;
-
-        let li = divObjetivo.closest('li');
-        while (li) {
-            const ulPadre = li.parentElement;
-            if (ulPadre && ulPadre.classList.contains('hijos')) {
-                ulPadre.classList.add('abierta');
-                const liPadre = ulPadre.closest('li');
-                const divPadre = liPadre ? liPadre.querySelector(':scope > .nodo') : null;
-                if (divPadre) divPadre.classList.add('expandido');
-                li = liPadre;
-            } else {
-                li = null;
-            }
-        }
-
-        mostrarNodo(objetivo, divObjetivo);
-        divObjetivo.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        if (!objetivo) return;
+        mostrarNodo(objetivo, null);
     }
 
     async function mostrarNodo(nodo, elementoDiv) {
@@ -1311,6 +1572,7 @@ const ARBOL = [
             case 'especial-directorio': renderDirectorio(pane); break;
             case 'externo': renderExterno(nodo, pane); break;
             case 'descarga': renderDescarga(nodo, pane); break;
+            case 'imagen': renderImagen(nodo, pane); break;
             case 'roto': renderRoto(nodo, pane); break;
             default: renderGrupo(nodo, pane); break;
         }
@@ -1378,7 +1640,7 @@ const ARBOL = [
         if (!pagina) {
             pane.innerHTML = `
                 <h2>${nodo.label}</h2>
-                <p class="aviso">⚠️ No encontramos esta página en los datos scrapeados. Puede que en el
+                <p class="aviso">No encontramos esta página en los datos scrapeados. Puede que en el
                 sitio real esté en una URL distinta a la esperada, o falte volver a scrapearla.</p>`;
             return;
         }
@@ -1415,17 +1677,16 @@ const ARBOL = [
             }
         });
 
-        const galeria = renderGaleria(imagenesGaleria, nodo.circuloVerde);
+        const galeria = renderGaleria(imagenesGaleria, nodo.circuloVerde, nodo.label, nodo.imagenGrande);
         const textoDiv = document.createElement('div');
         textoDiv.className = 'texto-pagina';
-        const hayTexto = !esSoloEtiquetas(pagina.contenido);
+        let contenidoTexto = quitarLineaDuplicadaDelTitulo(pagina.contenido || '', nodo.label);
+        const hayTexto = !esSoloEtiquetas(contenidoTexto);
         if (hayTexto) {
-            let contenidoTexto = pagina.contenido || '';
-            // Opt-in por nodo: algunas páginas repiten el título como primera
-            // línea del texto scrapeado y ESO está bien (ej. "Nivel Político"
-            // se usa a propósito como subtítulo real) - pero en otras es pura
-            // redundancia con el <h2> de arriba. nodo.lineasOmitir permite
-            // sacar esas líneas puntuales solo donde hace falta.
+            // Opt-in por nodo: para casos puntuales donde hace falta sacar
+            // otras líneas de ruido específicas (no el título, que ya se
+            // quita automáticamente arriba). nodo.lineasOmitir permite sacar
+            // esas líneas puntuales solo donde haga falta.
             if (nodo.lineasOmitir && nodo.lineasOmitir.length) {
                 contenidoTexto = contenidoTexto
                     .split('\n')
@@ -1500,19 +1761,32 @@ const ARBOL = [
             </div>`;
     }
 
+    // tipo 'imagen': para contenido corto y simple (ej. un mapa) donde
+    // conviene mostrar la imagen directamente y grande, en vez de forzar
+    // una descarga de PDF. Documentos más largos siguen usando 'descarga'.
+    function renderImagen(nodo, pane) {
+        pane.innerHTML = `
+            <h2>${escapeHtml(nodo.label)}</h2>
+            ${nodo.hrefOriginal ? `<p class="fuente"><a href="${nodo.hrefOriginal}" target="_blank" rel="noopener noreferrer">Ver PDF original ↗</a></p>` : ''}
+            <div class="imagen-grande-wrap">
+                <img src="${nodo.imagen}" alt="${escapeHtml(nodo.label)}">
+            </div>
+            ${nodo.nota ? `<p class="nota" style="text-align:center">${escapeHtml(nodo.nota)}</p>` : ''}`;
+    }
+
     function renderDescarga(nodo, pane) {
         if (nodo.href) {
             pane.innerHTML = `
                 <h2>${nodo.label}</h2>
                 <div class="aviso-descarga">
-                    <p>📄 ${nodo.nota ? escapeHtml(nodo.nota) : 'Este es un documento descargable en el sitio real.'}</p>
+                    <p>${nodo.nota ? escapeHtml(nodo.nota) : 'Este es un documento descargable en el sitio real.'}</p>
                     <a class="boton-externo" href="${nodo.href}" target="_blank" rel="noopener noreferrer">Descargar / Abrir documento ↗</a>
                 </div>`;
         } else {
             pane.innerHTML = `
                 <h2>${nodo.label}</h2>
                 <div class="aviso-descarga">
-                    <p>📄 ${nodo.nota ? escapeHtml(nodo.nota) : 'Este es un documento descargable en el sitio real.'}</p>
+                    <p>${nodo.nota ? escapeHtml(nodo.nota) : 'Este es un documento descargable en el sitio real.'}</p>
                     <p class="nota">Todavía no tenemos el enlace exacto de descarga capturado en nuestros datos.</p>
                 </div>`;
         }
@@ -1527,7 +1801,7 @@ const ARBOL = [
             pane.innerHTML = `
                 <h2>${nodo.label}</h2>
                 <div class="aviso-roto">
-                    <p>⚠️ Todavía no tenemos esta página incorporada en nuestro prototipo.</p>
+                    <p>Todavía no tenemos esta página incorporada en nuestro prototipo.</p>
                     <p class="nota">Sí existe y funciona en el sitio real - la estamos por agregar.</p>
                     <a class="boton-externo" href="${nodo.hrefReal}" target="_blank" rel="noopener noreferrer">Ver en el sitio real ↗</a>
                 </div>`;
@@ -1535,7 +1809,7 @@ const ARBOL = [
             pane.innerHTML = `
                 <h2>${nodo.label}</h2>
                 <div class="aviso-roto">
-                    <p>⚠️ Esta página está actualmente caída o con errores en el sitio real de la Municipalidad.</p>
+                    <p>Esta página está actualmente caída o con errores en el sitio real de la Municipalidad.</p>
                     <p class="nota">No es un problema de nuestro prototipo - lo confirmamos directamente en flores.go.cr.</p>
                 </div>`;
         }
@@ -1545,7 +1819,7 @@ const ARBOL = [
         pane.innerHTML = `
             <h2>${nodo.label}</h2>
             <div class="aviso-grupo">
-                <p>Elegí una opción del menú de la izquierda para ver su contenido.</p>
+                <p>Elegí una opción de arriba para ver su contenido.</p>
                 ${nodo.nota ? `<p class="nota">${escapeHtml(nodo.nota)}</p>` : ''}
             </div>`;
     }
@@ -1560,8 +1834,8 @@ const ARBOL = [
             <div class="grid">
                 <div class="grid-item">
                     <img src="https://dl.dropbox.com/s/p2siexy1t376aiq/Eder.png?dl=0" alt="Alcalde Eder Ramírez">
-                    <h4>👤 Alcalde</h4>
-                    <p><strong>Eder Ramírez</strong><br>📞 Ext. 108 | eramirez@flores.go.cr</p>
+                    <h4>Alcalde</h4>
+                    <p><strong>Eder Ramírez</strong><br>Ext. 108 | eramirez@flores.go.cr</p>
                     <p>Eder José Ramírez Segura, Abogado, de vocación comunalista, Regidor Municipal,
                     Presidente de Asociación de Desarrollo Integral, Vocal 1 en la Unión Cantonal de
                     Asociaciones de Desarrollo de Flores, Presidente del Comité Cantonal de la Persona
@@ -1569,8 +1843,8 @@ const ARBOL = [
                 </div>
                 <div class="grid-item">
                     <img src="https://dl.dropbox.com/scl/fi/1909jlvk7trf56epi7f95/image.png?rlkey=9togkcplg4jpsbr57uk8qnfpd&st=3y57b90y&dl=0" alt="Vicealcaldesa María de los Ángeles Ulate">
-                    <h4>👤 Vicealcaldesa</h4>
-                    <p><strong>María de los Ángeles Ulate</strong><br>📞 Ext. 109 | maulate@flores.go.cr</p>
+                    <h4>Vicealcaldesa</h4>
+                    <p><strong>María de los Ángeles Ulate</strong><br>Ext. 109 | maulate@flores.go.cr</p>
                     <p>María de los Ángeles Ulate Alfaro cuenta con más de 30 años de experiencia en el
                     sector público y en la Municipalidad de Flores. Sus primeros estudios los realizó en
                     el Kinder y Escuela Estados Unidos de América, su secundaria en el Liceo Regional de
@@ -1734,13 +2008,13 @@ const ARBOL = [
 
     function renderContacto(pane) {
         pane.innerHTML = `
-            <h2>📞 Contáctenos</h2>
+            <h2>Contáctenos</h2>
             <p class="fuente"><a href="https://flores.go.cr/contactenos/" target="_blank" rel="noopener noreferrer">Ver en el sitio real ↗</a></p>
             <div class="contacto-box">
-                <p>📍 <strong>Dirección:</strong> Diagonal a la esquina suroeste de la iglesia católica de San Joaquín de Flores</p>
-                <p>📞 <strong>Teléfono:</strong> (506) 2265-7109</p>
-                <p>✉️ <strong>Correo:</strong> info@flores.go.cr</p>
-                <p>🕐 <strong>Horario:</strong> Lunes a viernes de 7:00 a.m. a 3:00 p.m.</p>
+                <p><strong>Dirección:</strong> Diagonal a la esquina suroeste de la iglesia católica de San Joaquín de Flores</p>
+                <p><strong>Teléfono:</strong> (506) 2265-7109</p>
+                <p><strong>Correo:</strong> info@flores.go.cr</p>
+                <p><strong>Horario:</strong> Lunes a viernes de 7:00 a.m. a 3:00 p.m.</p>
             </div>
             <p class="nota">En el sitio real, esta página presenta además un formulario de contacto directo.</p>`;
     }

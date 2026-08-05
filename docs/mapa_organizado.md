@@ -101,14 +101,27 @@ dentro de Municipalidad, o una portada distinta - falta confirmar cuál.
 
 ---
 
-## NOTICIAS Y COMUNICADOS [CONFIRMADO por el usuario: es el blog]
+## NOTICIAS Y COMUNICADOS ✅ CERRADO 2026-08-05 [es el blog institucional]
 
-Es simplemente el listado de posts del blog. Categorías detectadas por scraping propio:
-- Categoría: Cantón de Flores (4 posts)
-- Categoría: Comunicados (3 posts)
-- Categoría: Leyes (sin posts detectados)
-- Categoría: Gestión Ambiental (2 posts, sin confirmar el nombre exacto de la categoría)
-- Categoría: Sin categoría (4 posts)
+Es el listado de posts del blog, agrupado por categoría (mismo patrón que "Gestión Ambiental"
+dentro de Municipalidad: `tipo: 'especial-blog'` + `renderBlog`, posts curados a mano y
+confirmados contra el sitio real vía `web_fetch`). Implementado como nodo padre "Noticias y
+Comunicados" con 6 hijos, uno por categoría real:
+- Sin categoría (3 posts)
+- Cantón de Flores (4 posts)
+- Municipalidad (7 posts) - categoría agregadora del sitio real: incluye posts propios más
+  algunos que también están etiquetados en otras categorías (Comunicados, Gestión Ambiental).
+  Es así en el sitio real, no es un error nuestro - se documentó con una nota en el nodo.
+- Comunicados (3 posts)
+- Gestión Ambiental (3 posts) - misma categoría/mismos posts que "Municipalidad > Gestión
+  Ambiental", repetida acá porque en el sitio real esta sección es accesible desde ambos lugares.
+- Leyes (1 post: "Ley de Movilidad Peatonal")
+
+**Nota sobre desactualización del mapa original:** las categorías y conteos de arriba se
+reconfirmaron completas el 2026-08-05 directo contra el sitio real. Cambiaron respecto a lo
+anotado originalmente (por ejemplo apareció una categoría nueva, "Municipalidad", con 2 posts
+propios que no estaban en ninguna otra categoría) - consistente con la fragilidad/actualización
+activa del sitio real ya documentada en `resumen_para_continuar.md`.
 
 ---
 
