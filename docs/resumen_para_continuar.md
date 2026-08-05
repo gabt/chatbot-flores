@@ -11,6 +11,38 @@ GitHub + GitHub Pages (frontend) + PowerShell (terminal local) + HTML/CSS/JS van
 - GitHub: https://github.com/gabt/chatbot-flores
 - Sitio real: https://flores.go.cr + http://portalmuni.flores.go.cr (portal de actas, sin HTTPS)
 
+## 🚦 PRÓXIMO PASO INMEDIATO (leer esto primero en una sesión nueva)
+El repaso nodo por nodo del sitio real (Municipalidad, Contribuyente, Noticias y Comunicados,
+Contáctenos) quedó 100% cerrado el 2026-08-05 (día 3 de la pasantía). Lo que sigue es un plan de
+trabajo de 7 jornadas (día 4 al día 10), ya detallado con objetivo/alcance técnico/metodología/
+entregable por día en `docs/Tareas-Pendientes.docx`. Resumen rápido de cada día:
+
+- **Día 4** — Cerrar "Planos por APC" (sin implementar todavía, sin decisión tomada), verificar
+  "Salarios Base 2021" (marcado como no probado), y resolver los 6 ítems ambiguos de
+  `mapa_organizado.md` ("Otros ítems del PDF original sin reconciliar todavía").
+- **Día 5** — QA funcional completo de Municipalidad + Contribuyente (~45 nodos), en 2
+  navegadores, comparado contra el sitio real.
+- **Día 6** — QA funcional completo de Noticias y Comunicados + Contáctenos, más integridad
+  referencial del árbol (ids huérfanos, navegación interna) y pruebas del buscador del directorio.
+- **Día 7** — Responsive (3 anchos de viewport) + accesibilidad (alt text, contraste de color,
+  navegación por teclado).
+- **Día 8** — Auditoría de enlaces externos (Dropbox, Drive, CFIA, Contraloría) y contraste de
+  los ~166 URLs de `conocimiento.json` contra el estado actual del sitio real.
+- **Día 9** — README técnico de arquitectura, limpieza/comentado de código, aplicar la decisión
+  de Gerardo sobre `index_prueba.html` (fusionar con el real o archivar) si ya respondió.
+- **Día 10** — Matriz de pruebas formal (tabla con los 80+ nodos del árbol) + regresión final de
+  extremo a extremo + cierre documental.
+
+**Nota de alcance:** por pedido explícito de Jeiron, el "informe final" de la pasantía queda
+fuera de este plan de 7 días - no forma parte del trabajo técnico programado día a día.
+
+**Sobre `index_prueba.html`:** es un rediseño visual experimental completo (hero con foto, menú
+de pastillas en vez de sidebar, paleta cálida, escudo real, sin emojis) que vive en un archivo
+aparte y está pendiente de aprobación de Gerardo Brenes Trejos (tutor) vía GitHub Pages. Todo
+contenido nuevo (Noticias y Comunicados, Directorio ampliado) se replica en ambos archivos a la
+vez para no duplicar trabajo si se aprueba, pero los cambios puramente visuales/de navegación
+siguen existiendo solo ahí hasta que haya una decisión.
+
 ## Arquitectura actual
 - `scraper.py`: recorre ambos dominios, filtra widgets repetidos, cookies, "Leer Contenido",
   404 suaves, corrige URLs con "localhost" mal configuradas; captura src/alt/contexto/enlace
