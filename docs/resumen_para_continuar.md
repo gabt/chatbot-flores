@@ -191,6 +191,15 @@ Estaba roto (`tipo: 'especial-noticias'` sin implementar). Cerrado con el mismo 
 "Gestión Ambiental" (`especial-blog`), 6 categorías, 21 posts curados y confirmados contra el
 sitio real. Ver sección 8 más abajo.
 
+### Estado de "Contáctenos" — 🎉 TERMINADO (2026-08-05)
+El formulario de contacto y los datos básicos (dirección/teléfono/correo/horario) ya estaban
+bien. El Directorio Institucional tenía un gap grande: solo mostraba 8 de ~53 contactos reales.
+Ampliado al directorio completo. Ver sección 9 más abajo.
+
+## 🎉 REPASO NODO POR NODO DEL SITIO REAL — COMPLETO (2026-08-05)
+Con el cierre de Contáctenos, las 4 secciones del menú principal (Municipalidad, Contribuyente,
+Noticias y Comunicados, Contáctenos) quedan revisadas y confirmadas contra el sitio real.
+
 ## Sesión 2026-08-05: PDFs propios, cierre de Contribuyente, Transparencia simplificada
 Resumen de lo trabajado hoy (se omiten a propósito 3 ítems que Jeiron pidió excluir por estar
 ya registrados en otro lado: el arreglo del link de "Solicitud de Artesanos", el cierre del
@@ -323,6 +332,43 @@ categorías.
 **Aplicado en paralelo a `index_prueba.html`** (mismo contenido/estructura, adaptado a su
 render de pastillas en vez de sidebar) - a pedido de Jeiron, para que si Gerardo aprueba el
 rediseño visual no haya que repetir este trabajo de contenido ahí.
+
+### 9. Contáctenos cerrado - Directorio Institucional ampliado (2026-08-05, sesión de cierre)
+Al revisar "Contáctenos" nodo por nodo (la única sección del menú principal que faltaba pasar
+por el repaso formal), se confirmó lo siguiente contra el sitio real vía `web_fetch`:
+
+- **Página "Contáctenos" (`renderContacto`)**: los datos hardcodeados (dirección, teléfono
+  2265-7109, correo info@flores.go.cr, horario lunes a viernes 7am-3pm) ya estaban correctos -
+  confirmados contra el footer del sitio real y contra `/municipalidad/informacion-general`
+  (que es de donde sale el horario). La página real en sí es solo un formulario de contacto
+  (Nombre/Correo/Mensaje), consistente con lo que ya decía la nota del prototipo. Sin cambios.
+
+- **Directorio Institucional (`renderDirectorio`) - GAP GRANDE encontrado y corregido**: el
+  prototipo solo mostraba 8 contactos hardcodeados. El directorio real
+  (`/contactenos/directorio/`) tiene **53 contactos con cargo/nombre/extensión/correo**, más
+  **7 líneas directas adicionales** (fax, WhatsApp de Comunicación, línea general del Concejo,
+  líneas directas de Cementerio/Policía/Gestión Comunal/Inspecciones Constructivas) que no
+  siguen el mismo formato de fila y se separaron en una segunda lista "Otros contactos y líneas
+  directas". Se reconstruyó completo desde el HTML real (confirmado contra `conocimiento.json`,
+  que ya tenía el directorio scrapeado completo pero nunca se conectó al nodo - mismo patrón de
+  "dato ya capturado pero no conectado" que otros casos documentados en sesiones anteriores).
+  Se agregó también un buscador simple (`#directorio-buscar`, filtra por texto en cualquier
+  columna) porque 53 filas es demasiado para escanear a simple vista.
+
+  **Nota de calidad de datos (no es un bug nuestro):** dos filas del directorio real tienen el
+  correo desalineado del nombre de esa fila (Contabilidad/Andrea Arroyo muestra el correo de
+  "lloban", y Proveeduría/Laura Loban muestra el correo de "vbarrantes") - así aparece tal cual
+  en `flores.go.cr`. Se dejó igual (no se "corrigió" adivinando el correo correcto) y se agregó
+  una nota visible en el prototipo explicándolo, para que no se confunda con un error nuestro.
+
+**Verificado con Playwright**: 53 filas cargan en la tabla, el buscador filtra correctamente
+(probado con "Alcaldía" → 3 resultados: Alcaldía, Vicealcaldía y cualquier otra fila que
+contenga el texto), la página de Contáctenos sigue mostrando los datos correctos.
+
+**Aplicado en paralelo a `index_prueba.html`**, mismo criterio que el punto anterior.
+
+Con este cierre, las 4 secciones del menú principal del sitio real (Municipalidad,
+Contribuyente, Noticias y Comunicados, Contáctenos) quedan 100% revisadas nodo por nodo.
 
 ### Pendiente para la próxima sesión
 1. **Detalles estéticos solicitados por Jeiron pero NO implementados todavía en el `index.html`

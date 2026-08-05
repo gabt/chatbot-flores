@@ -1745,21 +1745,101 @@ const ARBOL = [
             <p class="nota">En el sitio real, esta página presenta además un formulario de contacto directo.</p>`;
     }
 
+    const DIRECTORIO = [
+      { cargo: 'Central Telefónica y Denuncias', nombre: '—', ext: '2265-7109', correo: 'info@flores.go.cr' },
+      { cargo: 'Plataforma DIP, Unidad Técnica Vial y Acueducto', nombre: 'Wendy Segura', ext: '102', correo: 'wsegura@flores.go.cr' },
+      { cargo: 'Alcaldía', nombre: 'Eder Ramírez', ext: '108', correo: 'eramirez@flores.go.cr' },
+      { cargo: 'Vicealcaldía', nombre: 'María de los Ángeles Ulate', ext: '109', correo: 'maulate@flores.go.cr' },
+      { cargo: 'Secretaría Alcaldía', nombre: 'Flor María Vargas', ext: '100', correo: 'fvargas@flores.go.cr' },
+      { cargo: 'Dirección Financiera', nombre: 'Wilbeth Apú', ext: '140', correo: 'wapu@flores.go.cr' },
+      { cargo: 'Tesorería', nombre: 'José Vega', ext: '143', correo: 'jvega@flores.go.cr' },
+      { cargo: 'Contabilidad', nombre: 'Alejandra Siezar', ext: '142', correo: 'asiezar@flores.go.cr' },
+      { cargo: 'Contabilidad', nombre: 'Andrea Arroyo', ext: '141', correo: 'lloban@flores.go.cr' },
+      { cargo: 'Dirección Tributaria', nombre: 'Natalia García', ext: '112', correo: 'ngarcia@flores.go.cr' },
+      { cargo: 'Cobros', nombre: 'Andrea Quirós', ext: '110', correo: 'aquiros@flores.go.cr' },
+      { cargo: 'Cobros', nombre: 'Andrea Vargas', ext: '115', correo: 'avargas@flores.go.cr' },
+      { cargo: 'Notificador Municipal', nombre: 'Alejandro Sánchez', ext: '114', correo: 'asanchez@flores.go.cr' },
+      { cargo: 'Bienes Inmuebles', nombre: 'Mario Flores', ext: '111', correo: 'mflores@flores.go.cr' },
+      { cargo: 'Bienes Inmuebles', nombre: 'Ana Cambronero', ext: '116', correo: 'acambronero@flores.go.cr' },
+      { cargo: 'Patentes', nombre: 'Stephanie Mayorga', ext: '113', correo: 'smayorga@flores.go.cr' },
+      { cargo: 'Informática', nombre: 'Juan Carlos Brenes', ext: '120', correo: 'jcbrenes@flores.go.cr' },
+      { cargo: 'Informática', nombre: 'Kris Rojas Fernández', ext: '121', correo: 'krojas@flores.go.cr' },
+      { cargo: 'Dirección Desarrollo Urbano', nombre: 'Oscar Álvarez Muñoz', ext: '160', correo: 'oalvarez@flores.go.cr' },
+      { cargo: 'Arquitecta Municipal', nombre: 'Jane Britt', ext: '162', correo: 'janedisch@flores.go.cr' },
+      { cargo: 'Inspectora Municipal', nombre: 'Marta Cortés', ext: '165', correo: 'mcortes@flores.go.cr' },
+      { cargo: 'Ingeniería / Catastro', nombre: 'Francisco Zumbado', ext: '164', correo: 'fzumbado@flores.go.cr' },
+      { cargo: 'Ventanilla Única', nombre: 'Melissa Vargas', ext: '101', correo: 'mvargas@flores.go.cr' },
+      { cargo: 'Gestión Ambiental', nombre: 'Luis Carlos Sánchez', ext: '166', correo: 'lcsanchez@flores.go.cr' },
+      { cargo: 'Dirección Inversión Pública', nombre: 'Mariel Murillo', ext: '150', correo: 'mmurillo@flores.go.cr' },
+      { cargo: 'Unidad Técnica Gestión Vial', nombre: 'Diego Zamora', ext: '152', correo: 'dzamora@flores.go.cr' },
+      { cargo: 'Acueducto Municipal', nombre: 'Marianela Gómez', ext: '151', correo: 'mgomez@flores.go.cr' },
+      { cargo: 'Acueducto Municipal', nombre: 'Julio Alfaro', ext: '154', correo: 'jalfaro@flores.go.cr' },
+      { cargo: 'Promotora Social', nombre: 'Flor Camacho', ext: '153', correo: 'fcamacho@flores.go.cr' },
+      { cargo: 'Recursos Humanos', nombre: 'Andrés Camacho', ext: '170', correo: 'acamacho@flores.go.cr' },
+      { cargo: 'Recursos Humanos', nombre: 'Ana Lucía Sánchez', ext: '171', correo: 'asanchez@flores.go.cr' },
+      { cargo: 'Comunicación', nombre: 'Carlos Víquez', ext: '173', correo: 'cviquez@flores.go.cr' },
+      { cargo: 'Mensajería', nombre: 'Alexis Alfaro', ext: '172', correo: 'aalfaro@flores.go.cr' },
+      { cargo: 'Proveeduría', nombre: 'Laura Muñoz', ext: '131', correo: 'lnunez@flores.go.cr' },
+      { cargo: 'Proveeduría', nombre: 'Laura Loban', ext: '130', correo: 'vbarrantes@flores.go.cr' },
+      { cargo: 'Bodega', nombre: 'Eduardo Barrantes', ext: '132', correo: 'ebarrantes@flores.go.cr' },
+      { cargo: 'Departamento Legal', nombre: 'Sofía Chacón', ext: '183', correo: 'schacon@flores.go.cr' },
+      { cargo: 'Departamento Legal', nombre: 'Karla Segura', ext: '180', correo: 'ksegura@flores.go.cr' },
+      { cargo: 'Asesora Legal Concejo', nombre: 'María Baldizón', ext: '181', correo: 'mbadizon@flores.go.cr' },
+      { cargo: 'Auditoría Municipal', nombre: 'Marlen Chaves', ext: '185', correo: 'mchaves@flores.go.cr' },
+      { cargo: 'Gestión Comunal', nombre: 'Karolina Salas', ext: '230', correo: 'ofim@flores.go.cr' },
+      { cargo: 'Trabajadora Social', nombre: 'Hazel Luna', ext: '231', correo: 'hluna@flores.go.cr' },
+      { cargo: 'Secretaría Concejo Municipal', nombre: 'Dayana Soto', ext: '200', correo: 'dsoto@flores.go.cr' },
+      { cargo: 'Secretaría Concejo Municipal', nombre: 'Deyanid Muñoz', ext: '201', correo: 'dmunoz@flores.go.cr' },
+      { cargo: 'Secretaría Comisiones', nombre: 'Irma Solano', ext: '202', correo: 'isolano@flores.go.cr' },
+      { cargo: 'Cementerio Municipal', nombre: 'Auxiliadora Hernández', ext: '210', correo: 'ahernandez@flores.go.cr' },
+      { cargo: 'Archivo Municipal', nombre: 'Xiomara Alvarado', ext: '205', correo: 'xalvarado@flores.go.cr' },
+      { cargo: 'Seguridad Ciudadana', nombre: 'Olger Jesús Solano', ext: '190', correo: 'policia@flores.go.cr' },
+      { cargo: 'Policía Municipal de Tránsito', nombre: 'Yuriana Ojeda', ext: '193', correo: 'yojeda@flores.go.cr' },
+      { cargo: 'Policía Municipal', nombre: 'Olger Jesús Solano', ext: '192', correo: 'oficial1@flores.go.cr' },
+      { cargo: 'Policía Municipal (Monitoreo)', nombre: 'Bruce Andrei Cordero', ext: '191', correo: 'monitoreo@flores.go.cr' },
+      { cargo: 'CECUDI', nombre: 'Johanna Ulate', ext: '240', correo: 'cecudi@flores.go.cr' },
+      { cargo: 'Comité de Deportes', nombre: 'Karen Mora', ext: '2265-7549', correo: 'comitedeportesf@gmail.com' },
+    ];
+
+    const DIRECTORIO_RAPIDOS = [
+      { texto: 'Fax Municipalidad', ext: '2265-5652' },
+      { texto: 'WhatsApp Comunicación', ext: '8769-8362', correo: 'comunicacion@flores.go.cr' },
+      { texto: 'Concejo Municipal (línea general)', ext: '200', correo: 'concejo@flores.go.cr' },
+      { texto: 'Cementerio (línea directa)', ext: '8814-1642' },
+      { texto: 'Policía (línea directa)', ext: '8770-3754', correo: 'policia@flores.go.cr' },
+      { texto: 'Gestión Comunal (línea directa)', ext: '8919-3663' },
+      { texto: 'Inspecciones Constructivas (línea directa)', ext: '8814-1643' },
+    ];
+
+    function filtrarDirectorio() {
+        const q = document.getElementById('directorio-buscar').value.trim().toLowerCase();
+        document.querySelectorAll('#directorio-tabla tbody tr').forEach(fila => {
+            const texto = fila.textContent.toLowerCase();
+            fila.style.display = texto.includes(q) ? '' : 'none';
+        });
+    }
+
     function renderDirectorio(pane) {
+        const filas = DIRECTORIO.map(d =>
+            `<tr><td>${escapeHtml(d.cargo)}</td><td>${escapeHtml(d.nombre)}</td><td>${escapeHtml(d.ext)}</td><td>${escapeHtml(d.correo)}</td></tr>`
+        ).join('');
+        const rapidos = DIRECTORIO_RAPIDOS.map(d =>
+            `<li><strong>${escapeHtml(d.texto)}:</strong> ${escapeHtml(d.ext)}${d.correo ? ` · ${escapeHtml(d.correo)}` : ''}</li>`
+        ).join('');
         pane.innerHTML = `
             <h2>Directorio Institucional</h2>
             <p class="fuente"><a href="https://flores.go.cr/contactenos/directorio/" target="_blank" rel="noopener noreferrer">Ver en el sitio real ↗</a></p>
-            <table>
-                <tr><th>Cargo</th><th>Nombre</th><th>Ext.</th><th>Correo</th></tr>
-                <tr><td>Alcaldía</td><td>Eder Ramírez</td><td>108</td><td>eramirez@flores.go.cr</td></tr>
-                <tr><td>Vicealcaldía</td><td>María de los Ángeles Ulate</td><td>109</td><td>maulate@flores.go.cr</td></tr>
-                <tr><td>Dirección Financiera</td><td>Wilbeth Apú</td><td>140</td><td>wapu@flores.go.cr</td></tr>
-                <tr><td>Tesorería</td><td>José Vega</td><td>143</td><td>jvega@flores.go.cr</td></tr>
-                <tr><td>Dirección Tributaria</td><td>Natalia García</td><td>112</td><td>ngarcia@flores.go.cr</td></tr>
-                <tr><td>Bienes Inmuebles</td><td>Mario Flores</td><td>111</td><td>mflores@flores.go.cr</td></tr>
-                <tr><td>Plataforma DIP</td><td>Wendy Segura</td><td>102</td><td>wsegura@flores.go.cr</td></tr>
-                <tr><td>Secretaría Alcaldía</td><td>Flor María Vargas</td><td>100</td><td>fvargas@flores.go.cr</td></tr>
-            </table>`;
+            <input type="text" id="directorio-buscar" placeholder="Buscar por nombre o departamento..." oninput="filtrarDirectorio()"
+                style="width:100%;box-sizing:border-box;padding:10px 14px;margin-bottom:14px;border:1px solid #ccc;border-radius:6px;font-size:0.95rem;">
+            <table id="directorio-tabla">
+                <thead><tr><th>Cargo</th><th>Nombre</th><th>Ext.</th><th>Correo</th></tr></thead>
+                <tbody>${filas}</tbody>
+            </table>
+            <p class="nota">Dos filas del directorio real (Contabilidad/Andrea Arroyo y Proveeduría/Laura Loban) muestran un
+            correo que no corresponde al nombre de esa fila - así aparece en el sitio real (flores.go.cr), no es un error
+            de este prototipo.</p>
+            <h3 style="margin-top:28px">Otros contactos y líneas directas</h3>
+            <ul>${rapidos}</ul>`;
     }
 
     /* =========================================================

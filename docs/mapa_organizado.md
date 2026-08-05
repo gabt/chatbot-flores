@@ -45,12 +45,13 @@ dentro de Municipalidad, o una portada distinta - falta confirmar cuál.
 - Marco Normativo — /municipalidad/marco-normativo/
   - Documentación (leyes/reglamentos) — /marco-normativo/documentacion/
   - Plan Regulador de Flores (⚠️ TAMBIÉN referenciado desde Contribuyente>Servicios, mismo URL) — /contribuyente/plan-regulador-de-flores/
-- Transparencia (link de salida a herramienta/sección separada) — /transparencia/
-  - (ver detalle de sub-ítems más abajo, sección "TRANSPARENCIA - a reconciliar")
+- Transparencia (✅ desde 2026-08-05 es un solo link de salida, ya no un submenú - ver sección
+  "TRANSPARENCIA" más abajo) — /transparencia_accesibilidad/
 - Planes y Proyectos — /municipalidad/planes-y-proyectos/
   - Plan Anual Operativo (PDF vía Drive)
-  - Plan de Desarrollo Urbano Cantonal (⚠️ enlace roto)
-  - Plan de Conservación y Desarrollo Vial (PDF vía Dropbox)
+  - Plan de Desarrollo Urbano Cantonal (✅ resuelto 2026-08-05: es el mismo PDF que "Plan de
+    Desarrollo Humano Local" - el sitio real usa una etiqueta distinta para el mismo archivo)
+  - Plan de Conservación y Desarrollo Vial (PDF vía Dropbox, sin cambios)
   - Plan Regulador (repite enlaces de Marco Normativo)
 - Gestión Ambiental (imágenes con links a entradas de blog) — /category/municipalidad/gestion-ambiental/
 - Recursos Humanos (funcionarios, complementos salariales, escalafón, OMIL) — /municipalidad/recursos-humanos/
@@ -75,11 +76,12 @@ dentro de Municipalidad, o una portada distinta - falta confirmar cuál.
     - Certificaciones de Registro (lista de precios) — /contribuyente/servicios/certificaciones-de-registro/
   - Mapa Catastral del Cantón (SIG navegable) — /contribuyente/servicios/mapa-del-canton/
   - Plan Regulador de Flores — /contribuyente/plan-regulador-de-flores/
-    - Mapa de Zonificación (⚠️ CAÍDO) — /flores/zonificac-actul-prf/
-  - Plan Cantonal de Desarrollo Humano Local (PDF vía Dropbox)
-  - Recolección de desechos y reciclaje (⚠️ dando error) — /contribuyente/servicios/recoleccion-de-desechos/
+    - Mapa de Zonificación (✅ resuelto 2026-08-05: PDF propio subido por Jeiron, ya no depende
+      del link caído del sitio real) — /flores/zonificac-actul-prf/
+  - Plan Cantonal de Desarrollo Humano Local (✅ PDF propio desde 2026-08-05, ya no depende de Dropbox)
+  - Recolección de desechos y reciclaje (✅ funciona correctamente, contenido real conectado) — /contribuyente/servicios/recoleccion-de-desechos/
 - Pago en línea
-  - Calendario de pagos (⚠️ CAÍDO) — /contribuyente/calendario-de-pagos/
+  - Calendario de pagos (✅ funciona correctamente, contenido real conectado) — /contribuyente/calendario-de-pagos/
 - Preguntas Frecuentes (✅ CERRADO 2026-08-05, submenú con 6 categorías) — /contribuyente/preguntas/
   - Bienes Inmuebles — /rfw/Frecuentes/bienes.html
   - Acueducto — /rfw/Frecuentes/Acueducto.html
@@ -90,14 +92,20 @@ dentro de Municipalidad, o una portada distinta - falta confirmar cuál.
     /contribuyente/preguntas/patentes/, vacía; contenido real en esta URL secundaria)
   - Catastro — /rfw/Frecuentes/catastro.html
   - Gestión de Cobros — /contribuyente/cobros
-- Amnistía Tributaria (PDF vía Dropbox)
+- Amnistía Tributaria (✅ PDF propio desde 2026-08-05, ya no depende de Dropbox)
 
 ---
 
-## CONTÁCTENOS ▾ [CONFIRMADO - detalle completo del usuario]
+## CONTÁCTENOS ▾ ✅ CERRADO 2026-08-05 [CONFIRMADO - detalle completo del usuario]
 
-- (página principal: formulario de consultas) — /contactenos/
-- Directorio Institucional (cargo, nombre, teléfono, correo) — /contactenos/directorio/
+- (página principal: formulario de consultas, Nombre/Correo/Mensaje) — /contactenos/
+- Directorio Institucional — /contactenos/directorio/
+  **✅ Ampliado 2026-08-05**: el prototipo solo tenía 8 de 53 contactos reales. Ahora muestra
+  el directorio completo (53 filas cargo/nombre/ext/correo) más 7 líneas directas adicionales
+  (fax, WhatsApp, Concejo, Cementerio, Policía, Gestión Comunal, Inspecciones Constructivas) en
+  una lista aparte, y un buscador simple para filtrar por texto. Dos filas del directorio real
+  tienen el correo desalineado del nombre (Contabilidad/Andrea Arroyo y Proveeduría/Laura Loban)
+  - es así en el sitio real, no un error nuestro; se dejó una nota visible explicándolo.
 
 ---
 
@@ -125,7 +133,18 @@ activa del sitio real ya documentada en `resumen_para_continuar.md`.
 
 ---
 
-## TRANSPARENCIA ▾ [CONFIRMADO - detalle completo del usuario]
+## TRANSPARENCIA ▾ ✅ SIMPLIFICADO 2026-08-05 - un solo link, no un submenú
+
+**Estado actual real (lo que hoy está implementado en `index.html`):** un único nodo
+"Transparencia", tipo `externo`, dentro del dropdown de Municipalidad, apuntando a
+`https://flores.go.cr/transparencia_accesibilidad/`. NO existe un submenú de Transparencia con
+sub-ítems - eso se probó en una sesión anterior y se revirtió por decisión de Jeiron (ver
+`resumen_para_continuar.md`, sección "Transparencia: se probó embeber contenido real, pero se
+revirtió a un solo link").
+
+<details>
+<summary>Detalle histórico (arquitectura que se probó y NO se usa - dejado solo como referencia
+si en el futuro se retoma la idea de contenido embebido)</summary>
 
 Es la integración de una herramienta interinstitucional del "Índice de Transparencia"
 promovida por la Defensoría de los Habitantes de Costa Rica (de ahí el diseño y estilo
@@ -137,12 +156,12 @@ de menú totalmente distinto al resto del sitio). Menú principal — /transpare
   mismo sitio - patrón repetido en varios de los submenús siguientes)
   - Información del personal Institucional — /transparencia/infpersonal.php
   - Procesos de Contratación — /transparencia/pcontratacion.php
-  - Servicios y Procesos Institucionales (⚠️ mismo URL que Contribuyente>Servicios) — /contribuyente/servicios/
+  - Servicios y Procesos Institucionales (mismo URL que Contribuyente>Servicios) — /contribuyente/servicios/
 - Rendición de cuentas — /transparencia/rcuentas.php
   - Informes Institucionales — /transparencia/informe.php
   - Presupuesto Municipal — /transparencia/presupuesto-municipal/
-  - Toma de Decisiones (⚠️ mismo URL que Municipalidad>Concejo>Actas del Concejo) — portalmuni.flores.go.cr/actas/bgeneral.php
-  - Planes y Cumplimiento (⚠️ mismo URL que Municipalidad>Planes y Proyectos) — /municipalidad/planes-y-proyectos/
+  - Toma de Decisiones (mismo URL que Municipalidad>Concejo>Actas del Concejo) — portalmuni.flores.go.cr/actas/bgeneral.php
+  - Planes y Cumplimiento (mismo URL que Municipalidad>Planes y Proyectos) — /municipalidad/planes-y-proyectos/
 - Participación ciudadana (formulario) — /transparencia/pciudadana.php
 - Datos Abiertos — /transparencia/dabiertos.php
   - Presupuesto público — /transparencia/ppublicos.php
@@ -150,6 +169,8 @@ de menú totalmente distinto al resto del sitio). Menú principal — /transpare
   - Contratación administrativa — /transparencia/SICOP.php
 - Red de Transparencia (info sobre la red interinstitucional de la Defensoría, estilo
   de menú distinto) — /transparencia/preguntas.php
+
+</details>
 
 ## CANTÓN DE FLORES [RESUELTO]
 Vive en la barra secundaria de accesos rápidos (ver arriba), no dentro del dropdown
