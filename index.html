@@ -694,12 +694,12 @@ const ARBOL = [
           { id: 'plan-regulador-mn', label: 'Plan Regulador de Flores', tipo: 'contenido', url: 'plan-regulador-de-flores', galeriaAlFinal: true, lineasOmitir: ['Plan Regulador de Flores'] },
         ]
       },
-      { id: 'transparencia-link', label: 'Transparencia', tipo: 'externo', href: 'https://flores.go.cr/transparencia/', nota: 'Ver la sección completa "Transparencia" más abajo en este menú' },
+      { id: 'transparencia-link', label: 'Transparencia', tipo: 'externo', href: 'https://flores.go.cr/transparencia_accesibilidad/' },
       {
         id: 'planes-proyectos', label: 'Planes y Proyectos', tipo: 'contenido', url: 'planes-y-proyectos',
         children: [
           { id: 'pao', label: 'Plan Anual Operativo', tipo: 'descarga', nota: 'Documento descargable desde Google Drive', href: 'https://drive.google.com/file/d/1-kh8ur1aMGwosVo6fTuWgu6f-PjGMwIw/view?usp=sharing' },
-          { id: 'pduc', label: 'Plan de Desarrollo Urbano Cantonal', tipo: 'roto' },
+          { id: 'pduc', label: 'Plan de Desarrollo Urbano Cantonal', tipo: 'descarga', nota: 'PDF (mismo documento que "Plan de Desarrollo Humano Local", el sitio real usa esta otra etiqueta para el mismo archivo)', href: 'pdfs/plan-desarrollo-humano-local.pdf' },
           { id: 'pcdv', label: 'Plan de Conservación y Desarrollo Vial', tipo: 'descarga', nota: 'PDF descargable desde Dropbox', href: 'https://dl.dropbox.com/scl/fi/i1vkcfsock7473fohesv1/Documento-PVQCD-FLORES-2022-2026.pdf?rlkey=q06mpjo5gw6znpwocv1xhj4d2&st=rrenvliq&dl=0' },
           { id: 'plan-regulador-pp', label: 'Plan Regulador', tipo: 'contenido', url: 'plan-regulador-de-flores', galeriaAlFinal: true, lineasOmitir: ['Plan Regulador de Flores'] },
         ]
@@ -748,12 +748,12 @@ const ARBOL = [
           {
             id: 'formularios', label: 'Formularios', tipo: 'contenido', url: 'formularios', circuloVerde: true,
             children: [
-              { id: 'form-acueducto', label: 'Acueducto', tipo: 'externo', href: 'https://flores.go.cr/formularios/acueducto.php' },
+              { id: 'form-acueducto', label: 'Acueducto', tipo: 'contenido', url: 'formularios/acueducto.php' },
               { id: 'form-catastro', label: 'Catastro', tipo: 'externo', href: 'https://flores.go.cr/formularios/catastro.php', nota: '4 formularios' },
               { id: 'form-planificacion', label: 'Planificación Urbana', tipo: 'externo', href: 'https://flores.go.cr/formularios/planificacion.php', nota: '7 formularios descargables' },
               { id: 'form-patentes', label: 'Patentes Municipales', tipo: 'externo', href: 'https://flores.go.cr/formularios/patentes.php', nota: '5 formularios' },
-              { id: 'form-bienes', label: 'Bienes Inmuebles', tipo: 'externo', href: 'https://flores.go.cr/formularios/bienes.php', nota: '7 formularios' },
-              { id: 'form-utgv', label: 'Gestión Vial Inmuebles', tipo: 'externo', href: 'https://flores.go.cr/formularios/utgv.php', nota: '1 formulario' },
+              { id: 'form-bienes', label: 'Bienes Inmuebles', tipo: 'contenido', url: 'formularios/bienes.php' },
+              { id: 'form-utgv', label: 'Gestión Vial Inmuebles', tipo: 'contenido', url: 'formularios/utgv.php' },
             ]
           },
           {
@@ -780,7 +780,7 @@ const ARBOL = [
           { id: 'calendario-pagos', label: 'Calendario de pagos', tipo: 'contenido', url: 'calendario-de-pagos' },
         ]
       },
-      { id: 'preguntas-frecuentes', label: 'Preguntas Frecuentes', tipo: 'roto' },
+      { id: 'preguntas-frecuentes', label: 'Preguntas Frecuentes', tipo: 'roto', hrefReal: 'https://flores.go.cr/contribuyente/preguntas/' },
       { id: 'amnistia-tributaria', label: 'Amnistía Tributaria', tipo: 'descarga', nota: 'PDF (Acuerdo Municipal MF-CM-SEC-AC-1629-122-21, Plan de Condonación)', href: 'pdfs/amnistia-tributaria.pdf' },
     ]
   },
@@ -808,43 +808,21 @@ const ARBOL = [
       { id: 'cecudi', label: 'CECUDI', tipo: 'contenido', url: 'cuido-y-desarrollo-infantil' },
     ]
   },
-  {
-    id: 'transparencia', label: 'Transparencia',
-    nota: 'Herramienta interinstitucional (Defensoría de los Habitantes de Costa Rica), diseño distinto al resto del sitio',
-    children: [
-      { id: 'acceso-informacion', label: 'Acceso a la Información', tipo: 'externo', href: 'https://flores.go.cr/transparencia/acinfo.php' },
-      {
-        id: 'info-institucional-t', label: 'Información Institucional', tipo: 'externo', href: 'https://flores.go.cr/transparencia/infinst.php',
-        children: [
-          { id: 'info-personal', label: 'Información del personal Institucional', tipo: 'externo', href: 'https://flores.go.cr/transparencia/infpersonal.php' },
-          { id: 'procesos-contratacion', label: 'Procesos de Contratación', tipo: 'externo', href: 'https://flores.go.cr/transparencia/pcontratacion.php' },
-          { id: 'servicios-procesos', label: 'Servicios y Procesos Institucionales', tipo: 'contenido', url: 'contribuyente/servicios' },
-        ]
-      },
-      {
-        id: 'rendicion-cuentas', label: 'Rendición de cuentas', tipo: 'externo', href: 'https://flores.go.cr/transparencia/rcuentas.php',
-        children: [
-          { id: 'informes-institucionales', label: 'Informes Institucionales', tipo: 'externo', href: 'https://flores.go.cr/transparencia/informe.php' },
-          { id: 'presupuesto-municipal', label: 'Presupuesto Municipal', tipo: 'contenido', url: 'presupuesto-municipal' },
-          { id: 'toma-decisiones', label: 'Toma de Decisiones', tipo: 'especial-actas', url: 'bgeneral.php' },
-          { id: 'planes-cumplimiento', label: 'Planes y Cumplimiento', tipo: 'contenido', url: 'planes-y-proyectos' },
-        ]
-      },
-      { id: 'participacion-ciudadana', label: 'Participación ciudadana', tipo: 'externo', href: 'https://flores.go.cr/transparencia/pciudadana.php', nota: 'Formulario' },
-      {
-        id: 'datos-abiertos', label: 'Datos Abiertos', tipo: 'externo', href: 'https://flores.go.cr/transparencia/dabiertos.php',
-        children: [
-          { id: 'presupuesto-publico', label: 'Presupuesto público', tipo: 'externo', href: 'https://flores.go.cr/transparencia/ppublicos.php' },
-          { id: 'ejecucion-presupuesto', label: 'Ejecución del presupuesto', tipo: 'externo', href: 'https://cgrweb.cgr.go.cr/apex/f?p=150200:17:::::P17_COD_INST:3014042091', nota: 'Sitio de la Contraloría General de la República' },
-          { id: 'contratacion-admin', label: 'Contratación administrativa', tipo: 'externo', href: 'https://flores.go.cr/transparencia/SICOP.php' },
-        ]
-      },
-      { id: 'red-transparencia', label: 'Red de Transparencia', tipo: 'externo', href: 'https://flores.go.cr/transparencia/preguntas.php' },
-    ]
-  },
   { id: 'noticias', label: 'Noticias y Comunicados', tipo: 'especial-noticias' },
 ];
 
+
+    /* =========================================================
+       MAPA id -> nodo (para navegación interna, tipo 'interno')
+       ========================================================= */
+    const NODOS_POR_ID = {};
+    function indexarNodos(lista) {
+        lista.forEach(n => {
+            NODOS_POR_ID[n.id] = n;
+            if (n.children && n.children.length) indexarNodos(n.children);
+        });
+    }
+    indexarNodos(ARBOL);
 
     /* =========================================================
        CONSTRUCCIÓN DEL ÁRBOL EN EL DOM
@@ -853,6 +831,7 @@ const ARBOL = [
         const li = document.createElement('li');
         const div = document.createElement('div');
         div.className = 'nodo nivel-' + nivel;
+        div.dataset.id = nodo.id;
 
         const tieneHijos = !!(nodo.children && nodo.children.length);
         const flecha = document.createElement('span');
@@ -1092,7 +1071,40 @@ const ARBOL = [
     /* =========================================================
        RENDERIZADORES POR TIPO DE NODO
        ========================================================= */
+    // nodo.tipo === 'interno': en vez de redirigir afuera del prototipo,
+    // salta a otro nodo que YA existe en nuestro propio árbol (por ejemplo,
+    // un ítem de "Municipalidad" que apunta a la sección completa
+    // "Transparencia" que vive aparte, en el menú principal). Expande los
+    // <ul> ancestros necesarios para que el nodo destino quede visible.
+    function irANodo(id) {
+        const objetivo = NODOS_POR_ID[id];
+        const divObjetivo = document.querySelector(`[data-id="${id}"]`);
+        if (!objetivo || !divObjetivo) return;
+
+        let li = divObjetivo.closest('li');
+        while (li) {
+            const ulPadre = li.parentElement;
+            if (ulPadre && ulPadre.classList.contains('hijos')) {
+                ulPadre.classList.add('abierta');
+                const liPadre = ulPadre.closest('li');
+                const divPadre = liPadre ? liPadre.querySelector(':scope > .nodo') : null;
+                if (divPadre) divPadre.classList.add('expandido');
+                li = liPadre;
+            } else {
+                li = null;
+            }
+        }
+
+        mostrarNodo(objetivo, divObjetivo);
+        divObjetivo.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
+
     async function mostrarNodo(nodo, elementoDiv) {
+        if (nodo.tipo === 'interno') {
+            irANodo(nodo.destino);
+            return;
+        }
+
         document.querySelectorAll('.nodo.activo').forEach(n => n.classList.remove('activo'));
         if (elementoDiv) elementoDiv.classList.add('activo');
 
@@ -1278,12 +1290,23 @@ const ARBOL = [
     }
 
     function renderExterno(nodo, pane) {
+        let esSitioMunicipal = false;
+        try {
+            const host = new URL(nodo.href).hostname.toLowerCase();
+            esSitioMunicipal = host === 'flores.go.cr' || host.endsWith('.flores.go.cr');
+        } catch (e) { /* href inválido o relativo: tratamos como no-municipal por seguridad */ }
+
+        const mensaje = esSitioMunicipal
+            ? 'Esta información SÍ es parte del sitio real de la Municipalidad de Flores - vive en otra sección de flores.go.cr que todavía no incorporamos dentro de este prototipo.'
+            : 'Este contenido vive en un sistema de otra institución (no es parte del sitio flores.go.cr).';
+        const textoBoton = esSitioMunicipal ? 'Ver esta sección en flores.go.cr ↗' : 'Abrir el sistema externo ↗';
+
         pane.innerHTML = `
             <h2>${nodo.label}</h2>
             <div class="aviso-externo">
-                <p>Este contenido vive en una página o sistema externo del sitio real.</p>
+                <p>${mensaje}</p>
                 ${nodo.nota ? `<p class="nota">${escapeHtml(nodo.nota)}</p>` : ''}
-                <a class="boton-externo" href="${nodo.href}" target="_blank" rel="noopener noreferrer">Abrir en el sitio real ↗</a>
+                <a class="boton-externo" href="${nodo.href}" target="_blank" rel="noopener noreferrer">${textoBoton}</a>
             </div>`;
     }
 
@@ -1306,12 +1329,26 @@ const ARBOL = [
     }
 
     function renderRoto(nodo, pane) {
-        pane.innerHTML = `
-            <h2>${nodo.label}</h2>
-            <div class="aviso-roto">
-                <p>⚠️ Esta página está actualmente caída o con errores en el sitio real de la Municipalidad.</p>
-                <p class="nota">No es un problema de nuestro prototipo - lo confirmamos directamente en flores.go.cr.</p>
-            </div>`;
+        if (nodo.hrefReal) {
+            // Caso especial: la página SÍ funciona en el sitio real, pero
+            // todavía no la tenemos scrapeada/curada en nuestro prototipo
+            // (pendiente de incorporar). Mostramos el botón igual para que
+            // se pueda verificar el contenido real mientras se resuelve.
+            pane.innerHTML = `
+                <h2>${nodo.label}</h2>
+                <div class="aviso-roto">
+                    <p>⚠️ Todavía no tenemos esta página incorporada en nuestro prototipo.</p>
+                    <p class="nota">Sí existe y funciona en el sitio real - la estamos por agregar.</p>
+                    <a class="boton-externo" href="${nodo.hrefReal}" target="_blank" rel="noopener noreferrer">Ver en el sitio real ↗</a>
+                </div>`;
+        } else {
+            pane.innerHTML = `
+                <h2>${nodo.label}</h2>
+                <div class="aviso-roto">
+                    <p>⚠️ Esta página está actualmente caída o con errores en el sitio real de la Municipalidad.</p>
+                    <p class="nota">No es un problema de nuestro prototipo - lo confirmamos directamente en flores.go.cr.</p>
+                </div>`;
+        }
     }
 
     function renderGrupo(nodo, pane) {
@@ -1329,6 +1366,7 @@ const ARBOL = [
     function renderAlcaldia(pane) {
         pane.innerHTML = `
             <h2>Alcaldía Municipal</h2>
+            <p class="fuente"><a href="https://flores.go.cr/alcaldia-municipal/" target="_blank" rel="noopener noreferrer">Ver en el sitio real ↗</a></p>
             <div class="grid">
                 <div class="grid-item">
                     <img src="https://dl.dropbox.com/s/p2siexy1t376aiq/Eder.png?dl=0" alt="Alcalde Eder Ramírez">
@@ -1507,6 +1545,7 @@ const ARBOL = [
     function renderContacto(pane) {
         pane.innerHTML = `
             <h2>📞 Contáctenos</h2>
+            <p class="fuente"><a href="https://flores.go.cr/contactenos/" target="_blank" rel="noopener noreferrer">Ver en el sitio real ↗</a></p>
             <div class="contacto-box">
                 <p>📍 <strong>Dirección:</strong> Diagonal a la esquina suroeste de la iglesia católica de San Joaquín de Flores</p>
                 <p>📞 <strong>Teléfono:</strong> (506) 2265-7109</p>
@@ -1519,6 +1558,7 @@ const ARBOL = [
     function renderDirectorio(pane) {
         pane.innerHTML = `
             <h2>Directorio Institucional</h2>
+            <p class="fuente"><a href="https://flores.go.cr/contactenos/directorio/" target="_blank" rel="noopener noreferrer">Ver en el sitio real ↗</a></p>
             <table>
                 <tr><th>Cargo</th><th>Nombre</th><th>Ext.</th><th>Correo</th></tr>
                 <tr><td>Alcaldía</td><td>Eder Ramírez</td><td>108</td><td>eramirez@flores.go.cr</td></tr>
