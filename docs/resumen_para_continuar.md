@@ -568,6 +568,36 @@ inmuebles", puede no matchear). Si en el futuro hace falta mejor precisión, el 
 sería retrieval semántico con embeddings (más preciso con paráfrasis, pero agrega costo y una
 dependencia nueva) - no fue necesario hoy.
 
+### 9. INCIDENTE 2026-08-06 (mismo día, después del primer push): el chat quedó CAÍDO en producción
+Jeiron hizo `git push` del `app.py` nuevo y Render lo desplegó, pero el chat dejó de responder por
+completo en `index.html` Y `index_prueba.html` - hasta preguntas básicas como "quién es el
+alcalde" (que funcionaban antes de hoy). Diagnóstico hecho en conjunto con Jeiron desde su
+PowerShell (`Invoke-RestMethod` con `try/catch` leyendo `$_.Exception.Response` para sacar el
+cuerpo del error, porque PowerShell esconde el body en errores HTTP por defecto):
+
+```
+{"error":"Error al consultar la API de Claude: Error code: 400 - {'type': 'error', 'error':
+{'type': 'invalid_request_error', 'message': 'tools.0.web_search_20250305: Country code CR is
+not supported.'}}"}
+```
+
+**Causa:** se había agregado `user_location: {..., "country": "CR"}` a la herramienta de búsqueda
+web para sesgar resultados a Costa Rica, pero la API no soporta ese código de país - y como la
+herramienta de búsqueda viaja en TODOS los mensajes (no solo los externos), esto tumbaba el 100%
+de las preguntas, no solo las que necesitaban buscar. **Arreglo:** se quitó el bloque
+`user_location` completo de `app.py` (quedó documentado con un comentario en el código explicando
+por qué). Verificado localmente de la misma forma que antes (llamada con API key inválida): volvió
+a dar 401 (autenticación) en vez de 400 (formato inválido), confirmando que el payload ya es
+válido. Pendiente: Jeiron vuelve a hacer `git add`/`commit`/`push` de este `app.py` corregido y
+prueba de nuevo con el mismo `Invoke-RestMethod` antes de dar por cerrado el tema.
+
+**Lección para la próxima vez que se toque `app.py`:** antes de pedirle a Jeiron que haga push,
+probar TODOS los parámetros nuevos (no solo la forma general del payload) contra la documentación
+oficial o con más cuidado - el error de "country CR no soportado" se pudo haber evitado
+verificando la lista de países soportados antes, en vez de asumir que cualquier código ISO de
+2 letras funciona. Si en el futuro se quiere volver a sesgar la búsqueda a Costa Rica, investigar
+primero qué códigos de país acepta `user_location` antes de agregarlo de nuevo.
+
 ## Limitación conocida, aceptada por ahora (posible mejora futura)
 Las listas ANIDADAS del sitio real (ítem padre con sub-ítems debajo, y la lista sigue en el
 mismo nivel después) se muestran como lista PLANA en nuestro prototipo, sin la jerarquía real -

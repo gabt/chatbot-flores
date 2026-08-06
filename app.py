@@ -163,12 +163,13 @@ def chat():
                     # Tope de búsquedas por pregunta, para no disparar el costo
                     # ($0.01 por búsqueda + tokens de los resultados).
                     "max_uses": 3,
-                    "user_location": {
-                        "type": "approximate",
-                        "city": "Heredia",
-                        "region": "Heredia",
-                        "country": "CR",
-                    },
+                    # NOTA 2026-08-06: se había agregado "user_location" con
+                    # country: "CR" para sesgar resultados a Costa Rica, pero
+                    # la API respondió "Country code CR is not supported" y
+                    # eso tumbaba TODAS las preguntas (no solo las externas),
+                    # porque esta herramienta viaja en cada mensaje. Se quita
+                    # por ahora; ver si el proyecto quiere investigar qué
+                    # códigos de país sí soporta antes de volver a intentarlo.
                 }
             ],
         )
