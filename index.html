@@ -366,24 +366,31 @@
         display: block; margin: 0 auto 10px;
     }
 
-    /* Medios de pago (Contribuyente > Pago en línea): filas con imagen chica
-       a la izquierda y nombre del banco a la derecha, fila completa clickeable
-       cuando hay link real. "Pago directo" no tiene link (aún no existe ese
-       servicio), se muestra atenuado con una nota aclaratoria debajo. */
-    .medios-pago { display: flex; flex-direction: column; gap: 14px; margin-top: 20px; max-width: 440px; }
+    /* Medios de pago (Contribuyente > Pago en línea): imagen grande y suelta a
+       la izquierda (fuera de cualquier caja, para que se vea y lea bien), y a
+       la derecha una caja con fondo de color que contiene solo el nombre del
+       banco + nota. Fila completa clickeable cuando hay link real. "Pago
+       directo" no tiene link (aún no existe ese servicio), se muestra
+       atenuado con una nota aclaratoria debajo del nombre. */
+    .medios-pago-wrap { max-width: 560px; margin: 12px auto 0; }
+    .medios-pago-wrap > p { text-align: center; }
+    .medios-pago { display: flex; flex-direction: column; gap: 24px; margin-top: 20px; }
     .medio-pago-item {
-        display: flex; align-items: center; gap: 16px;
-        background: #eaf4fb; border-radius: 8px; padding: 14px 18px;
-        border-left: 4px solid #2e86c1; text-decoration: none; color: inherit;
+        display: flex; align-items: center; gap: 20px;
+        text-decoration: none; color: inherit;
+    }
+    .medio-pago-item img { width: 185px; height: 185px; object-fit: contain; flex-shrink: 0; }
+    .medio-pago-caja {
+        flex: 1; max-width: 360px;
+        background: #eaf4fb; border-radius: 8px; padding: 14px 20px;
+        border-left: 4px solid #2e86c1;
         transition: background 0.15s;
     }
-    a.medio-pago-item:hover { background: #d7ecfa; }
-    .medio-pago-pendiente { border-left-color: #b0b0b0; opacity: 0.85; cursor: default; }
-    .medio-pago-item img { width: 56px; height: 56px; object-fit: contain; flex-shrink: 0; }
-    .medio-pago-texto { display: flex; flex-direction: column; }
-    .medio-pago-nombre { font-weight: bold; font-size: 1.05rem; color: #1a5276; }
+    a.medio-pago-item:hover .medio-pago-caja { background: #d7ecfa; }
+    .medio-pago-pendiente .medio-pago-caja { border-left-color: #b0b0b0; opacity: 0.85; }
+    .medio-pago-nombre { display: block; font-weight: bold; font-size: 1.4rem; color: #1a5276; }
     .medio-pago-pendiente .medio-pago-nombre { color: #555; }
-    .medio-pago-nota { font-size: 0.78rem; color: #888; margin-top: 2px; }
+    .medio-pago-nota { display: block; font-size: 0.8rem; color: #888; margin-top: 3px; }
 
     table {
         width: 100%;
@@ -820,7 +827,7 @@ const ARBOL = [
             // de construir uno desde cero.
             id: 'medios-pago', label: 'Medios de pago', tipo: 'especial-pago',
             medios: [
-              { nombre: 'BCR', imagen: 'assets/logo-bcr.png', href: 'https://www.bancobcr.com/wps/portal/bcr' },
+              { nombre: 'Banco de Costa Rica', imagen: 'assets/logo-bcr.png', href: 'https://www.bancobcr.com/wps/portal/bcr' },
               { nombre: 'Banco Nacional', imagen: 'assets/logo-bncr.png', href: 'https://www.bncr.fi.cr/' },
               { nombre: 'Pago directo', imagen: 'assets/logo-muni-mejorado.png', nota: '(Estamos trabajando para hacerlo posible)' },
             ]
@@ -1767,7 +1774,10 @@ const ARBOL = [
     // "Pago directo" no tiene 'href' (ese servicio propio de la municipalidad
     // aún no existe) - se renderiza sin <a>, atenuado, con nota aclaratoria.
     function renderMediosPago(nodo, pane) {
-        pane.innerHTML = `<h2>${nodo.label}</h2><p>Seleccione el banco con el que desea realizar su pago.</p>`;
+        pane.innerHTML = `<h2>${nodo.label}</h2>`;
+        const wrap = document.createElement('div');
+        wrap.className = 'medios-pago-wrap';
+        wrap.innerHTML = '<p>Seleccione el medio por el que desea realizar su pago.</p>';
         const lista = document.createElement('div');
         lista.className = 'medios-pago';
         nodo.medios.forEach(medio => {
@@ -1784,23 +1794,24 @@ const ARBOL = [
             img.alt = medio.nombre;
             fila.appendChild(img);
 
-            const textoDiv = document.createElement('div');
-            textoDiv.className = 'medio-pago-texto';
+            const caja = document.createElement('div');
+            caja.className = 'medio-pago-caja';
             const nombre = document.createElement('span');
             nombre.className = 'medio-pago-nombre';
             nombre.textContent = medio.nombre;
-            textoDiv.appendChild(nombre);
+            caja.appendChild(nombre);
             if (medio.nota) {
                 const nota = document.createElement('span');
                 nota.className = 'medio-pago-nota';
                 nota.textContent = medio.nota;
-                textoDiv.appendChild(nota);
+                caja.appendChild(nota);
             }
-            fila.appendChild(textoDiv);
+            fila.appendChild(caja);
 
             lista.appendChild(fila);
         });
-        pane.appendChild(lista);
+        wrap.appendChild(lista);
+        pane.appendChild(wrap);
     }
 
     // Listados de blog (ej. categorías del blog real como "Gestión Ambiental" o
