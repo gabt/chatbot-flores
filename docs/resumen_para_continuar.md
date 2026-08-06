@@ -13,9 +13,31 @@ GitHub + GitHub Pages (frontend) + PowerShell (terminal local) + HTML/CSS/JS van
 
 ## 🚦 PRÓXIMO PASO INMEDIATO (leer esto primero en una sesión nueva)
 El repaso nodo por nodo del sitio real (Municipalidad, Contribuyente, Noticias y Comunicados,
-Contáctenos) quedó 100% cerrado el 2026-08-05 (día 3 de la pasantía). Lo que sigue es un plan de
-trabajo de 7 jornadas (día 4 al día 10), ya detallado con objetivo/alcance técnico/metodología/
-entregable por día en `docs/Tareas-Pendientes.docx`. Resumen rápido de cada día:
+Contáctenos) quedó 100% cerrado el 2026-08-05 (día 3 de la pasantía). El plan de trabajo de 7
+jornadas (día 4 al día 10) sigue detallado con objetivo/alcance técnico/metodología/entregable por
+día en `docs/Tareas-Pendientes.docx` **y sigue pendiente de arrancar** (no se tocó hoy).
+
+**Instrucción de Gerardo (PRIORIDAD) — ✅ investigación y primera carga resueltas el 2026-08-06,
+ver sección "Sesión 2026-08-06" más abajo para el detalle completo.** Texto original de la
+instrucción (se deja tal cual para registro): *"Investigar como el chatbot puede mezclar
+información externa para responder, hacer RAG, añadiendo a conocimiento.jason. RANKINGS de la
+muni, comparaciónes entre municipalidades (flores y belen por ejemplo) donde botan la basura,
+cuantas toneladas de basura se generan, cuales fuentes de agua existen, están protegidas o no,
+etc. el barrio santísima trinidad en x dirección que tipo de zonificación tiene (industrial,
+comercial, vivienda, etc) que el chatbot pueda responder preguntas externas a la información de
+la web pero que todo se encuentre en conocimiento.jason. Preguntarle a las personas que que
+preguntas le harían a la municipalidad, tipo que cuanto deben pagar en x cosa. Pago en Línea
+(investigar y tratar de resolverlo, recomendarle a la muni que instalen ese sistema de que cada
+ciudadano pueda tener su usuario, tal vez con la cédula y que ahi aparezca lo que debe y poder
+pagar desde ahi)"*
+
+**Siguiente sesión: retomar el plan de Día 4** (Planos por APC, Salarios Base 2021, los 6 ítems
+de `mapa_organizado.md`) — quedó pausado hoy para atender la prioridad de Gerardo primero, a
+pedido explícito de Jeiron. Pendiente puntual que quedó abierto de la prioridad de Gerardo:
+confirmar la ubicación real de "barrio Santísima Trinidad" (ver sección de hoy) y completar la
+lista de preguntas ciudadanas con lo que Jeiron recoja al preguntarle a personas reales hoy.
+
+Resumen rápido de cada día:
 
 - **Día 4** — Cerrar "Planos por APC" (sin implementar todavía, sin decisión tomada), verificar
   "Salarios Base 2021" (marcado como no probado), y resolver los 6 ítems ambiguos de
@@ -411,6 +433,140 @@ Contribuyente, Noticias y Comunicados, Contáctenos) quedan 100% revisadas nodo 
    pero solo en el prototipo experimental `index_prueba.html`** (rediseño de navegación con
    pastillas en vez de sidebar, pendiente de que Gerardo lo revise y apruebe antes de tocar el
    `index.html` real) - ver contexto aparte, no documentado en detalle acá a pedido de Jeiron.
+
+## Sesión 2026-08-06: Prioridad de Gerardo — RAG con información externa
+
+A pedido explícito de Jeiron, hoy se atendió PRIMERO la instrucción de Gerardo (ver texto completo
+en "PRÓXIMO PASO INMEDIATO" arriba) antes que el plan técnico de Día 4, que queda pendiente para
+la próxima sesión.
+
+### 1. Investigación de información externa (rankings, residuos, agua, zonificación, pago en línea)
+Se investigó cada punto pedido por Gerardo vía búsqueda web. Resultado honesto: parte de la
+información SÍ se encontró con fuente confiable, y parte NO está disponible públicamente (se deja
+así documentado, sin inventar cifras):
+
+- **Rankings municipales**: el Índice de Gestión de Servicios Municipales (IGSM) de la Contraloría
+  General de la República evaluó las 82 municipalidades en 2023 - ninguna alcanzó nivel "avanzado"
+  y Belén se destacó puntualmente en servicios sociales, pero **no se encontró la calificación
+  exacta de Flores** en fuentes públicas indexadas (se documentó cómo pedirla directo a la CGR:
+  igsm@cgr.go.cr, 2501-8715/8482).
+- **Basura Flores vs Belén**: según el informe "Indicadores Cantonales de Gestión Integral de
+  Residuos 2023-2024" (IFAM + Ministerio de Salud), Flores genera ~0.3 kg de residuos por persona
+  por día - una de las cifras MÁS BAJAS del país (entre los 10 cantones con menor generación per
+  cápita). **No se encontraron cifras de Belén** en ese mismo informe, ni el total de toneladas
+  mensuales/anuales de ninguno de los dos cantones, ni el nombre del relleno sanitario de destino.
+- **Fuentes de agua**: se confirmó que Flores administra SU PROPIO acueducto municipal (a
+  diferencia de otros cantones de Heredia que dependen de ESPH o AyA). **No se encontró** el
+  listado específico de nacientes/pozos ni un mapa público de áreas de protección - sí se confirmó
+  que existen "zonas de protección de pozo" relevantes para trámites de construcción (mencionadas
+  en los formularios reales), aunque sin listado público.
+- **Zonificación de "barrio Santísima Trinidad"**: se revisó el PDF real
+  `pdfs/mapa-zonificacion.pdf` (Mapa de Zonificación Actualizada del Plan Regulador de Flores, al
+  18 de mayo 2018) - es una imagen a color sin etiquetas de texto de barrios, así que no se puede
+  buscar "Trinidad" directamente ahí. Al investigar la ubicación del barrio, **surgió una
+  contradicción sin resolver**: una fuente (Moovit) lo asocia con Flores, pero otra (Waze) ubica un
+  barrio con el mismo nombre en San Josecito, San Rafael de Heredia (cantón vecino, NO Flores).
+  ⚠️ **Pendiente: Jeiron debe confirmar la ubicación real de este barrio** (dirección o punto de
+  referencia) para poder darle la zonificación exacta usando el Mapa Catastral del Cantón (SIG) en
+  una próxima sesión.
+- **Pago en línea**: se encontró que IFAM ya ofrece una plataforma compartida ("Sistema de
+  Consultas y Pagos de Tributos Municipales", `comercio.ifam.go.cr/<municipalidad>`) que usan
+  municipalidades pequeñas como San Ramón, Acosta y Río Cuarto - login por cédula, ver deuda total
+  desglosada, pagar con tarjeta vía Banco Nacional. Se agregó como recomendación concreta (ver
+  punto 3 abajo).
+
+### 2. Carga a `conocimiento.json` (RAG)
+Se agregaron **5 entradas nuevas** a `conocimiento.json` (168 → 173 entradas), con `url` sintética
+(prefijo `conocimiento-externo://...`, no colisiona con ningún fragmento real usado por
+`buscarPagina()` en `index.html`/`index_prueba.html`, así que no afecta la navegación en árbol -
+solo alimenta el contexto del chatbot vía `construir_contexto()` en `app.py`). Cada entrada incluye
+sus fuentes y, cuando el dato no se pudo confirmar, una instrucción explícita para que el chatbot
+lo admita en vez de inventar una respuesta. Marcadas con `"fuente_tipo": "externo_rag_manual"`
+para distinguirlas de las páginas scrapeadas.
+
+⚠️ **Cuidado importante:** `scraper.py` SOBREESCRIBE `conocimiento.json` por completo en cada
+corrida (`json.dump` sin merge). Si se vuelve a correr el scraper completo, estas 5 entradas RAG
+se PERDERÍAN y habría que volver a agregarlas a mano (o mover esta lógica a un archivo aparte que
+se combine en `app.py` al arrancar - posible mejora futura, no implementada hoy para respetar el
+pedido literal de Gerardo de que "todo se encuentre en conocimiento.json").
+
+### 3. `recomendaciones_informe_final.md` actualizado
+Se agregó el punto 4 (Pago en Línea) con la recomendación concreta de sumarse a la plataforma de
+IFAM en vez de desarrollar un sistema propio desde cero, con fuentes. El documento ya no está tan
+desactualizado como antes de hoy.
+
+### 4. Lista de preguntas ciudadanas
+Como Jeiron va a hacer la encuesta él mismo hoy ("preguntarle a las personas qué preguntas le
+harían a la municipalidad"), se le entregó un borrador de 21 preguntas típicas (impuestos,
+patentes, catastro, acueducto, basura, pagos, trámites, concejo) en
+`docs/preguntas_ciudadanas_borrador.md`, para usar como punto de partida y ajustar con lo que la
+gente realmente responda.
+
+### 5. Sin cambios en index.html / index_prueba.html
+Todo el trabajo de hoy fue en `conocimiento.json` (datos del chatbot) y documentación - no hubo
+cambios de código ni de contenido visible en el árbol de navegación, así que no aplicó la regla de
+"replicar todo cambio en ambos archivos". Ambos siguen idénticos entre sí en lo que ya estaba.
+
+### 6. CORRECCIÓN DE ALCANCE (mismo día, más tarde): Jeiron aclaró que el pedido de Gerardo no era
+### solo Flores-vs-Belén ni solo el barrio Trinidad - esos eran EJEMPLOS, no el alcance completo
+El pedido real es que el chatbot pueda responder sobre CUALQUIER municipalidad del país y
+CUALQUIER barrio, no solo los casos investigados a mano en el punto 1-2. Esto llevó a repensar la
+arquitectura completa (ver puntos 7 y 8).
+
+### 7. ¿`conocimiento.json` es RAG? No, no lo era hasta hoy
+Se detectó que `construir_contexto()` en `app.py` armaba UN bloque fijo con los 173 documentos
+completos (recortados a 2000 caracteres cada uno) UNA sola vez al arrancar el servidor, y ese
+mismo bloque completo (~51,000 tokens) se mandaba en CADA pregunta del chatbot, sin importar el
+tema. Eso es "context stuffing", no RAG real (RAG = buscar primero qué es relevante a la pregunta
+puntual, y mandar solo eso). Esto ya costaba dinero real ANTES de tocar nada hoy: ~$0.10 en tokens
+de contexto por cada mensaje (precio Sonnet 5 a agosto 2026, $2/MTok input), sin contar que
+`historial` se reenvía completo en cada turno.
+
+### 8. `app.py` reescrito: RAG real por palabras clave + búsqueda web en vivo
+Se reescribió `app.py` (probado localmente: importa bien, `buscar_documentos_relevantes()` da
+resultados sensatos, y una llamada de prueba a la API con key inválida confirma que el payload
+-incluyendo el bloque `tools` de búsqueda web- pasa la validación del servidor, solo falla en
+autenticación como se esperaba):
+
+- **Retrieval por palabras clave** (`buscar_documentos_relevantes()`, sin librerías nuevas):
+  normaliza (minúsculas, sin tildes) la pregunta y el contenido de cada documento, tokeniza
+  quitando palabras vacías, puntúa cada documento por coincidencias (la URL pesa 3x porque suele
+  traer el tema en el slug), y devuelve los 6 documentos más relevantes. Prueba real: la pregunta
+  "cuánto cuesta una patente comercial" da un contexto de ~2,900 tokens en vez de ~51,000 (94%
+  menos) - y ese ahorro CRECE con cada entrada nueva que se agregue a `conocimiento.json`, porque
+  ya no todo se manda siempre.
+- **Búsqueda web en vivo** (`tools=[{"type": "web_search_20250305", ...}]` en la llamada a la API
+  de Claude): para preguntas que el contenido local no cubre (comparación con OTRA municipalidad,
+  zonificación de un barrio no investigado, rankings nacionales, etc.), el chatbot puede buscar en
+  internet en el momento, en vez de depender de que alguien haya escrito esa respuesta a mano de
+  antemano. Tope de 3 búsquedas por pregunta (`max_uses: 3`) para controlar el costo ($0.01 por
+  búsqueda). Ubicación aproximada seteada a Heredia, CR, para sesgar los resultados a Costa Rica.
+  Las respuestas que usan búsqueda web ahora agregan automáticamente un bloque "Fuentes
+  consultadas:" con los links citados.
+- El endpoint `/chat` ahora también devuelve `"fuentes_locales"` (qué páginas de `conocimiento.json`
+  se usaron) en la respuesta JSON - el frontend no lo necesita, pero sirve para depurar/demostrar
+  que el RAG está funcionando cuando le muestren esto a Gerardo.
+- `/paginas` y `/imagenes/<seccion>` quedaron sin cambios (los sigue usando el árbol de navegación
+  de `index.html`/`index_prueba.html`, no dependen de este cambio).
+
+⚠️ **No se pudo probar el endpoint `/chat` completo end-to-end** (necesita una API key real de
+Anthropic, que no está en este entorno). Jeiron debe probarlo localmente (`python app.py` con su
+`.env`) o en Render antes de darlo por cerrado - especialmente confirmar que la búsqueda web
+efectivamente se dispara para preguntas externas.
+
+⚠️ **Hallazgo colateral, útil para el QA de Día 5/6**: la página real
+`recoleccion-de-desechos` en `conocimiento.json` tiene solo 35 caracteres de contenido scrapeado
+("Recolección de desechos y reciclaje", nada más) - por eso el RAG no encuentra nada útil para
+preguntas tipo "qué día pasa el camión de la basura". No es un bug del RAG, es que esa página real
+no tiene ese texto capturado (puede estar en una imagen, o simplemente no estar publicado en el
+sitio real). Vale la pena revisarlo cuando toque el QA de Contribuyente.
+
+⚠️ **Nota de arquitectura para más adelante**: el retrieval de hoy es por palabras clave (rápido,
+gratis, sin dependencias) - funciona bien para este tamaño de corpus (173 documentos) pero tiene
+límites (ej. sinónimos: si alguien pregunta "impuesto de la casa" y el documento dice "bienes
+inmuebles", puede no matchear). Si en el futuro hace falta mejor precisión, el siguiente paso
+sería retrieval semántico con embeddings (más preciso con paráfrasis, pero agrega costo y una
+dependencia nueva) - no fue necesario hoy.
 
 ## Limitación conocida, aceptada por ahora (posible mejora futura)
 Las listas ANIDADAS del sitio real (ítem padre con sub-ítems debajo, y la lista sigue en el

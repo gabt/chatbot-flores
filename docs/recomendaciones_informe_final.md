@@ -46,3 +46,37 @@ equivocado, sin ninguna indicación visual de que el link no corresponde al tít
 
 **Recomendación:** Revisar el editor de esa entrada en el CMS y quitar el hipervínculo suelto del
 punto final, dejando un único link correcto por ítem (el que ya apunta al reglamento de activos).
+
+## 4. Falta un sistema real de "Pago en Línea" (consulta de deuda + pago con cédula)
+**Página:** Contribuyente → Pago en línea → Calendario de pagos
+(https://flores.go.cr/contribuyente/calendario-de-pagos/)
+
+**Actualizado 2026-08-06 (a pedido de Gerardo, tutor):** hoy la sección "Pago en línea" del sitio
+real solo muestra un calendario con las fechas en que vencen los tributos (cuándo hay que pagar),
+pero NO permite que el ciudadano ingrese con su cédula, vea cuánto debe exactamente, y pague desde
+ahí. Para eso, hoy en día el ciudadano tiene que ir presencialmente o pagar en el banco sin poder
+consultar su estado de cuenta actualizado en línea primero.
+
+**Por qué importa:** es una fricción evitable para el ciudadano (no sabe cuánto debe hasta que
+llega a la ventanilla o al banco) y para la propia Municipalidad (más carga de atención presencial
+y telefónica solo para consultas de saldo).
+
+**Recomendación:** no hace falta construir un sistema desde cero. El Instituto de Fomento y
+Asesoría Municipal (IFAM) ya ofrece una plataforma compartida — "Sistema de Consultas y Pagos
+(Tributos Municipales)", en `comercio.ifam.go.cr/<municipalidad>` — que ya usan municipalidades
+más pequeñas como San Ramón, Acosta y Río Cuarto: el ciudadano se identifica con su número de
+cédula, ve el "Total Adeudado" desglosado por servicio y período, y paga con tarjeta de débito o
+crédito (Visa/Mastercard) a través del Banco Nacional. Otras municipalidades (San Carlos, San
+José, Aserrí, Coronado, Garabito) tienen soluciones similares propias o de otros proveedores. La
+vía más rápida y de menor costo para Flores sería solicitar directamente a IFAM sumarse a ese
+sistema compartido, en vez de desarrollar uno propio desde cero.
+
+*Fuentes consultadas: comercio.ifam.go.cr/sanramon, aserri.go.cr/pago-en-linea, munigarabito.go.cr,
+coromuni.go.cr, msj.go.cr/trampago, munisc.go.cr (consultado 2026-08-06).*
+
+---
+
+*Documento actualizado por última vez el 2026-08-06. El punto 4 se agregó a pedido explícito de
+Gerardo (tutor) como parte de la investigación de "RAG externo" del chatbot — ver también la
+entrada `conocimiento-externo://pago-en-linea-recomendacion` en `conocimiento.json`, donde el
+chatbot tiene esta misma información disponible para responder preguntas de ciudadanos.*

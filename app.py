@@ -3,6 +3,8 @@ from flask_cors import CORS
 import anthropic
 import os
 import json
+import re
+import unicodedata
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -12,29 +14,114 @@ CORS(app)
 
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
-# Cargar conocimiento del sitio municipal
+# Cargar conocimiento del sitio municipal (incluye páginas reales scrapeadas
+# y entradas de referencia externa agregadas a mano, ver conocimiento.json /
+# docs/resumen_para_continuar.md, sección "Sesión 2026-08-06")
 with open("conocimiento.json", "r", encoding="utf-8") as f:
     documentos = json.load(f)
 
-def construir_contexto():
+# ---------------------------------------------------------------------------
+# RAG real (2026-08-06): antes, construir_contexto() armaba UN bloque fijo
+# con los ~173 documentos completos y ese mismo bloque se mandaba en CADA
+# mensaje, sin importar la pregunta (~51,000 tokens siempre). Ahora se busca
+# primero qué documentos son relevantes a la pregunta puntual (retrieval por
+# palabras clave, sin librerías nuevas) y solo esos se arman como contexto.
+# Esto baja los tokens por mensaje y deja que conocimiento.json siga creciendo
+# sin que cada mensaje se vuelva más caro.
+# ---------------------------------------------------------------------------
+
+PALABRAS_VACIAS = {
+    "de", "la", "el", "en", "que", "y", "a", "los", "se", "del", "las", "un", "por",
+    "con", "no", "una", "su", "para", "es", "al", "lo", "como", "mas", "pero",
+    "sus", "le", "ya", "o", "este", "si", "porque", "esta", "entre", "cuando",
+    "muy", "sin", "sobre", "tambien", "me", "hasta", "hay", "donde", "quien",
+    "desde", "todo", "nos", "durante", "todos", "uno", "les", "ni", "contra", "otros",
+    "ese", "eso", "ante", "ellos", "e", "esto", "mi", "antes", "algunos",
+    "unos", "yo", "otro", "otras", "otra", "tanto", "esa", "estos", "mucho",
+    "quienes", "nada", "muchos", "cual", "poco", "ella", "estar", "estas", "algunas",
+    "algo", "nosotros", "tu", "te", "ti", "tus", "ellas", "cuanto", "cuanta",
+    "cuales", "puedo", "podria", "quiero", "quisiera", "necesito", "hola",
+    "buenas", "favor", "gracias", "informacion",
+}
+
+
+def normalizar(texto):
+    """minusculas + sin tildes, para que 'jose' y 'josé' matcheen igual."""
+    texto = texto.lower()
+    texto = unicodedata.normalize("NFD", texto)
+    texto = "".join(c for c in texto if unicodedata.category(c) != "Mn")
+    return texto
+
+
+def tokenizar(texto):
+    texto = normalizar(texto)
+    palabras = re.findall(r"[a-z0-9]+", texto)
+    return [p for p in palabras if len(p) > 2 and p not in PALABRAS_VACIAS]
+
+
+# Se pre-calcula UNA sola vez al arrancar (no en cada request) el texto
+# normalizado de cada documento, para no repetir ese trabajo en cada pregunta.
+_DOCS_NORMALIZADOS = [
+    {
+        "doc": doc,
+        "url_norm": normalizar(doc.get("url", "")),
+        "contenido_norm": normalizar(doc.get("contenido", "")),
+    }
+    for doc in documentos
+]
+
+
+def buscar_documentos_relevantes(pregunta, top_n=6):
+    """Retrieval por palabras clave: puntúa cada documento según cuántas
+    palabras de la pregunta aparecen en su url/contenido (la url pesa más,
+    porque suele traer el tema en el slug, ej. 'recoleccion-de-desechos').
+    Devuelve los top_n documentos con mejor puntaje (score > 0). Si ninguno
+    matchea, devuelve una lista vacía y el chatbot recurre a la búsqueda web."""
+    palabras = tokenizar(pregunta)
+    if not palabras:
+        return []
+
+    puntuados = []
+    for item in _DOCS_NORMALIZADOS:
+        score = 0
+        for palabra in palabras:
+            score += item["url_norm"].count(palabra) * 3
+            score += item["contenido_norm"].count(palabra)
+        if score > 0:
+            puntuados.append((score, item["doc"]))
+
+    puntuados.sort(key=lambda x: x[0], reverse=True)
+    return [doc for score, doc in puntuados[:top_n]]
+
+
+def construir_contexto(docs):
     contexto = ""
-    for doc in documentos:
+    for doc in docs:
         contexto += f"\n\n--- Página: {doc['url']} ---\n"
-        contexto += doc["contenido"][:2000]
+        contexto += doc["contenido"][:3000]
     return contexto
 
-CONTEXTO = construir_contexto()
 
-SYSTEM_PROMPT = f"""Sos un asistente virtual de la Municipalidad de Flores, Costa Rica.
+SYSTEM_PROMPT_BASE = """Sos un asistente virtual de la Municipalidad de Flores, Costa Rica.
 Respondés preguntas de ciudadanos de forma clara, amable y en español.
-Basate ÚNICAMENTE en la siguiente información del sitio web municipal.
-Si no sabés algo, sugerís llamar al 2265-7109.
 
-INFORMACIÓN DEL SITIO WEB MUNICIPAL:
-{CONTEXTO}
+Tenés dos fuentes de información:
+1. La INFORMACIÓN DEL SITIO WEB MUNICIPAL que se te da abajo (páginas reales de flores.go.cr y
+   entradas de referencia agregadas a mano) - basate en ella primero, es la más confiable para
+   trámites y datos propios de la Municipalidad de Flores.
+2. Una herramienta de búsqueda web, para preguntas que la información de abajo NO cubre: por
+   ejemplo comparaciones con OTRAS municipalidades del país, rankings nacionales, información de
+   un barrio específico que no aparece abajo, o cualquier otro dato externo puntual. Usala cuando
+   haga falta, y decile a la persona de dónde sacaste el dato.
+
+Si no encontrás la respuesta ni en la información de abajo ni buscando, decilo con honestidad y
+sugerí llamar al 2265-7109 en vez de inventar una respuesta.
+
+INFORMACIÓN DEL SITIO WEB MUNICIPAL (relevante a esta pregunta puntual):
+{contexto}
 """
 
-# Mapa de secciones a palabras clave en URLs
+# Mapa de secciones a palabras clave en URLs (se usa en /imagenes/<seccion>, sin cambios)
 SECCIONES = {
     "municipalidad": ["municipalidad", "omil", "concejo", "recursos-humanos", "cecudi", "alcald", "actas", "portalmuni"],
     "canton": ["canton", "historia", "poblacional", "organizaciones"],
@@ -43,6 +130,7 @@ SECCIONES = {
     "noticias": ["blog", "noticias", "comunicados"],
     "contacto": ["contactenos", "directorio"]
 }
+
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -53,22 +141,72 @@ def chat():
     if not pregunta:
         return jsonify({"error": "Falta el campo 'pregunta'"}), 400
 
+    docs_relevantes = buscar_documentos_relevantes(pregunta, top_n=6)
+    contexto = construir_contexto(docs_relevantes)
+    if not contexto:
+        contexto = ("(No se encontró ninguna página local relacionada con esta pregunta puntual "
+                    "- usá la búsqueda web si hace falta para responderla.)")
+    system_prompt = SYSTEM_PROMPT_BASE.format(contexto=contexto)
+
     mensajes = historial + [{"role": "user", "content": pregunta}]
 
     try:
         respuesta_api = client.messages.create(
             model="claude-sonnet-5",
-            max_tokens=1024,
-            system=SYSTEM_PROMPT,
-            messages=mensajes
+            max_tokens=1536,
+            system=system_prompt,
+            messages=mensajes,
+            tools=[
+                {
+                    "type": "web_search_20250305",
+                    "name": "web_search",
+                    # Tope de búsquedas por pregunta, para no disparar el costo
+                    # ($0.01 por búsqueda + tokens de los resultados).
+                    "max_uses": 3,
+                    "user_location": {
+                        "type": "approximate",
+                        "city": "Heredia",
+                        "region": "Heredia",
+                        "country": "CR",
+                    },
+                }
+            ],
         )
-        texto_respuesta = respuesta_api.content[0].text
+
+        # La respuesta puede traer varios bloques (texto + llamada de búsqueda +
+        # resultados + texto final). El bloque de texto final ya incluye todo lo
+        # que Claude concluyó después de buscar, así que usamos ese.
+        bloques_texto = [b for b in respuesta_api.content if b.type == "text"]
+        if bloques_texto:
+            ultimo = bloques_texto[-1]
+            texto_respuesta = ultimo.text.strip()
+
+            # Si el bloque final trae citas de la búsqueda web, las agregamos
+            # al final de la respuesta para que el ciudadano vea la fuente.
+            fuentes = []
+            vistos = set()
+            for c in (getattr(ultimo, "citations", None) or []):
+                url = getattr(c, "url", None)
+                if url and url not in vistos:
+                    vistos.add(url)
+                    fuentes.append(url)
+            if fuentes:
+                texto_respuesta += "\n\nFuentes consultadas:\n" + "\n".join(f"- {u}" for u in fuentes)
+        else:
+            texto_respuesta = "Disculpá, no pude generar una respuesta. Intentá de nuevo o llamá al 2265-7109."
     except Exception as e:
         return jsonify({"error": f"Error al consultar la API de Claude: {str(e)}"}), 500
 
     nuevo_historial = mensajes + [{"role": "assistant", "content": texto_respuesta}]
 
-    return jsonify({"respuesta": texto_respuesta, "historial": nuevo_historial})
+    return jsonify({
+        "respuesta": texto_respuesta,
+        "historial": nuevo_historial,
+        # Informativo (el frontend no lo necesita): qué páginas locales se
+        # usaron para esta respuesta, útil para depurar/demostrar el RAG.
+        "fuentes_locales": [d["url"] for d in docs_relevantes],
+    })
+
 
 @app.route('/paginas', methods=['GET'])
 def obtener_paginas():
@@ -76,6 +214,7 @@ def obtener_paginas():
     cual están en conocimiento.json. Lo usa el frontend para la navegación
     en árbol, buscando la página exacta que corresponde a cada nodo."""
     return jsonify(documentos)
+
 
 @app.route('/imagenes/<seccion>', methods=['GET'])
 def obtener_imagenes(seccion):
