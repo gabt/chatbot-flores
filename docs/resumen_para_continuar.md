@@ -15,7 +15,14 @@ GitHub + GitHub Pages (frontend) + PowerShell (terminal local) + HTML/CSS/JS van
 El repaso nodo por nodo del sitio real (Municipalidad, Contribuyente, Noticias y Comunicados,
 Contáctenos) quedó 100% cerrado el 2026-08-05 (día 3 de la pasantía). El plan de trabajo de 7
 jornadas (día 4 al día 10) sigue detallado con objetivo/alcance técnico/metodología/entregable por
-día en `docs/Tareas-Pendientes.docx` **y sigue pendiente de arrancar** (no se tocó hoy).
+día en `docs/Tareas-Pendientes.docx`.
+
+**Día 4 — ✅ CERRADO 2026-08-06** (ver sección "Sesión 2026-08-06 (continuación): Día 4" más
+abajo para el detalle completo: Planos por APC implementado, Salarios Base 2021 verificado, los
+8 ítems de `mapa_organizado.md` reconciliados, más el pedido adicional de Gerardo de "Medios de
+pago" en Contribuyente > Pago en línea). **Siguiente sesión: arrancar Día 5** (QA funcional de
+Municipalidad y Contribuyente, ~45 nodos, con prueba cruzada en al menos dos navegadores) - ver
+`docs/Tareas-Pendientes.docx` para el detalle completo de ese día.
 
 **Instrucción de Gerardo (PRIORIDAD) — ✅ investigación y primera carga resueltas el 2026-08-06,
 ver sección "Sesión 2026-08-06" más abajo para el detalle completo.** Texto original de la
@@ -597,6 +604,124 @@ oficial o con más cuidado - el error de "country CR no soportado" se pudo haber
 verificando la lista de países soportados antes, en vez de asumir que cualquier código ISO de
 2 letras funciona. Si en el futuro se quiere volver a sesgar la búsqueda a Costa Rica, investigar
 primero qué códigos de país acepta `user_location` antes de agregarlo de nuevo.
+
+### 10. Segundo bug en producción (mismo día): respuesta cortada a la mitad
+Ya sin el error 400, el chat respondía pero con textos raros - empezaban con un "." suelto y
+nunca decían el nombre del alcalde, aunque la página correcta SÍ estaba en el contexto (verificado
+aparte). Causa real: cuando Claude busca en la web a mitad de una respuesta, el resultado viene en
+VARIOS bloques de texto separados (uno antes de buscar, otro después, continuando la misma
+oración) - el código solo tomaba el ÚLTIMO bloque y tiraba el resto. **Arreglo:** unir TODOS los
+bloques de texto en orden (`"".join(...)` en vez de quedarse con `bloques_texto[-1]`). Probado con
+una simulación de bloques antes de pedirle a Jeiron que probara en vivo - esta vez sí funcionó a
+la primera.
+
+### 11. Pedido de Jeiron: respuestas más breves + negrita real (no asteriscos)
+Jeiron pidió que el chatbot conteste solo lo que se pregunta (sin agregar datos de más, ej. no
+listar los estudios del alcalde si solo preguntan quién es) y que la negrita Markdown (`**así**`)
+se vea en negrita de verdad en vez de mostrar los asteriscos literales. Cambios:
+- `SYSTEM_PROMPT_BASE` en `app.py`: instrucción explícita de ser breve/concreto y de que solo se
+  permite usar `**negrita**` como formato (nada de encabezados/viñetas/tablas, el chat no los
+  interpreta).
+- `agregarMensaje()` / `formatearMensajeBot()` en `index.html` **e** `index_prueba.html`: en vez
+  de `div.textContent = texto` (texto plano), ahora los mensajes del bot pasan por una función que
+  escapa cualquier HTML del texto (por seguridad, para que el chatbot nunca pueda inyectar markup)
+  y RECIÉN DESPUÉS convierte a mano `**texto**` → `<strong>texto</strong>` y `\n` → `<br>`. Nada
+  más de Markdown se interpreta. Probado con Node.js localmente (negrita, inyección de
+  `<script>`, saltos de línea, asterisco suelto) antes de mandarlo - todo se comportó bien.
+
+### 12. Tercer bug en producción (mismo día): timeout de Gunicorn cortaba las búsquedas
+Al probar una pregunta que necesitaba buscar en la web, la conexión se cortaba con "La conexión ha
+terminado de forma inesperada" - no era un error de la API, era que Gunicorn mata el proceso a los
+30 segundos por defecto (`render.yaml` no especificaba `--timeout`), y una respuesta con búsqueda
+web tarda más que eso. **Arreglo:** `startCommand` en `render.yaml` pasó a
+`gunicorn app:app --bind 0.0.0.0:10000 --timeout 120`.
+
+### 13. Ajuste estético: URLs largas se salían del cuadro del chat
+Jeiron notó que los links de "Fuentes consultadas:" (URLs largas sin espacios) desbordaban el
+borde del globo de chat en vez de ajustarse. Se agregó `overflow-wrap: break-word` y
+`word-break: break-word` a la clase `.msg` en `index.html` e `index_prueba.html`.
+
+### ✅ RESULTADO FINAL (confirmado por Jeiron en vivo, 2026-08-06): el chat quedó funcionando de
+### punta a punta en producción
+Probado en vivo por Jeiron: preguntas locales responden bien y breve, con negrita real
+("**Eder José Ramírez Segura**" se ve en negrita); preguntas externas (ej. "qué municipalidad
+recicla más basura en Costa Rica") buscan en internet y citan fuentes reales (confirmado con 2
+links de nacion.com, coincidiendo con la investigación de la sección 1); las URLs largas ya no se
+desbordan del cuadro. Hubo un error aislado una sola vez con "¿Quién es el alcalde?" (con mayúscula
+y signo de pregunta) que no se pudo reproducir en el segundo intento - posible bache pasajero de
+red o "despertar" de Render tras inactividad, no un bug identificado. Si vuelve a pasar, diagnosticar
+con el mismo método de `Invoke-RestMethod` + `try/catch` que se usó hoy.
+
+**Pendiente para más adelante** (no bloqueante): investigar semántica/embeddings para el
+retrieval si el stemming por prefijo no alcanza (ver sección de RAG arriba); considerar hacer
+clickeables los links de "Fuentes consultadas".
+
+## Sesión 2026-08-06 (continuación): Día 4 — cierre de elementos pendientes del árbol
+
+Con la prioridad de Gerardo resuelta (sección anterior), se retomó el plan de `Tareas-
+Pendientes.docx` a partir de Día 4. Los 4 puntos del alcance técnico de Día 4 quedaron
+cerrados:
+
+1. **Planos por APC** — investigado y clasificado como `tipo: 'contenido'` (hay contenido real
+   propio: marco legal + cómo tramitar, que a su vez remite al sistema externo del CFIA).
+   Implementado como nodo de nivel superior `planos-apc` en `index.html` e `index_prueba.html`,
+   igual que sus hermanos del menú principal.
+2. **Salarios Base 2021** — verificado: el nodo `salarios-base` ya existía y renderiza
+   correctamente la tabla real (categoría / salario base / número de personas), sin cambios
+   necesarios.
+3. **Los 6 ítems de `mapa_organizado.md`** ("Otros ítems del PDF original sin reconciliar
+   todavía") — los 8 ítems que quedaban (los 6 asignados a Día 4 más 2 adicionales que también
+   colgaban de esa lista) se investigaron uno por uno contra `/mapa-del-sitio/` del sitio real.
+   Hallazgo clave: casi todos resultaron ser el listado plano de "Páginas" que WordPress
+   auto-genera (post-type "Page" del CMS), no un menú de navegación real - la mayoría son la
+   misma página que un nodo ya existente bajo otro nombre/ruta, y el resto son páginas
+   huérfanas (existen en el sitio pero no están enlazadas desde el header ni el footer reales).
+   Detalle completo, item por item, en `mapa_organizado.md` sección "Otros ítems del PDF
+   original — ✅ TODOS RECONCILIADOS". Resultado neto: 7 de 8 ítems no requirieron cambios de
+   código (duplicados confirmados o descartados por estar fuera del menú real, aunque varios
+   -Bolsa de empleo, Sesiones del Concejo, Política de privacidad- ya tienen contenido real en
+   `conocimiento.json` y el chatbot puede responder preguntas sobre ellos vía RAG aunque no
+   tengan nodo visual). El octavo, **"Formularios de patentes"**, sí resultó ser una página real
+   distinta y valiosa (`flores.go.cr/patentes`, con los plazos/requisitos de la Declaración
+   Jurada del Impuesto de Patentes 2026) - se implementó como nodo nuevo `form-patentes-
+   declaracion` dentro de Contribuyente > Servicios > Formularios, en ambos archivos. **Ojo de
+   implementación:** su fragmento de URL tuvo que ser `'flores.go.cr/patentes'` completo (no
+   solo `'patentes'`) porque el fragmento corto también matcheaba por error la URL
+   `/contribuyente/preguntas/patentes` - se documentó en el comentario del código.
+4. `mapa_organizado.md` quedó actualizado sin ítems pendientes de clasificación (entregable de
+   Día 4 cumplido).
+
+### Pedido adicional de Gerardo (mismo día, fuera del plan de Día 4): "Medios de pago"
+Gerardo pidió agregar, dentro de Contribuyente > Pago en línea, un bloque nuevo "Medios de
+pago" junto a "Calendario de pagos": una fila por banco (imagen chica a la izquierda, nombre en
+negrita a la derecha), fila completa clickeable hacia el sitio real del banco, más una fila
+"Pago directo" con el logo de la municipalidad y la nota "(Estamos trabajando para hacerlo
+posible)" en letra más pequeña y clara (sin link, porque ese servicio propio aún no existe -
+ver `recomendaciones_informe_final.md` punto 4, donde ya se recomendó usar la plataforma de
+IFAM en vez de construir uno desde cero).
+
+Implementado como un tipo de nodo nuevo, `tipo: 'especial-pago'`, con su propia función
+`renderMediosPago()` (agregada junto a `renderActas`, mismo patrón de fila/botón con imagen +
+link) y su propio bloque CSS (`.medios-pago`, `.medio-pago-item`, etc.) - en **ambos** archivos,
+cada uno con la paleta de color de su propio diseño (`index.html` en azul, `index_prueba.html`
+en el esquema cálido naranja/crema). El nodo `medios-pago` vive en ambos ARBOL, con 3 entradas:
+BCR (`bancobcr.com`), Banco Nacional (`bncr.fi.cr`), y Pago directo (sin `href`, se renderiza
+como `<div>` en vez de `<a>`, atenuado, con la nota aclaratoria debajo del nombre).
+
+Los logos de BCR y Banco Nacional los subió Jeiron directo (ya en buena resolución, solo se
+redimensionaron a 500px de ancho máximo para el peso del archivo: `assets/logo-bcr.png`,
+`assets/logo-bncr.png`). El logo de la Municipalidad que subió Jeiron para "Pago directo" venía
+en baja resolución (442×199px, bordes borrosos) - se mejoró con upscaling LANCZOS 3x +
+unsharp mask + un ligero ajuste de contraste (no es un upscaling con IA/super-resolución real,
+esa opción se intentó con `cv2.dnn_superres` pero el módulo no estaba disponible en esta sesión;
+LANCZOS + sharpening da un resultado notablemente más nítido para un logo de colores planos +
+tipografía, que es exactamente el caso de uso). Resultado guardado en
+`assets/logo-muni-mejorado.png`. Si en algún momento la Municipalidad entrega el logo original
+en alta resolución o vectorial (SVG/AI), se debería reemplazar este archivo por el original -
+esto es una mejora de la copia borrosa, no un sustituto de tener el archivo fuente real.
+
+Verificado visualmente con Playwright headless (screenshot de ambos archivos, ambas paletas de
+color) antes de entregar - capturas compartidas con Jeiron en el chat.
 
 ## Limitación conocida, aceptada por ahora (posible mejora futura)
 Las listas ANIDADAS del sitio real (ítem padre con sub-ítems debajo, y la lista sigue en el
