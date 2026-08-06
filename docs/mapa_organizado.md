@@ -31,7 +31,10 @@ dentro de Municipalidad, o una portada distinta - falta confirmar cuál.
       - Nivel de Fiscalización (texto) — /niveles/nivel-de-fiscalizacion/
       - Nivel Sustantivo (texto) — /niveles/nivel-sustantivo/
       - Nivel de Apoyo (texto) — /niveles/nivel-de-apoyo/
-    - Salarios Base 2021 (tabla) — /organigrama/salarios-base/
+    - Salarios Base 2021 (tabla) — /organigrama/salarios-base/ ✅ verificado Día 4
+      (2026-08-06): NO renderizaba como tabla (salía como texto plano línea por línea, con
+      el título duplicado). Corregido con `tablaTexto` + `lineasOmitir` en ambos archivos -
+      ver detalle en `resumen_para_continuar.md`, sección Día 4.
   - Misión y Visión (imagen + texto) — /mision-y-vision/
   - Nuestros Valores (gráfica + texto) — /valores/
   - Ubicación (formato Waze) — /ubicacion/
@@ -83,6 +86,17 @@ dentro de Municipalidad, o una portada distinta - falta confirmar cuál.
 - Pago en línea
   - Calendario de pagos (✅ funciona correctamente, contenido real conectado) — /contribuyente/calendario-de-pagos/
 - Preguntas Frecuentes (✅ CERRADO 2026-08-05, submenú con 6 categorías) — /contribuyente/preguntas/
+  **⚠️→✅ Corregido Día 4 (2026-08-06), fuera del plan de ese día (excepción a pedido de Jeiron,
+  igual que "Medios de pago"):** el "CERRADO 2026-08-05" de acá era incompleto en dos sentidos.
+  (1) El submenú de 6 categorías solo existía en `index_prueba.html` - en `index.html` el nodo
+  estaba marcado `tipo: 'roto'` ("todavía no incorporada"), violando la regla de que toda
+  modificación va en ambos archivos. Ya se igualó. (2) En la página resumen de ambos archivos,
+  el texto scrapeado trae 6 veces "Más información" SIN link real (el scraper no captura href de
+  texto plano, solo de imágenes) - por eso no redirigían a ningún lado. Se agregó un mecanismo
+  nuevo, `enlacesInternos` (variante de `listasEnlaces` para navegar a OTRO NODO de la app en vez
+  de a un link externo), que reemplaza ese texto muerto por links reales a cada categoría.
+  Verificado con Jeiron contra los links reales del sitio (coinciden con los ya documentados
+  abajo, incluyendo los dos casos especiales de Cementerio y Patentes).
   - Bienes Inmuebles — /rfw/Frecuentes/bienes.html
   - Acueducto — /rfw/Frecuentes/Acueducto.html
   - Cementerio Municipal — /rfw/Frecuentes/cementerio.html (⚠️ el link real de la tarjeta apunta a

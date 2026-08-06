@@ -666,9 +666,19 @@ cerrados:
    propio: marco legal + cómo tramitar, que a su vez remite al sistema externo del CFIA).
    Implementado como nodo de nivel superior `planos-apc` en `index.html` e `index_prueba.html`,
    igual que sus hermanos del menú principal.
-2. **Salarios Base 2021** — verificado: el nodo `salarios-base` ya existía y renderiza
-   correctamente la tabla real (categoría / salario base / número de personas), sin cambios
-   necesarios.
+2. **Salarios Base 2021** — verificado a fondo (no solo confirmar que el nodo existe y tiene
+   contenido, sino efectivamente renderizarlo en pantalla) y **sí se encontró un defecto real**:
+   el nodo `salarios-base` existía pero NO mostraba una tabla - el contenido scrapeado venía
+   como texto plano línea por línea (categoría + salario + personas sin separar), así que se
+   veía como una lista con líneas tipo "Operativo Municipal 1A 312 245,52 7", más el título
+   "Salarios base 2021" duplicado debajo del `<h2>`. Corregido en ambos archivos con
+   `tablaTexto` (mismo mecanismo ya usado en "Junta Directiva CCDRF") y `lineasOmitir`: ahora
+   se ve como tabla real de 3 columnas (Categoría / Salario base / Personas contratadas),
+   montos reformateados con separador de miles en punto (`₡1.921.060,47`), y una fila de total
+   (85 personas, que coincide con la suma real de la columna). La primera verificación
+   "superficial" de hoy (solo confirmar existencia del nodo y del contenido en
+   `conocimiento.json`) había dado un falso "sin cambios necesarios" - quedó corregido tras
+   verificar el renderizado real en el navegador.
 3. **Los 6 ítems de `mapa_organizado.md`** ("Otros ítems del PDF original sin reconciliar
    todavía") — los 8 ítems que quedaban (los 6 asignados a Día 4 más 2 adicionales que también
    colgaban de esa lista) se investigaron uno por uno contra `/mapa-del-sitio/` del sitio real.
@@ -722,6 +732,30 @@ esto es una mejora de la copia borrosa, no un sustituto de tener el archivo fuen
 
 Verificado visualmente con Playwright headless (screenshot de ambos archivos, ambas paletas de
 color) antes de entregar - capturas compartidas con Jeiron en el chat.
+
+### Verificación en vivo de Día 4 encontró un defecto real, más otro pedido fuera de plan
+
+Al pedido de Jeiron de "continuar con la lista sin tocar otro día", en vez de solo confirmar por
+texto que Día 4 estaba cerrado, se re-verificó en el navegador (headless, con Playwright,
+interceptando la llamada a `${BACKEND}/paginas` para servir `conocimiento.json` localmente ya
+que este sandbox no tiene salida de red hacia el backend real en Render.com) el renderizado real
+de los 3 nodos tocados hoy. Encontró que la verificación anterior de "Salarios Base 2021" había
+sido superficial (solo confirmar que el nodo y el contenido existían, sin efectivamente
+renderizarlo) y de hecho SÍ tenía un defecto: no se mostraba como tabla. Ya corregido (ver
+detalle en el punto 2 de la lista de arriba).
+
+Mientras se hacía esta verificación, Jeiron reportó por su cuenta un problema real en "Preguntas
+Frecuentes" (contenido de Día 3, no de Día 4): en `index.html` la sección directamente no existía
+(nodo marcado `roto`), y en `index_prueba.html` los botones "Más información" de cada categoría
+no redirigían a ningún lado. Se le preguntó si prefería dejarlo para el QA formal de Contribuyente
+(Día 5) o resolverlo ya como excepción - eligió resolverlo ahora. Detalle completo de la causa y
+la corrección en `mapa_organizado.md`, sección de Contribuyente > Preguntas Frecuentes. En
+resumen: el submenú de 6 categorías se igualó en ambos archivos, y se agregó un mecanismo nuevo
+reutilizable, `nodo.enlacesInternos` (hermano de `listasEnlaces`, pero para navegar a OTRO NODO
+de la misma app vía `irANodo()` en vez de a un link externo), que reemplaza el texto muerto
+"Más información" × 6 por links reales. Se verificó haciendo click de verdad sobre uno de los
+links generados (no solo llamando `irANodo()` desde consola) para confirmar que el `onclick`
+generado funciona de punta a punta.
 
 ## Limitación conocida, aceptada por ahora (posible mejora futura)
 Las listas ANIDADAS del sitio real (ítem padre con sub-ítems debajo, y la lista sigue en el

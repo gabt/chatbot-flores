@@ -605,7 +605,45 @@ const ARBOL = [
                   { id: 'nivel-apoyo', label: 'Nivel de Apoyo', tipo: 'contenido', url: 'nivel-de-apoyo' },
                 ]
               },
-              { id: 'salarios-base', label: 'Salarios Base 2021', tipo: 'contenido', url: 'salarios-base' },
+              {
+                // Verificado Día 4 (2026-08-06): el contenido scrapeado venía como texto
+                // plano línea por línea (categoría + salario + personas todo junto), sin
+                // tabla real - se agregó tablaTexto para mostrarlo como tabla de verdad,
+                // igual que "Junta Directiva CCDRF" más arriba. Los salarios en el sitio
+                // real usan espacio como separador de miles (ej. "1 921 060,47"); se
+                // reformatearon con punto (formato costarricense estándar, "₡1.921.060,47")
+                // para que se lean claro en una columna angosta.
+                id: 'salarios-base', label: 'Salarios Base 2021', tipo: 'contenido', url: 'salarios-base',
+                lineasOmitir: ['Salarios base 2021'],
+                tablaTexto: {
+                  anclaInicio: 'CATEGORIA SALARIO BASE NUMERO DE PERSONAS CONTRATADAS',
+                  anclaFin: '85',
+                  columnas: ['Categoría', 'Salario base', 'Personas contratadas'],
+                  filas: [
+                    { valores: ['Alcalde', '₡1.921.060,47', '1'] },
+                    { valores: ['Vice Alcaldesa', '₡1.536.848,38', '1'] },
+                    { valores: ['Operativo Municipal 1A', '₡312.245,52', '7'] },
+                    { valores: ['Operativo Municipal 1B', '₡321.987,75', '17'] },
+                    { valores: ['Operativo Municipal 1D', '₡351.836,63', '8'] },
+                    { valores: ['Operativo Municipal 1E', '₡412.297,71', '1'] },
+                    { valores: ['Tecnico Municipal 1A', '₡387.042,63', '4'] },
+                    { valores: ['Tecnico Municipal 2A', '₡509.346,71', '2'] },
+                    { valores: ['Tecnico Municipal 2B', '₡525.122,05', '3'] },
+                    { valores: ['Profesional Municipal 1A', '₡575.051,35', '7'] },
+                    { valores: ['Profesional Municipal 1B', '₡609.925,53', '3'] },
+                    { valores: ['Profesional Municipal 1C', '₡629.247,34', '1'] },
+                    { valores: ['Profesional Municipal 2A', '₡690.648,51', '9'] },
+                    { valores: ['Profesional Municipal 2B', '₡712.401,19', '2'] },
+                    { valores: ['Profesional Municipal 2C', '₡734.873,54', '4'] },
+                    { valores: ['Administrativo Municipal 1A', '₡356.240,50', '7'] },
+                    { valores: ['Administrativo Municipal 1B', '₡358.197,35', '4'] },
+                    { valores: ['Administrativo Municipal 2A', '₡399.004,31', '1'] },
+                    { valores: ['Administrativo Municipal 2B', '₡464.937,96', '1'] },
+                    { valores: ['Servicios Especiales', '₡690.648,51', '2'] },
+                    { seccion: 'Total: 85 personas contratadas' },
+                  ]
+                }
+              },
             ]
           },
           { id: 'mision-vision', label: 'Misión y Visión', tipo: 'contenido', url: 'mision-y-vision' },
@@ -834,7 +872,39 @@ const ARBOL = [
           },
         ]
       },
-      { id: 'preguntas-frecuentes', label: 'Preguntas Frecuentes', tipo: 'roto', hrefReal: 'https://flores.go.cr/contribuyente/preguntas/' },
+      {
+        // Corregido Día 4 (2026-08-06) a pedido de Jeiron, aunque es contenido de
+        // Día 3: este nodo estaba marcado 'roto' (placeholder "aún no incorporada")
+        // solo en index.html - el submenú completo de 6 categorías SÍ existía en
+        // index_prueba.html desde el 2026-08-05, violando la regla de que toda
+        // modificación va en ambos archivos. Se igualó acá. Además, en ambos
+        // archivos el texto scrapeado de la página resumen trae 6 veces la
+        // palabra "Más información" SIN link real (el scraper no captura href de
+        // texto plano) - se reemplaza ese bloque con enlacesInternos, que navega
+        // de verdad a cada categoría dentro de la misma app.
+        id: 'preguntas-frecuentes', label: 'Preguntas Frecuentes', tipo: 'contenido', url: 'contribuyente/preguntas',
+        lineasOmitir: ['Preguntas Frecuentes'],
+        enlacesInternos: {
+          anclaInicio: 'Bienes inmuebles',
+          anclaFin: null,
+          items: [
+            { titulo: 'Bienes inmuebles', pregunta: '¿Cada cuánto tiempo se debe hacer la declaración de bienes inmuebles?', destino: 'preg-bienes-inmuebles' },
+            { titulo: 'Acueducto', pregunta: '¿Cuáles son los servicios y trámites que ofrece el Acueducto Municipal?', destino: 'preg-acueducto' },
+            { titulo: 'Cementerio Municipal', destino: 'preg-cementerio' },
+            { titulo: 'Patentes Municipales', pregunta: '¿Cuáles son los trámites y servicios que se pueden realizar en la municipalidad?', destino: 'preg-patentes' },
+            { titulo: 'Catastro', pregunta: '¿Cuándo es necesario tramitar uso de suelo?', destino: 'preg-catastro' },
+            { titulo: 'Cobros', pregunta: '¿Se puede solicitar arreglo de pago por la deuda pendiente?', destino: 'preg-cobros' },
+          ]
+        },
+        children: [
+          { id: 'preg-bienes-inmuebles', label: 'Bienes Inmuebles', tipo: 'contenido', url: 'rfw/frecuentes/bienes.html' },
+          { id: 'preg-acueducto', label: 'Acueducto', tipo: 'contenido', url: 'rfw/frecuentes/acueducto.html' },
+          { id: 'preg-cementerio', label: 'Cementerio Municipal', tipo: 'contenido', url: 'rfw/frecuentes/cementerio.html' },
+          { id: 'preg-patentes', label: 'Patentes Municipales', tipo: 'contenido', url: 'rfw/frecuentes/patentes.html' },
+          { id: 'preg-catastro', label: 'Catastro', tipo: 'contenido', url: 'rfw/frecuentes/catastro.html' },
+          { id: 'preg-cobros', label: 'Gestión de Cobros', tipo: 'contenido', url: 'contribuyente/cobros' },
+        ]
+      },
       { id: 'amnistia-tributaria', label: 'Amnistía Tributaria', tipo: 'descarga', nota: 'PDF (Acuerdo Municipal MF-CM-SEC-AC-1629-122-21, Plan de Condonación)', href: 'pdfs/amnistia-tributaria.pdf' },
     ]
   },
@@ -1437,6 +1507,22 @@ const ARBOL = [
         }).join('');
     }
 
+    // Variante de listasEnlaces para cuando el destino NO es un link externo
+    // sino OTRO NODO de este mismo árbol (ej. "Más información" bajo cada
+    // categoría de Preguntas Frecuentes, que en el sitio real navega a la
+    // página de esa categoría). En vez de <a href> con target=_blank, usa
+    // onclick + irANodo() para navegar dentro de la misma app de una vez -
+    // agregado Día 4 (2026-08-06) al corregir "Preguntas Frecuentes".
+    function renderEnlacesInternos(items) {
+        const li = items.map(it => {
+            const etiqueta = it.pregunta
+                ? `<strong>${escapeHtml(it.titulo)}:</strong> ${escapeHtml(it.pregunta)}`
+                : `<strong>${escapeHtml(it.titulo)}</strong>`;
+            return `<li><a href="#" onclick="irANodo('${it.destino}'); return false;">${etiqueta} →</a></li>`;
+        }).join('');
+        return `<ul class="lista-enlaces">${li}</ul>`;
+    }
+
     async function renderContenido(nodo, pane) {
         const paginas = await obtenerPaginas();
         const pagina = buscarPagina(paginas, nodo.url);
@@ -1514,7 +1600,15 @@ const ARBOL = [
                     listasEnlacesHtml = renderListasEnlaces(nodo.listasEnlaces.categorias);
                 }
             }
-            textoDiv.innerHTML = tablaHtml + formatearTexto(contenidoTexto) + listasEnlacesHtml;
+            let enlacesInternosHtml = '';
+            if (nodo.enlacesInternos) {
+                const extraido = extraerYQuitarBloque(contenidoTexto, nodo.enlacesInternos.anclaInicio, nodo.enlacesInternos.anclaFin);
+                if (extraido) {
+                    contenidoTexto = extraido.antes + '\n\n' + extraido.despues;
+                    enlacesInternosHtml = renderEnlacesInternos(nodo.enlacesInternos.items);
+                }
+            }
+            textoDiv.innerHTML = tablaHtml + formatearTexto(contenidoTexto) + listasEnlacesHtml + enlacesInternosHtml;
             imagenesInline.forEach(({ regla, imagen }) => {
                 const parrafos = Array.from(textoDiv.querySelectorAll('p'));
                 const objetivo = parrafos.find(p => p.textContent.includes(regla.despuesDeTexto));
