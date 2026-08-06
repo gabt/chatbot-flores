@@ -177,21 +177,71 @@ Vive en la barra secundaria de accesos rápidos (ver arriba), no dentro del drop
 MUNICIPALIDAD. Trae: Actividades, Historia del cantón, Información poblacional,
 Organizaciones cantonales.
 
-## Otros ítems del PDF original sin reconciliar todavía
-- Comité Cantonal Persona Joven (¿es lo mismo que "Comité Cantonal de la Persona
-  Joven" ya confirmado dentro de Comités Municipales? probablemente sí, mismo ítem)
+## Otros ítems del PDF original — ✅ TODOS RECONCILIADOS (Día 4, 2026-08-06)
+
+**Hallazgo general que explica el lote completo:** se verificó `/mapa-del-sitio/` (el mapa
+del sitio auto-generado por WordPress) del sitio real, y resulta que TODOS los ítems de
+esta lista - salvo los ya resueltos antes de hoy - son simplemente el listado plano de
+"Páginas" (el post-type "Page" de WordPress) que expone ese plugin, no un menú de
+navegación real. La mayoría de esos nombres ya están cubiertos por nodos existentes bajo
+otras rutas/etiquetas (confirmando que son la misma página real); el resto son páginas
+huérfanas que existen en el CMS pero a las que no se llega desde el header ni el footer
+reales - mismo patrón ya documentado para "Eventos" (plugin My Calendar). Detalle item
+por item:
+
+- Comité Cantonal Persona Joven (✅ RESUELTO: es el mismo ítem, confirmado por URL
+  idéntica - `comite-cantonal-persona-joven` -, ya implementado como nodo `comite-joven`
+  dentro de Municipalidad > Comités Municipales. Sin acción.)
 - Contratación Administrativa (✅ RESUELTO: es "Procesos de Contratación" dentro de Transparencia > Información Institucional)
 - Himno al Cantón de Flores (✅ RESUELTO: vive en la barra secundaria de accesos rápidos)
-- I Simulacro Nacional de Evacuación por Sismo (probablemente un post de noticias,
-  no una página de navegación)
-- Información Institucional (sin ubicación confirmada, ¿duplicado de Info General?)
-- Sesiones del Concejo Municipal (¿es lo mismo que "Sesiones en vivo" o "Actas del
-  Concejo" ya confirmados? a confirmar)
-- Bolsa de empleo (sin ubicación confirmada)
-- Calendario (¿es el mismo "Calendario de pagos" de Contribuyente, o algo distinto?)
-- Formularios de patentes (¿duplicado de Contribuyente > Servicios > Formularios >
-  Patentes Municipales?)
-- Política de privacidad (probablemente un link de footer, no del menú principal)
+- I Simulacro Nacional de Evacuación por Sismo (✅ RESUELTO, descartado: página huérfana
+  de WordPress -`/simulacro/`-, no enlazada desde el menú real. Contenido real de solo 70
+  caracteres, un anuncio puntual y ya vencido de un evento pasado con link de inscripción
+  -"Inscríbase en línea aquí"-. Mismo tipo de exclusión ya aplicado a "Eventos": instancia
+  de evento puntual, no contenido de página de navegación permanente.)
+- Información Institucional (✅ RESUELTO: no es un ítem aparte - es el nombre real de un
+  punto dentro de la jerarquía de Transparencia -`/transparencia/infinst.php` y
+  `/transparencia/acinfo.php`-, sección que ya fue simplificada a un solo link de salida
+  el 2026-08-05 -ver sección "TRANSPARENCIA" arriba-. Cubierto por esa decisión previa,
+  sin acción adicional.)
+- Sesiones del Concejo Municipal (✅ RESUELTO, descartado del árbol visual: página
+  huérfana de WordPress -`/sesionesconcejo/`-, NO enlazada desde el dropdown real de
+  Concejo Municipal -solo aparece en el mapa del sitio auto-generado-. Tiene contenido
+  real -5365 caracteres, listado de video-sesiones del "Canal Concejo Flores"-, ya
+  capturado en `conocimiento.json`, por lo que el chatbot puede responder preguntas al
+  respecto vía RAG aunque no tenga nodo propio en el árbol. La necesidad ciudadana
+  equivalente -ver sesiones del concejo- ya está cubierta por el nodo existente "Actas
+  del Concejo" -incluye botón de canal de YouTube-. Nota adicional: el ítem "Sesiones en
+  vivo" que sí cuelga del dropdown real de Concejo Municipal está vacío en el sitio real
+  -apenas 16 caracteres, solo el título-, consistente con la fragilidad ya documentada
+  del sitio real.)
+- Bolsa de empleo (✅ RESUELTO, descartado del árbol visual: página huérfana de WordPress
+  -`/bolsa-de-empleo-municipal/`-, NO enlazada desde el menú real -ni en el dropdown de
+  Municipalidad/Recursos Humanos, ni en el footer-. Contenido real y vigente -1653
+  caracteres, concursos externos activos de la municipalidad-, ya capturado en
+  `conocimiento.json`; el chatbot puede responder preguntas sobre vacantes vía RAG. No se
+  agregó nodo propio para mantener el árbol fiel al menú real del sitio, mismo criterio
+  aplicado a "Funcionarios".)
+- Calendario (✅ RESUELTO: confirmado que es el mismo ítem ya documentado como "Eventos"
+  más abajo -plugin "My Calendar", `/my-calendar/`-, ya excluido del scraping por
+  decisión previa. Mismo ítem, sin acción adicional.)
+- Formularios de patentes (✅ RESUELTO e IMPLEMENTADO 2026-08-06: NO es duplicado del
+  nodo existente "Patentes Municipales" -`form-patentes`, que apunta a
+  `/formularios/patentes.php`, la página real de descarga de los 5 formularios-. Es una
+  página real distinta -`flores.go.cr/patentes`-, también huérfana -solo en el mapa del
+  sitio auto-generado, no en el dropdown real-, pero con contenido propio, real y valioso
+  para el ciudadano: plazos, multas y requisitos de la Declaración Jurada del Impuesto de
+  Patentes 2026. Por su valor informativo se agregó como nodo nuevo `form-patentes-
+  declaracion` dentro de Contribuyente > Servicios > Formularios, en `index.html` e
+  `index_prueba.html`, conservando el título real de la página -"Formularios de
+  patentes"- pese a que no coincide con su contenido real -inconsistencia propia del
+  sitio real, documentada en el código-.)
+- Política de privacidad (✅ RESUELTO, descartado: página huérfana de WordPress
+  -`/politica-privacidad/`-, texto genérico estándar que WordPress genera automáticamente
+  para cualquier instalación -no es contenido institucional real de la Municipalidad-. No
+  enlazada desde el menú ni el footer reales -se verificó el footer real: solo tiene
+  "Inicio" y "Mapa del sitio"-. Ya está en `conocimiento.json` sin que eso implique
+  ninguna acción adicional.)
 
 ---
 

@@ -366,6 +366,25 @@
         display: block; margin: 0 auto 10px;
     }
 
+    /* Medios de pago (Contribuyente > Pago en línea): filas con imagen chica
+       a la izquierda y nombre del banco a la derecha, fila completa clickeable
+       cuando hay link real. "Pago directo" no tiene link (aún no existe ese
+       servicio), se muestra atenuado con una nota aclaratoria debajo. */
+    .medios-pago { display: flex; flex-direction: column; gap: 14px; margin-top: 20px; max-width: 440px; }
+    .medio-pago-item {
+        display: flex; align-items: center; gap: 16px;
+        background: #eaf4fb; border-radius: 8px; padding: 14px 18px;
+        border-left: 4px solid #2e86c1; text-decoration: none; color: inherit;
+        transition: background 0.15s;
+    }
+    a.medio-pago-item:hover { background: #d7ecfa; }
+    .medio-pago-pendiente { border-left-color: #b0b0b0; opacity: 0.85; cursor: default; }
+    .medio-pago-item img { width: 56px; height: 56px; object-fit: contain; flex-shrink: 0; }
+    .medio-pago-texto { display: flex; flex-direction: column; }
+    .medio-pago-nombre { font-weight: bold; font-size: 1.05rem; color: #1a5276; }
+    .medio-pago-pendiente .medio-pago-nombre { color: #555; }
+    .medio-pago-nota { font-size: 0.78rem; color: #888; margin-top: 2px; }
+
     table {
         width: 100%;
         border-collapse: collapse;
@@ -754,6 +773,19 @@ const ARBOL = [
               { id: 'form-catastro', label: 'Catastro', tipo: 'externo', href: 'https://flores.go.cr/formularios/catastro.php', nota: '4 formularios' },
               { id: 'form-planificacion', label: 'Planificación Urbana', tipo: 'externo', href: 'https://flores.go.cr/formularios/planificacion.php', nota: '7 formularios descargables' },
               { id: 'form-patentes', label: 'Patentes Municipales', tipo: 'externo', href: 'https://flores.go.cr/formularios/patentes.php', nota: '5 formularios' },
+              {
+                // Resuelto Día 4 (2026-08-06), ítem "Formularios de patentes" de mapa_organizado.md.
+                // Página real independiente (flores.go.cr/patentes), listada en el mapa del sitio
+                // auto-generado de WordPress pero NO en el dropdown real de Contribuyente. A pesar
+                // del título "Formularios de patentes" (así se llama en el sitio real), el contenido
+                // real no son formularios sino los plazos/requisitos de la Declaración Jurada del
+                // Impuesto de Patentes 2026 - se conserva el título real tal cual, es una
+                // inconsistencia del propio sitio, no un error nuestro. Se usa el fragmento de URL
+                // completo 'flores.go.cr/patentes' (no solo 'patentes') porque ese fragmento corto
+                // también matchea por error la URL /contribuyente/preguntas/patentes.
+                id: 'form-patentes-declaracion', label: 'Formularios de patentes', tipo: 'contenido', url: 'flores.go.cr/patentes',
+                lineasOmitir: ['Formularios de patentes'],
+              },
               { id: 'form-bienes', label: 'Bienes Inmuebles', tipo: 'contenido', url: 'formularios/bienes.php' },
               { id: 'form-utgv', label: 'Gestión Vial Inmuebles', tipo: 'contenido', url: 'formularios/utgv.php' },
             ]
@@ -780,6 +812,19 @@ const ARBOL = [
         id: 'pago-linea', label: 'Pago en línea',
         children: [
           { id: 'calendario-pagos', label: 'Calendario de pagos', tipo: 'contenido', url: 'calendario-de-pagos' },
+          {
+            // Agregado Día 4 (2026-08-06) a pedido de Gerardo. "Pago directo"
+            // es un sistema propio de la municipalidad aún no implementado
+            // (sin 'href' a propósito) - ver recomendaciones_informe_final.md,
+            // punto 4, donde se recomienda usar la plataforma de IFAM en vez
+            // de construir uno desde cero.
+            id: 'medios-pago', label: 'Medios de pago', tipo: 'especial-pago',
+            medios: [
+              { nombre: 'BCR', imagen: 'assets/logo-bcr.png', href: 'https://www.bancobcr.com/wps/portal/bcr' },
+              { nombre: 'Banco Nacional', imagen: 'assets/logo-bncr.png', href: 'https://www.bncr.fi.cr/' },
+              { nombre: 'Pago directo', imagen: 'assets/logo-muni-mejorado.png', nota: '(Estamos trabajando para hacerlo posible)' },
+            ]
+          },
         ]
       },
       { id: 'preguntas-frecuentes', label: 'Preguntas Frecuentes', tipo: 'roto', hrefReal: 'https://flores.go.cr/contribuyente/preguntas/' },
@@ -1000,6 +1045,17 @@ const ARBOL = [
         ]
       },
     ]
+  },
+  {
+    // Item de nivel superior del menú real (INICIO | MUNICIPALIDAD ▾ | FUNCIONARIOS ▾ |
+    // CONTRIBUYENTE ▾ | NOTICIAS Y COMUNICADOS | CONTÁCTENOS ▾ | PROTOCOLO COVID-19 |
+    // PLANOS POR APC) - resuelto Día 4 (2026-08-06). Página real con contenido propio
+    // (marco legal + cómo tramitar), que a su vez remite al sistema externo del CFIA
+    // (tramitesconstruccion.go.cr) para el trámite en sí - se muestra como 'contenido'
+    // (como "Documentación") en vez de 'externo' puro, porque sí hay texto real que
+    // mostrar antes de mandar afuera.
+    id: 'planos-apc', label: 'Planos por APC', tipo: 'contenido', url: 'planos-por-apc',
+    lineasOmitir: ['Planos por APC'],
   },
 ];
 
@@ -1308,6 +1364,7 @@ const ARBOL = [
             case 'especial-alcaldia': renderAlcaldia(pane); break;
             case 'especial-miembros': await renderMiembros(nodo, pane); break;
             case 'especial-actas': await renderActas(nodo, pane); break;
+            case 'especial-pago': renderMediosPago(nodo, pane); break;
             case 'especial-blog': renderBlog(nodo, pane); break;
             case 'especial-contacto': renderContacto(pane); break;
             case 'especial-directorio': renderDirectorio(pane); break;
@@ -1702,6 +1759,48 @@ const ARBOL = [
             grid.appendChild(item);
         });
         pane.appendChild(grid);
+    }
+
+    // Medios de pago (Contribuyente > Pago en línea) - agregado Día 4 (2026-08-06)
+    // a pedido de Gerardo. Cada fila es un banco: imagen chica a la izquierda,
+    // nombre a la derecha, fila completa clickeable hacia el sitio del banco.
+    // "Pago directo" no tiene 'href' (ese servicio propio de la municipalidad
+    // aún no existe) - se renderiza sin <a>, atenuado, con nota aclaratoria.
+    function renderMediosPago(nodo, pane) {
+        pane.innerHTML = `<h2>${nodo.label}</h2><p>Seleccione el banco con el que desea realizar su pago.</p>`;
+        const lista = document.createElement('div');
+        lista.className = 'medios-pago';
+        nodo.medios.forEach(medio => {
+            const fila = document.createElement(medio.href ? 'a' : 'div');
+            fila.className = 'medio-pago-item' + (medio.href ? '' : ' medio-pago-pendiente');
+            if (medio.href) {
+                fila.href = medio.href;
+                fila.target = '_blank';
+                fila.rel = 'noopener noreferrer';
+            }
+
+            const img = document.createElement('img');
+            img.src = medio.imagen;
+            img.alt = medio.nombre;
+            fila.appendChild(img);
+
+            const textoDiv = document.createElement('div');
+            textoDiv.className = 'medio-pago-texto';
+            const nombre = document.createElement('span');
+            nombre.className = 'medio-pago-nombre';
+            nombre.textContent = medio.nombre;
+            textoDiv.appendChild(nombre);
+            if (medio.nota) {
+                const nota = document.createElement('span');
+                nota.className = 'medio-pago-nota';
+                nota.textContent = medio.nota;
+                textoDiv.appendChild(nota);
+            }
+            fila.appendChild(textoDiv);
+
+            lista.appendChild(fila);
+        });
+        pane.appendChild(lista);
     }
 
     // Listados de blog (ej. categorías del blog real como "Gestión Ambiental" o
