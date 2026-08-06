@@ -153,7 +153,7 @@ def chat():
     try:
         respuesta_api = client.messages.create(
             model="claude-sonnet-5",
-            max_tokens=1536,
+            max_tokens=2048,
             system=system_prompt,
             messages=mensajes,
             tools=[
@@ -174,23 +174,26 @@ def chat():
             ],
         )
 
-        # La respuesta puede traer varios bloques (texto + llamada de búsqueda +
-        # resultados + texto final). El bloque de texto final ya incluye todo lo
-        # que Claude concluyó después de buscar, así que usamos ese.
+        # La respuesta puede traer varios bloques de texto intercalados con la
+        # búsqueda (ej.: texto ANTES de buscar + búsqueda + texto DESPUÉS,
+        # continuando la misma idea). Hay que unir TODOS los bloques de texto
+        # en orden - quedarse solo con el último corta la respuesta a la mitad
+        # (bug real detectado 2026-08-06: se perdía el nombre del alcalde
+        # porque venía en el primer bloque, antes de la búsqueda).
         bloques_texto = [b for b in respuesta_api.content if b.type == "text"]
         if bloques_texto:
-            ultimo = bloques_texto[-1]
-            texto_respuesta = ultimo.text.strip()
+            texto_respuesta = "".join(b.text for b in bloques_texto).strip()
 
-            # Si el bloque final trae citas de la búsqueda web, las agregamos
-            # al final de la respuesta para que el ciudadano vea la fuente.
+            # Juntamos las citas de TODOS los bloques (no solo el último) por
+            # si la búsqueda se usó más de una vez en la misma respuesta.
             fuentes = []
             vistos = set()
-            for c in (getattr(ultimo, "citations", None) or []):
-                url = getattr(c, "url", None)
-                if url and url not in vistos:
-                    vistos.add(url)
-                    fuentes.append(url)
+            for b in bloques_texto:
+                for c in (getattr(b, "citations", None) or []):
+                    url = getattr(c, "url", None)
+                    if url and url not in vistos:
+                        vistos.add(url)
+                        fuentes.append(url)
             if fuentes:
                 texto_respuesta += "\n\nFuentes consultadas:\n" + "\n".join(f"- {u}" for u in fuentes)
         else:
