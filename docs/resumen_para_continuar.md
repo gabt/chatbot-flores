@@ -20,9 +20,16 @@ día en `docs/Tareas-Pendientes.docx`.
 **Día 4 — ✅ CERRADO 2026-08-06** (ver sección "Sesión 2026-08-06 (continuación): Día 4" más
 abajo para el detalle completo: Planos por APC implementado, Salarios Base 2021 verificado, los
 8 ítems de `mapa_organizado.md` reconciliados, más el pedido adicional de Gerardo de "Medios de
-pago" en Contribuyente > Pago en línea). **Siguiente sesión: arrancar Día 5** (QA funcional de
-Municipalidad y Contribuyente, ~45 nodos, con prueba cruzada en al menos dos navegadores) - ver
-`docs/Tareas-Pendientes.docx` para el detalle completo de ese día.
+pago" en Contribuyente > Pago en línea, y la corrección de "Preguntas Frecuentes"). **Siguiente
+sesión: arrancar Día 5** (QA funcional de Municipalidad y Contribuyente, ~45 nodos, con prueba
+cruzada en al menos dos navegadores) - ver `docs/Tareas-Pendientes.docx` para el detalle
+completo de ese día.
+
+**Bitácoras de horas — ver sección "Bitácoras de horas (trabajo administrativo, no técnico) —
+2026-08-06" más abajo antes de tocar cualquiera de los dos documentos Word.** Pendiente puntual:
+confirmar si `docs/BITACORA DEL ESTUDIANTE PASANTÍA.docx` ya se guardó en el dispositivo (quedó
+bloqueado por estar abierto en Word al final de la sesión del 6/8/26) y llenar Hora Inicio/Hora
+Fin del 6/8/26 en ambas bitácoras cuando Jeiron las dé.
 
 **Instrucción de Gerardo (PRIORIDAD) — ✅ investigación y primera carga resueltas el 2026-08-06,
 ver sección "Sesión 2026-08-06" más abajo para el detalle completo.** Texto original de la
@@ -89,6 +96,14 @@ siguen existiendo solo ahí hasta que haya una decisión.
   (1) "Nuestros Valores" tiene el texto encerrado en una imagen (mal para accesibilidad/SEO);
   (2) el mapa de "Ubicación" usa un widget de Waze poco práctico en escritorio (mejor pensado
   para celular). Seguir agregando entradas acá cuando aparezcan, separado de los fixes técnicos.
+
+## Bitácoras de horas (documentos Word, no Markdown)
+- `docs/Jeiron-Bitacora.docx`: bitácora para la empresa (una fila por día). Se sube a GitHub.
+- `docs/BITACORA DEL ESTUDIANTE PASANTÍA.docx`: bitácora exigida por el colegio (agregada
+  2026-08-06). Portada y línea "Semana del..." se llenan a mano - **nunca editar esas partes**.
+  Jeiron confirmó que este documento NO se sube a GitHub, solo se actualiza localmente. Ver
+  detalle completo del proceso en la sección "Bitácoras de horas" dentro de "Sesión 2026-08-06
+  (continuación)" más abajo.
 
 ## Funcionalidades clave agregadas hoy en index.html
 1. **Zoom en imágenes de contenido**: cualquier imagen sin link de navegación (fotos, diagramas)
@@ -756,6 +771,61 @@ de la misma app vía `irANodo()` en vez de a un link externo), que reemplaza el 
 "Más información" × 6 por links reales. Se verificó haciendo click de verdad sobre uno de los
 links generados (no solo llamando `irANodo()` desde consola) para confirmar que el `onclick`
 generado funciona de punta a punta.
+
+### Bitácoras de horas (trabajo administrativo, no técnico) — 2026-08-06
+
+Dos documentos Word se mantienen en `docs/`, ambos con una fila/entrada por día (3/8/26 al
+6/8/26 hasta ahora):
+
+1. **`docs/Jeiron-Bitacora.docx`** — bitácora para la empresa. Tabla con columnas Fecha / Hora
+   Inicio / Hora Fin / Tot. Horas / Resumen de labores (celda de texto libre, varios párrafos
+   cortos por día).
+2. **`docs/BITACORA DEL ESTUDIANTE PASANTÍA.docx`** — bitácora exigida por el colegio (CTP de
+   Flores), **agregada hoy por primera vez**. Tiene una portada (nombre del estudiante,
+   especialidad, empresa, supervisor, sello) y una línea "Semana del ___ al ___ del mes de ___
+   del 202_" que **Jeiron llena a mano con lapicero — nunca tocar esas dos partes**. Debajo,
+   una tabla con columnas Tareas que realizó / Día / Hora inicio / Hora finalización, con una
+   fila por día (mismo criterio que la bitácora de la empresa: todas las tareas del día en una
+   sola celda de "Tareas que realizó", no una fila por tarea individual).
+
+Hoy se hicieron dos cosas, en este orden (pedido explícito de Jeiron):
+
+- **Simplificación de la entrada del 6/8/26 en la bitácora de la empresa.** La primera versión
+  que se escribió (a pedido de Jeiron, resumiendo todo el día 6/8/26: prioridad de Gerardo/RAG,
+  los 3 bugs de producción, Día 4, Medios de pago, Preguntas Frecuentes) quedó demasiado extensa
+  y técnica (10 párrafos largos) comparada con las entradas de los días anteriores (3/8/26,
+  4/8/26, 5/8/26, cada una ~4-5 párrafos cortos en lenguaje llano). Se acortó a 5 párrafos
+  cortos con el mismo estilo simple ("Se mejoró...", "Se encontraron y corrigieron...", etc.),
+  manteniendo el contenido explicativo pero sin jerga técnica extensa. Hora Inicio/Hora
+  Fin/Tot. Horas del 6/8/26 se dejaron en blanco a propósito (Jeiron pidió no tocarlas porque
+  aún no había tomado su hora de almuerzo ni cerrado el día) — **quedan pendientes de llenar,
+  ya sea a mano o pidiéndolo en una próxima sesión.**
+- **Traslado de todo (Fecha/Día, Horas, Tareas) a la bitácora del colegio,** respetando su
+  propia estructura de 4 columnas y sin tocar la portada ni la línea "Semana del...". Se
+  transfirieron los 4 días (3/8/26 al 6/8/26, este último también con horas en blanco, igual
+  que en la bitácora de la empresa) a las primeras 4 filas de la tabla; quedan ~22 filas vacías
+  para los días siguientes de la pasantía.
+
+Metodología técnica usada (por si hay que repetirla en próximas sesiones): edición directa del
+XML de cada `.docx` (`word/document.xml` dentro del ZIP), usando el skill `docx` — unzip →
+`merge_runs.py` → editar el XML a mano localizando la fila por el texto de la fecha (ej.
+`content.find('6/8/26')`) → validar con `validate.py --original` → renderizar a PDF/JPG con
+LibreOffice + `pdftoppm` para confirmar visualmente antes de entregar. Ambos archivos se
+entregaron a Jeiron y se intentó guardar en `C:\GBProyectos\chatbot-flores\docs\` vía el puente
+al dispositivo; la bitácora de la empresa sí se guardó, pero la del colegio quedó rechazada
+porque Jeiron la tenía abierta en Word en ese momento (bloqueo de archivo de Windows) — **queda
+pendiente confirmar en la próxima sesión si ya se guardó bien en el dispositivo, o repetir el
+`device_commit_files` con el Word cerrado.** Jeiron confirmó que la bitácora del colegio NO se
+sube a GitHub (es un documento solo local/físico para el colegio); solo la de la empresa se
+versiona en el repo.
+
+**Para la próxima sesión:** cuando se cierre el Día 5 (u otro día), seguir el mismo patrón:
+(1) agregar la fila del día a `Jeiron-Bitacora.docx` con un resumen corto de 4-5 párrafos estilo
+llano (no repetir el error de hoy de escribir una primera versión demasiado técnica/larga —
+apuntar directo a ese tono desde el principio), dejando Hora Inicio/Fin en blanco si Jeiron no
+las ha dado; (2) replicar la misma fila (Día/Horas/Tareas) en
+`BITACORA DEL ESTUDIANTE PASANTÍA.docx`, en la siguiente fila vacía de su tabla, sin tocar
+portada ni "Semana del...".
 
 ## Limitación conocida, aceptada por ahora (posible mejora futura)
 Las listas ANIDADAS del sitio real (ítem padre con sub-ítems debajo, y la lista sigue en el
