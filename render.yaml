@@ -3,7 +3,7 @@ services:
     name: chatbot-flores
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app --bind 0.0.0.0:10000
+    startCommand: gunicorn app:app --bind 0.0.0.0:10000 --timeout 120
     envVars:
       - key: ANTHROPIC_API_KEY
         sync: false

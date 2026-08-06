@@ -1882,10 +1882,26 @@ const ARBOL = [
         const msgs = document.getElementById('chat-messages');
         const div = document.createElement('div');
         div.className = `msg ${clase}`;
-        div.textContent = texto;
+        if (clase.includes('bot')) {
+            div.innerHTML = formatearMensajeBot(texto);
+        } else {
+            div.textContent = texto;
+        }
         msgs.appendChild(div);
         msgs.scrollTop = msgs.scrollHeight;
         return div;
+    }
+
+    function formatearMensajeBot(texto) {
+        // Escapa cualquier HTML del texto (para que el chatbot nunca pueda
+        // inyectar markup), y recién después habilita a mano SOLO negrita
+        // (**texto**) y saltos de línea - nada más de Markdown.
+        const tmp = document.createElement('div');
+        tmp.textContent = texto;
+        let seguro = tmp.innerHTML;
+        seguro = seguro.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        seguro = seguro.replace(/\n/g, '<br>');
+        return seguro;
     }
 </script>
 
