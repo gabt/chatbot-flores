@@ -5,6 +5,7 @@ import os
 import json
 import re
 import unicodedata
+from collections import Counter
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -59,34 +60,60 @@ def tokenizar(texto):
     return [p for p in palabras if len(p) > 2 and p not in PALABRAS_VACIAS]
 
 
-# Se pre-calcula UNA sola vez al arrancar (no en cada request) el texto
-# normalizado de cada documento, para no repetir ese trabajo en cada pregunta.
-_DOCS_NORMALIZADOS = [
-    {
+LARGO_RAIZ = 6
+
+
+def raiz(palabra):
+    """Achica una palabra a sus primeros LARGO_RAIZ caracteres (stemming bien
+    simple, sin librerías ni diccionario de sinónimos que mantener a mano) -
+    para que variantes de una misma palabra matcheen entre sí, ej. 'alcalde',
+    'alcaldes', 'alcaldia', 'alcaldesa' comparten la raíz 'alcald'. Esto NO
+    resuelve sinónimos de raíz distinta (ej. 'basura' vs 'residuos'); para eso
+    haría falta búsqueda semántica (embeddings) - ver nota en
+    docs/resumen_para_continuar.md. Lo que sí soluciona: la gran mayoría de
+    plurales, géneros y conjugaciones típicas del español."""
+    return palabra[:LARGO_RAIZ]
+
+
+# Se pre-calcula UNA sola vez al arrancar (no en cada request) el índice de
+# palabras y raíces de cada documento, para no repetir ese trabajo en cada
+# pregunta.
+def _construir_indice(doc):
+    palabras_url = tokenizar(doc.get("url", ""))
+    palabras_contenido = tokenizar(doc.get("contenido", ""))
+    return {
         "doc": doc,
-        "url_norm": normalizar(doc.get("url", "")),
-        "contenido_norm": normalizar(doc.get("contenido", "")),
+        "url_exacto": Counter(palabras_url),
+        "url_raiz": Counter(raiz(p) for p in palabras_url),
+        "contenido_exacto": Counter(palabras_contenido),
+        "contenido_raiz": Counter(raiz(p) for p in palabras_contenido),
     }
-    for doc in documentos
-]
+
+
+_DOCS_INDEXADOS = [_construir_indice(doc) for doc in documentos]
 
 
 def buscar_documentos_relevantes(pregunta, top_n=6):
-    """Retrieval por palabras clave: puntúa cada documento según cuántas
-    palabras de la pregunta aparecen en su url/contenido (la url pesa más,
-    porque suele traer el tema en el slug, ej. 'recoleccion-de-desechos').
+    """Retrieval por palabras clave (+ raíz): puntúa cada documento según
+    cuántas palabras de la pregunta aparecen en su url/contenido. La URL pesa
+    más (suele traer el tema en el slug, ej. 'recoleccion-de-desechos'), el
+    match EXACTO pesa más que el match por RAÍZ (así 'patente' no le gana a
+    'patentes' de pura casualidad, pero igual matchean si hace falta).
     Devuelve los top_n documentos con mejor puntaje (score > 0). Si ninguno
     matchea, devuelve una lista vacía y el chatbot recurre a la búsqueda web."""
     palabras = tokenizar(pregunta)
     if not palabras:
         return []
+    raices = [raiz(p) for p in palabras]
 
     puntuados = []
-    for item in _DOCS_NORMALIZADOS:
+    for item in _DOCS_INDEXADOS:
         score = 0
-        for palabra in palabras:
-            score += item["url_norm"].count(palabra) * 3
-            score += item["contenido_norm"].count(palabra)
+        for palabra, r in zip(palabras, raices):
+            score += item["url_exacto"].get(palabra, 0) * 6
+            score += item["url_raiz"].get(r, 0) * 3
+            score += item["contenido_exacto"].get(palabra, 0) * 2
+            score += item["contenido_raiz"].get(r, 0) * 1
         if score > 0:
             puntuados.append((score, item["doc"]))
 
