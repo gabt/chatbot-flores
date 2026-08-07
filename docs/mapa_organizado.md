@@ -80,9 +80,14 @@ dentro de Municipalidad, o una portada distinta - falta confirmar cuál.
   - Mapa Catastral del Cantón (SIG navegable) — /contribuyente/servicios/mapa-del-canton/
   - Plan Regulador de Flores — /contribuyente/plan-regulador-de-flores/
     - Mapa de Zonificación (✅ resuelto 2026-08-05: PDF propio subido por Jeiron, ya no depende
-      del link caído del sitio real) — /flores/zonificac-actul-prf/
+      del link caído del sitio real. ✅ Día 5 -2026-08-07-: cambiado de `tipo: 'descarga'` a
+      `tipo: 'imagen'` en `index.html` para igualar a `index_prueba.html` - ahora se ve la imagen
+      grande embebida en la página en vez de solo un botón de descarga del PDF) — /flores/zonificac-actul-prf/
   - Plan Cantonal de Desarrollo Humano Local (✅ PDF propio desde 2026-08-05, ya no depende de Dropbox)
-  - Recolección de desechos y reciclaje (✅ funciona correctamente, contenido real conectado) — /contribuyente/servicios/recoleccion-de-desechos/
+  - Recolección de desechos y reciclaje (✅ funciona correctamente, contenido real conectado.
+    ✅ Día 5 -2026-08-07-: confirmado con reintento el mismo día que los 35 caracteres que tenemos
+    son el contenido real completo -el sitio real solo tiene título + una imagen, sin texto de
+    horarios/días/tipos de residuos-, no es scraping incompleto ni bug nuestro) — /contribuyente/servicios/recoleccion-de-desechos/
 - Pago en línea
   - Calendario de pagos (✅ funciona correctamente, contenido real conectado) — /contribuyente/calendario-de-pagos/
 - Preguntas Frecuentes (✅ CERRADO 2026-08-05, submenú con 6 categorías) — /contribuyente/preguntas/

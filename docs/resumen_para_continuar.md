@@ -20,10 +20,23 @@ día en `docs/Tareas-Pendientes.docx`.
 **Día 4 — ✅ CERRADO 2026-08-06** (ver sección "Sesión 2026-08-06 (continuación): Día 4" más
 abajo para el detalle completo: Planos por APC implementado, Salarios Base 2021 verificado, los
 8 ítems de `mapa_organizado.md` reconciliados, más el pedido adicional de Gerardo de "Medios de
-pago" en Contribuyente > Pago en línea, y la corrección de "Preguntas Frecuentes"). **Siguiente
-sesión: arrancar Día 5** (QA funcional de Municipalidad y Contribuyente, ~45 nodos, con prueba
-cruzada en al menos dos navegadores) - ver `docs/Tareas-Pendientes.docx` para el detalle
-completo de ese día.
+pago" en Contribuyente > Pago en línea, y la corrección de "Preguntas Frecuentes").
+
+**Día 5 — ✅ CERRADO 2026-08-07** (ver sección "Sesión 2026-08-07: Día 5" más abajo para el
+detalle completo: crawl automatizado de los 62 nodos de Municipalidad+Contribuyente en Chromium,
+0 errores reales; se encontró y corrigió una divergencia de fondo entre `index.html` e
+`index_prueba.html` -deduplicación de título repetido + tipo de nodo `imagen`-, ambos archivos ya
+quedan con el mismo comportamiento de contenido; Jeiron confirmó el pase manual en Edge -segundo
+navegador- sin problemas). Mismo día, fuera del plan de Día 5, se agregó también "Pago por SINPE
+Móvil" en Medios de pago (ver sección propia más abajo) y se reemplazó el fondo del hero de
+`index_prueba.html` por una foto en alta calidad. También se cerró, más tarde el mismo día, el
+único pendiente que había quedado abierto de Día 5 (ver sección "Reintento 2026-08-07 (más tarde)
+de las páginas reales que habían dado error 500" más abajo): Jeiron pegó manualmente el contenido
+real de `flores.go.cr/patentes` -bloqueado para WebFetch automatizado pero no caído- y se confirmó
+que el contenido guardado en `conocimiento.json`/nodo `form-patentes-declaracion` sigue vigente
+sin cambios. **Siguiente sesión: arrancar Día 6** (QA de Noticias y Comunicados + Contáctenos,
+integridad referencial del árbol, buscador del directorio) - ver `docs/Tareas-Pendientes.docx`
+para el detalle completo de ese día.
 
 **Bitácoras de horas — ver sección "Bitácoras de horas (trabajo administrativo, no técnico) —
 2026-08-06" más abajo antes de tocar cualquiera de los dos documentos Word.** Pendiente puntual:
@@ -903,3 +916,259 @@ quiere cerrar esto "ASAP").
 El usuario quiere revisar TODO el árbol nodo por nodo (en progreso, ver arriba) y también
 probarlo en celular (el responsive y el auto-cierre del menú YA se probaron y confirmaron
 funcionando bien en celular real).
+
+## Sesión 2026-08-07: Día 5 — QA funcional de Municipalidad y Contribuyente
+
+### 1. Metodología
+Se extrajo programáticamente (Node, parseando el `ARBOL` real de `index.html`) la lista exacta
+de nodos de Municipalidad + Contribuyente: 62 nodos en total (48 hojas + 4 nodos padre que
+también muestran contenido propio -"Planes y Proyectos", "Formularios", "Plan Regulador de
+Flores" bajo Servicios, "Preguntas Frecuentes"- + 10 agrupadores puros). De esos, 52 tienen
+`tipo` propio (contenido real que probar); los 10 agrupadores puros solo se verificó que abran
+sin error. Se montó un servidor local + Playwright (Chromium headless, único motor disponible en
+este sandbox) que recorre cada nodo, interceptando la llamada a `${BACKEND}/paginas` para servir
+`conocimiento.json` local (sin salida de red real desde este sandbox hacia Render ni hacia
+flores.go.cr - por eso las imágenes externas y los recursos reales no cargan en el crawl, eso es
+una limitación del entorno de pruebas, no un bug: se separaron los errores de red esperados
+(`ERR_TUNNEL_CONNECTION_FAILED`) de errores de JavaScript reales para no generar falsos positivos.
+
+Se probó cada nodo verificando: errores de JS en consola (reales, no de red), presencia de
+`undefined`/`NaN`/`[object Object]` en el texto renderizado, imágenes propias (`assets/`) rotas,
+y que los mecanismos especiales (`tablaTexto`, `listasEnlaces`, `enlacesInternos`) efectivamente
+generen su estructura HTML esperada (tabla real, lista de links, etc.) en vez de fallar
+silenciosamente.
+
+### 2. Resultado del crawl automatizado
+**`index.html`: 62/62 nodos sin problemas reales** (0 errores de JS, 0 imágenes locales rotas, 0
+casos de `tablaTexto` sin tabla generada, contenido presente y coincidente con lo que
+efectivamente hay en `conocimiento.json` para cada URL - se verificó puntualmente que los nodos
+con texto muy corto, ej. "Certificaciones de Registro" o "Calendario de pagos", no son un bug
+sino que el contenido scrapeado real de esas páginas también es así de corto).
+
+**`index_prueba.html`: 52/52 nodos clickeables sin problemas reales** (misma metodología,
+adaptada al modelo de navegación por pastillas: nivel0 → nivel1 → dropdown plano para nietos, en
+vez del árbol lateral de `index.html`). Se comparó además la longitud del texto renderizado nodo
+por nodo entre ambos archivos para detectar divergencias de contenido (no solo de forma) - ver
+punto 3.
+
+### 3. Divergencia real encontrada entre los dos archivos — CORREGIDA (a pedido explícito de
+### Jeiron: "que exactamente queden de la mano, la única diferencia deben ser los temas estéticos")
+La comparación nodo por nodo encontró que `index_prueba.html` tenía dos mecanismos de contenido
+que `index.html` NO tenía (confirmado con un diff de nombres de función entre ambos archivos, que
+además confirmó que no había ninguna otra función de contenido faltante - las únicas diferencias
+de funciones eran las esperadas de navegación: árbol lateral vs. pastillas):
+
+1. **`quitarLineaDuplicadaDelTitulo(texto, titulo)`**: función que existía solo en
+   `index_prueba.html`, que quita automáticamente la primera línea del texto scrapeado cuando es
+   idéntica al título de la página (ruido de scraping muy común: el `<h1>`/título de WordPress se
+   captura también como primera línea del cuerpo). En `index.html` este problema solo se resolvía
+   a mano, nodo por nodo, con `lineasOmitir` - y quedaban **14 nodos sin resolver** con el título
+   repetido como ruido visible: `mapa-organizacional`, `nivel-politico`, `nivel-fiscalizacion`,
+   `nivel-sustantivo`, `nivel-apoyo`, `mision-vision`, `valores`, `planes-proyectos`,
+   `form-acueducto`, `form-bienes`, `certificaciones`, `calendario-pagos`,
+   `recoleccion-desechos`, `preg-bienes-inmuebles`.
+   ⚠️ Antes de portar la función se verificó con cuidado el caso de los 4 nodos "Nivel Político/
+   Fiscalización/Sustantivo/Apoyo", porque un comentario viejo en `index.html` decía que ahí el
+   título duplicado se dejaba **a propósito** como subtítulo visual. Al revisar el texto real
+   crudo en `conocimiento.json` se confirmó que esas 4 páginas tienen el título repetido **dos
+   veces seguidas** al inicio (ej. `"Nivel Político\nNivel Político\nSon aquellas áreas..."`) - la
+   función solo quita la PRIMERA aparición (el ruido puro de scraping) y deja la segunda intacta
+   (el subtítulo real e intencional). Es decir, no hay ningún conflicto real con la decisión
+   anterior: la función hace exactamente lo que ya se quería, de forma automática y general en
+   vez de caso por caso.
+2. **`tipo: 'imagen'` + función `renderImagen()`**: tipo de nodo nuevo (solo existía en
+   `index_prueba.html`) para mostrar una imagen grande directo en la página (ej. un mapa) en vez
+   de forzar una descarga de PDF. El nodo `mapa-zonificacion` (Contribuyente > Servicios > Plan
+   Regulador de Flores > Mapa de Zonificación) lo usaba en `index_prueba.html` pero en
+   `index.html` seguía siendo `tipo: 'descarga'` (solo un botón para abrir el PDF). Junto con este
+   tipo va también un ajuste chico en `renderGaleria()`: no repetir la etiqueta/caption de una
+   imagen si es idéntica al título de la página (mismo criterio de no duplicar título, aplicado a
+   imágenes en vez de texto) - tampoco existía en `index.html`.
+
+**Cambios aplicados en `index.html`** (ahora en paridad de contenido con `index_prueba.html`,
+la única diferencia real que queda entre ambos es puramente visual/de navegación - sidebar vs.
+pastillas, paleta azul vs. cálida):
+- Agregada `quitarLineaDuplicadaDelTitulo()` y conectada en `renderContenido()` (reemplaza el uso
+  directo de `pagina.contenido` crudo).
+- Agregado el tipo de nodo `'imagen'` al switch de `mostrarNodo()` + función `renderImagen()` +
+  CSS `.imagen-grande-wrap` / `.galeria-grande` (copiado tal cual del CSS de `index_prueba.html`,
+  es solo layout sin colores de paleta, no hizo falta adaptar nada).
+- `renderGaleria()` ahora acepta `tituloPagina` e `imagenGrande` como parámetros opcionales y no
+  duplica la caption si es igual al título.
+- Nodo `mapa-zonificacion`: cambiado de `tipo: 'descarga'` a `tipo: 'imagen'`, usando
+  `assets/mapa-zonificacion.jpg` (mismo archivo que ya usaba `index_prueba.html`) con
+  `hrefOriginal` apuntando al PDF por si alguien lo quiere igual.
+
+**Re-verificado con el mismo crawl automatizado tras los cambios: `index.html` sigue en 62/62 sin
+problemas**, y se confirmó línea por línea que los 4 nodos "Nivel X" conservan su subtítulo real
+(solo se quitó el duplicado puro), y que el resto de los 10 nodos quedó limpio del título repetido.
+
+### 4. Verificación puntual contra el sitio real (WebFetch, aprobado por Jeiron)
+- `flores.go.cr/` (portada): carga bien.
+- `flores.go.cr/contribuyente/servicios/recoleccion-de-desechos/`: **da error 500 del servidor
+  ahora mismo** (probado dos veces, con y sin barra final). Esto es consistente con la fragilidad
+  ya documentada del sitio real - no es un bug nuestro. Explica además por qué el contenido
+  scrapeado de esa página es tan corto (35 caracteres): puede que ya estuviera casi vacía o rota
+  al momento del scraping original. Sin acción de nuestro lado; si Jeiron quiere, puede
+  reintentar en otro momento para ver si es intermitente o ya quedó caída del todo.
+- `flores.go.cr/patentes/` (y sin la barra final): **también da error 500 ahora mismo**. Mismo
+  comentario que el punto anterior - no se pudo confirmar si los plazos de la Declaración Jurada
+  de Patentes 2026 siguen vigentes porque la página real no cargó en ningún intento. Pendiente:
+  reintentar en otra sesión antes de asumir que el contenido de `form-patentes-declaracion` sigue
+  vigente.
+
+### 5. Navegador cruzado — ✅ RESUELTO (pase manual de Jeiron en Edge)
+Este sandbox de esta sesión solo tiene Chromium disponible para Playwright (sin salida de red
+para bajar Firefox o WebKit - se intentó `npx playwright install firefox` y la descarga fue
+rechazada por la política de red del entorno). El crawl automatizado de hoy cubre la parte
+funcional (errores de JS, estructura HTML correcta) pero NO cubre diferencias de renderizado CSS/
+JS específicas de motor, que es justamente lo que pide el Día 5 con "al menos dos navegadores".
+
+**Jeiron hizo el pase manual él mismo en Microsoft Edge (segundo navegador) y confirmó "ya pase
+todo por edge, funciona bien"** - sin problemas reportados. Checklist que se le compartió como
+guía para ese pase - priorizando los nodos con mecanismos especiales (más probabilidad de un
+problema específico de motor que uno de contenido simple):
+
+- `salarios-base` (Municipalidad > Información General > Organigrama > Salarios Base 2021): la
+  tabla de 3 columnas se ve alineada, con separador de miles en punto y la fila de total.
+- `mapa-zonificacion` (Contribuyente > Servicios > Plan Regulador de Flores > Mapa de
+  Zonificación): **cambió hoy** de botón de descarga a imagen grande embebida - confirmar que la
+  imagen carga y se ve nítida, con el link "Ver PDF original" arriba.
+- `comite-deportes` (Municipalidad > Comités Municipales > Comité Cantonal de Deportes y
+  Recreación): tabla de Junta Directiva + logo/YouTube insertado en medio del texto.
+- `documentacion` (Municipalidad > Marco Normativo > Documentación): ~35 links a documentos de
+  Drive, confirmar que todos son clickeables.
+- `preguntas-frecuentes` (Contribuyente > Preguntas Frecuentes): confirmar que las 6 tarjetas de
+  categoría navegan bien al hacer click.
+- `miembros-concejo` (Municipalidad > Concejo Municipal > Miembros del Concejo Municipal):
+  banderas de partido político alineadas correctamente junto a cada nombre.
+- `medios-pago` (Contribuyente > Pago en línea > Medios de pago): logos de BCR/Banco Nacional +
+  fila de "Pago directo" atenuada, sin link.
+- En `index_prueba.html` además: abrir un par de cuadritos desplegables (▾) de pastillas con
+  muchos ítems (ej. "Servicios" en Contribuyente) y confirmar que no se cortan ni se salen de la
+  pantalla en el segundo navegador.
+- Ancho de ventana angosto (celular) en ambos archivos, en el segundo navegador: confirmar que el
+  menú/pastillas se comportan igual que en Chrome.
+
+Jeiron confirmó que no vio nada distinto en Edge.
+
+### 6. Día 5 — ✅ 100% CERRADO (ya no quedan pendientes propios de este día)
+Los 4 puntos que habían quedado abiertos al final de la sesión ya se resolvieron todos:
+1. ✅ Pase manual en segundo navegador (punto 5): Jeiron lo hizo en Edge, sin problemas.
+2. ✅ Reintento contra el sitio real (punto 4): `recoleccion-de-desechos` ya no da error 500 y se
+   confirmó que su contenido corto es correcto (no es un bug); `patentes` seguía dando 500 solo
+   para el fetch automatizado (no para Jeiron en su navegador), así que Jeiron pegó el contenido
+   real a mano y se confirmó que `form-patentes-declaracion` sigue vigente sin cambios - ver
+   sección "Reintento 2026-08-07 (más tarde)" más abajo para el detalle completo.
+3. Arrancar Día 6 (QA de Noticias y Comunicados + Contáctenos, integridad referencial, buscador
+   del directorio) - ver `docs/Tareas-Pendientes.docx`. **Pendiente real para la próxima sesión**,
+   a la espera de que Jeiron dé la orden explícita de arrancar.
+4. Actualizar ambas bitácoras de horas con la entrada del 7/8/26 - pendiente hasta que Jeiron
+   cierre el día y dé Hora Inicio/Hora Fin.
+
+## Pedido adicional de Jeiron (mismo día, fuera del plan de Día 5): "Pago por SINPE Móvil"
+El sitio real (`flores.go.cr/contribuyente/pago-en-linea/`) tiene un botón "SINPE MOVIL" que abre
+un formulario de terceros (`whatsform.com/UMTppW`, un servicio tipo SaaS que arma formularios que
+mandan la respuesta por WhatsApp) pidiendo Nombre y Cédula del contribuyente, más un check opcional
+de "Consultar estado de cuenta por" (Pago Parcial / Pago Anual / Pago de servicios específicos), y
+al enviar redirige a WhatsApp con un mensaje prearmado hacia el número real de "Cobros
+Municipalidad" (+506 8768 1510, confirmado por Jeiron con una captura de la app de WhatsApp - dato
+que no se podía obtener por scraping ni por `WebFetch`, porque el formulario real se arma con
+JavaScript del lado del cliente y este sandbox no tiene salida de red para renderizarlo con un
+navegador real).
+
+**Implementado en ambos archivos** como una fila nueva "Pago por SINPE Móvil" dentro de
+Contribuyente > Pago en línea > Medios de pago, ANTES de "Pago directo" (logo subido por Jeiron,
+guardado en `assets/logo-sinpe-movil.png`). Al hacer click abre un modal propio (mecanismo nuevo
+y reutilizable: `.modal-overlay` / `.modal-caja`, con `abrirFormularioSinpe()` /
+`enviarFormularioSinpe()` / `cerrarModal()`) que replica el formulario real campo por campo,
+confirmado con dos capturas de pantalla de Jeiron:
+- Nombre del contribuyente (obligatorio) y Cédula del contribuyente (obligatorio) - el borde rojo
+  y el texto "Este campo es obligatorio" **solo aparecen después de intentar enviar sin llenar**,
+  igual que el formulario real, no de entrada ni mientras se escribe (verificado con Playwright:
+  0 errores visibles al abrir, 2 al enviar vacío, 0 de nuevo tras llenar y reabrir).
+- Checkboxes opcionales "Consultar estado de cuenta por": Pago Parcial / Pago Anual / Pago de
+  servicios específicos.
+- Botón verde "📱 Enviar por WhatsApp" que arma el mensaje y abre `wa.me/50687681510` con el texto
+  ya cargado (`window.open`, pestaña nueva) y cierra el modal.
+
+**Formato del mensaje**, calcado del mensaje real que Jeiron probó y pegó como referencia (con
+negritas de WhatsApp vía asteriscos):
+```
+*SINPE MOVIL Flores*
+*SINPE MOVIL*
+*Nombre del contribuyente :* {nombre}
+*Cédula del contribuyente :* {cédula}
+*Consultar estado de cuenta por:* {opciones marcadas, separadas por coma}
+```
+La última línea se omite del todo si no se marcó ninguna opción, ya que ese campo no es
+obligatorio en el formulario real.
+
+⚠️ **Diferencia consciente con el mensaje real, pendiente de tu confirmación:** el mensaje real
+trae una línea extra `*Respuesta* #15846` - es un correlativo autogenerado por el backend propio
+de WhatsForm (el servicio de terceros), no algo que nosotros tengamos ni podamos replicar sin su
+sistema (no es una API pública ni algo a lo que se pueda pedir acceso - es un ID interno de esa
+plataforma para llevar la cuenta de las respuestas de SUS clientes). Por eso se omitió esa línea
+en nuestra versión en vez de inventar un número que no significaría nada real. Si en algún
+momento se quiere un correlativo propio (ej. basado en fecha/hora), se puede agregar fácil.
+
+**Verificado con Playwright** en ambos archivos: la fila aparece en el orden correcto, el modal
+abre/cierra bien, la validación se comporta como el sitio real, y el link de WhatsApp generado
+decodifica exactamente al formato de arriba. Pendiente: que Jeiron lo pruebe una vez en el
+navegador real (idealmente desde el celular, para confirmar que WhatsApp abre bien la app nativa
+en vez de solo la versión web) antes de darlo por cerrado del todo.
+
+Ajuste chico el mismo día: el botón "Enviar por WhatsApp" usaba el emoji 📱 (se veía roto/con un
+glifo raro en algunos dispositivos) y un verde genérico. Reemplazado por el logo real de WhatsApp
+que subió Jeiron (`assets/icono-whatsapp.png`) y el botón ahora usa un degradado sacado de los
+tonos exactos del logo (`#5BD066` → `#27B43E`, muestreado con PIL) en vez del verde genérico
+anterior. Aplicado igual en ambos archivos.
+
+## Pedido adicional de Jeiron (mismo día): fondo del hero en `index_prueba.html`
+La foto de fondo del cuadro principal (`assets/fondo-hero.jpg`, sección "hero-nav", **solo existe
+en `index_prueba.html`** - `index.html` no tiene esta sección, es una diferencia puramente visual
+del rediseño) estaba en muy baja resolución (500×332px, se veía borrosa al estirarse). Jeiron
+subió una foto real en alta calidad (4512×3000px, la iglesia de San Joaquín de Flores con un árbol
+de flor amarilla en primer plano) para reemplazarla.
+
+**Decisión tomada (sin cortar la imagen de origen):** se redimensionó a 1600px de ancho (buena
+nitidez, ~310KB) y se dejó que el `background-size: cover` existente haga el recorte responsivo
+automático según el ancho de pantalla en vez de fijar un recorte manual único - más robusto ante
+los distintos anchos de viewport. Se ajustó `background-position` para priorizar qué parte de la
+foto se prioriza al recortar.
+
+⚠️ Nota de proceso: la primera pasada del `background-position` (25%, después 8%) priorizaba
+mostrar la punta de la torre de la iglesia contra el cielo, pero Jeiron señaló que así "no se
+mira bien la iglesia" - lo que en realidad quería era ver la FACHADA completa (reloj, cruz, cuerpo
+del edificio), no solo la silueta de la punta de la torre. Se generó una comparación con 5
+opciones (0%/15%/30%/45%/60%) para decidir con evidencia visual en vez de seguir adivinando -
+**quedó en `background-position: center 45%`**, confirmado por Jeiron ("ahora me parece
+perfecta"). Verificado en desktop/tablet/celular con Playwright antes de guardar.
+
+## Reintento 2026-08-07 (más tarde) de las páginas reales que habían dado error 500
+Pendiente que había quedado abierto en la sección de Día 5 de hoy mismo:
+- `flores.go.cr/contribuyente/servicios/recoleccion-de-desechos/`: **ya no da error 500**, carga
+  bien. Se confirmó además algo importante: el contenido real de esa página es efectivamente solo
+  el título "Recolección de desechos y reciclaje" más una imagen (`Recoleccion-300x287.png`) - NO
+  hay texto de horarios/días/tipos de residuos en el sitio real. Es decir, los 35 caracteres que
+  tenemos en `conocimiento.json` para esa página **son correctos y completos**, no es un scraping
+  incompleto ni un bug nuestro - el sitio real simplemente no tiene ese contenido en texto.
+- `flores.go.cr/patentes/`: **sigue dando error 500 vía WebFetch automatizado** (Jeiron confirmó
+  que a él sí le carga bien en su navegador - es un bloqueo específico al método de fetch
+  automatizado, no una caída real del sitio). Jeiron copió y pegó manualmente el texto completo
+  de la página real. **Comparado contra el contenido guardado en `conocimiento.json` para
+  `flores.go.cr/patentes` (el que usa el nodo `form-patentes-declaracion`): coincide exactamente**
+  - mismos plazos (Régimen Simplificado 05-22 enero 2026, Régimen Tradicional 05 enero-20 marzo
+  2026), misma multa (50% del salario base, ¢231.000, Artículo 79), mismos requisitos y misma
+  información de formas de pago (incluyendo SINPE Móvil 8768-1510). **✅ Confirmado: el contenido
+  de `form-patentes-declaracion` sigue vigente, no requirió ningún cambio.** Con esto queda
+  cerrado el único pendiente que había dejado abierto el Día 5.
+  - De paso, Jeiron también pegó capturas de la página real `flores.go.cr/formularios/patentes.php`
+    (la que usa el nodo `form-patentes`, tipo `externo`, 5 formularios) y reportó dos problemas
+    *del sitio real*: un link de Google Drive caído/roto en uno de los PDFs, y que los botones
+    "DETALLE" del primer y segundo formulario ("Formulario de declaración patentes de licores" y
+    "Formulario de patentes de licores") abren la misma pestaña/documento en vez de documentos
+    distintos. Como `form-patentes` es un nodo `tipo: 'externo'` que simplemente redirige al
+    usuario a esa URL real (no reproduce su contenido en el chatbot), estos son bugs del sitio
+    municipal real, no del chatbot - no requieren ni admiten corrección de nuestra parte. Queda
+    documentado por si Jeiron quiere reportarlo aparte a quien mantiene el sitio real.

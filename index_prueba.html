@@ -49,7 +49,7 @@
         position: relative;
         background-image: url('assets/fondo-hero.jpg');
         background-size: cover;
-        background-position: center;
+        background-position: center 45%;
         min-height: 200px;
         display: flex;
         align-items: center;
@@ -504,6 +504,53 @@
     .medio-pago-nombre { display: block; font-weight: bold; font-size: 1.4rem; color: #6b4423; }
     .medio-pago-pendiente .medio-pago-nombre { color: #555; }
     .medio-pago-nota { display: block; font-size: 0.8rem; color: #888; margin-top: 3px; }
+    /* SINPE Móvil: la fila abre un formulario propio (modal) en vez de un
+       link externo, por eso es un <div> clickeable, no un <a>. */
+    .medio-pago-item.medio-pago-clickeable { cursor: pointer; border: none; background: none; text-align: left; width: 100%; font: inherit; }
+    .medio-pago-item.medio-pago-clickeable:hover .medio-pago-caja { background: #fbe8c8; }
+
+    /* Modal genérico (usado hoy por el formulario de SINPE Móvil, reutilizable
+       para cualquier formulario propio que necesitemos más adelante). */
+    .modal-overlay {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+        display: flex; align-items: center; justify-content: center;
+        padding: 20px; z-index: 2000;
+    }
+    .modal-caja {
+        background: white; border-radius: 10px; max-width: 480px; width: 100%;
+        max-height: 90vh; overflow-y: auto; padding: 28px 26px; position: relative;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+    .modal-cerrar {
+        position: absolute; top: 14px; right: 16px; background: none; border: none;
+        font-size: 1.4rem; line-height: 1; cursor: pointer; color: #888;
+    }
+    .modal-cerrar:hover { color: #333; }
+    .modal-caja h3 { margin-top: 0; }
+    .form-campo { margin-top: 18px; }
+    .form-campo label { display: block; font-weight: bold; margin-bottom: 6px; }
+    .form-campo label .obligatorio { color: #c0392b; }
+    .form-campo input[type="text"] {
+        width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px;
+        font-size: 1rem; box-sizing: border-box;
+    }
+    .form-campo input.campo-invalido { border-color: #c0392b; }
+    .form-campo .form-ayuda { font-size: 0.82rem; color: #777; margin-top: 4px; }
+    .form-campo .form-error { display: none; font-size: 0.82rem; color: #c0392b; margin-top: 4px; }
+    .form-campo.con-error .form-error { display: block; }
+    .form-checkbox-grupo { margin-top: 18px; }
+    .form-checkbox-grupo > span { display: block; font-weight: bold; margin-bottom: 8px; }
+    .form-checkbox-opcion { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 0.95rem; }
+    .form-nota-final { font-size: 0.85rem; color: #777; margin-top: 20px; }
+    .btn-whatsapp {
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+        width: 100%; margin-top: 16px; color: white;
+        background: linear-gradient(180deg, #5BD066, #27B43E);
+        border: none; border-radius: 8px; padding: 13px; font-size: 1rem;
+        font-weight: bold; cursor: pointer;
+    }
+    .btn-whatsapp:hover { background: linear-gradient(180deg, #4CC257, #1FA032); }
+    .btn-whatsapp img { width: 22px; height: 22px; flex-shrink: 0; }
 
     table {
         width: 100%;
@@ -994,6 +1041,14 @@ const ARBOL = [
             medios: [
               { nombre: 'Banco de Costa Rica', imagen: 'assets/logo-bcr.png', href: 'https://www.bancobcr.com/wps/portal/bcr' },
               { nombre: 'Banco Nacional', imagen: 'assets/logo-bncr.png', href: 'https://www.bncr.fi.cr/' },
+              // Agregado 2026-08-07 a pedido de Jeiron: replica el formulario real
+              // de SINPE Móvil (flores.go.cr/contribuyente/pago-en-linea/, botón
+              // que hoy en el sitio real abre un formulario de terceros en
+              // whatsform.com/UMTppW). Acá se implementa como formulario propio
+              // (ver abrirFormularioSinpe()) que arma el mismo mensaje y lo manda
+              // al WhatsApp real de "Cobros Municipalidad" (+506 8768 1510,
+              // confirmado por Jeiron contra la app de WhatsApp).
+              { nombre: 'Pago por SINPE Móvil', imagen: 'assets/logo-sinpe-movil.png', formulario: 'sinpe-movil' },
               { nombre: 'Pago directo', imagen: 'assets/logo-muni-mejorado.png', nota: '(Estamos trabajando para hacerlo posible)' },
             ]
           },
@@ -2142,6 +2197,10 @@ const ARBOL = [
                 fila.target = '_blank';
                 fila.rel = 'noopener noreferrer';
             }
+            if (medio.formulario === 'sinpe-movil') {
+                fila.className = 'medio-pago-item medio-pago-clickeable';
+                fila.addEventListener('click', () => abrirFormularioSinpe());
+            }
 
             const img = document.createElement('img');
             img.src = medio.imagen;
@@ -2166,6 +2225,98 @@ const ARBOL = [
         });
         wrap.appendChild(lista);
         pane.appendChild(wrap);
+    }
+
+    /* =========================================================
+       FORMULARIO "SINPE MÓVIL" (modal) - agregado 2026-08-07
+       Replica el formulario real de flores.go.cr/contribuyente/pago-en-linea/
+       (hoy resuelto con un formulario de terceros en whatsform.com/UMTppW):
+       mismos campos, mismo formato de mensaje, pero armado con código propio
+       y enviado directo a wa.me con el mismo número real de WhatsApp de
+       "Cobros Municipalidad" que usa el sitio real.
+       ========================================================= */
+    const SINPE_MOVIL_WHATSAPP = '50687681510'; // "Cobros Municipalidad", confirmado por Jeiron
+
+    function cerrarModal() {
+        const overlay = document.querySelector('.modal-overlay');
+        if (overlay) overlay.remove();
+    }
+
+    function abrirFormularioSinpe() {
+        const overlay = document.createElement('div');
+        overlay.className = 'modal-overlay';
+        overlay.addEventListener('click', (ev) => { if (ev.target === overlay) cerrarModal(); });
+
+        overlay.innerHTML = `
+            <div class="modal-caja" role="dialog" aria-modal="true" aria-labelledby="sinpe-titulo">
+                <button class="modal-cerrar" type="button" aria-label="Cerrar">✕</button>
+                <h3 id="sinpe-titulo">SINPE MOVIL</h3>
+                <p>Bienvenido al sistema SINPE MOVIL, en donde se puede realizar pagos en un
+                horario de lunes a viernes de 7 am a 1 pm.</p>
+                <p>Para poder colaborar con su trámite, es requerido contar con la siguiente
+                información.</p>
+                <form id="form-sinpe" novalidate>
+                    <div class="form-campo" id="campo-nombre">
+                        <label for="sinpe-nombre"><span class="obligatorio">*</span> Nombre del contribuyente</label>
+                        <input type="text" id="sinpe-nombre" name="nombre">
+                        <p class="form-ayuda">Nombre del contribuyente dueño de la propiedad.</p>
+                        <p class="form-error">Este campo es obligatorio</p>
+                    </div>
+                    <div class="form-campo" id="campo-cedula">
+                        <label for="sinpe-cedula"><span class="obligatorio">*</span> Cédula del contribuyente</label>
+                        <input type="text" id="sinpe-cedula" name="cedula">
+                        <p class="form-ayuda">Cédula del contribuyente dueño de la propiedad.</p>
+                        <p class="form-error">Este campo es obligatorio</p>
+                    </div>
+                    <div class="form-checkbox-grupo">
+                        <span>Consultar estado de cuenta por:</span>
+                        <label class="form-checkbox-opcion"><input type="checkbox" name="estado-cuenta" value="Pago Parcial"> Pago Parcial</label>
+                        <label class="form-checkbox-opcion"><input type="checkbox" name="estado-cuenta" value="Pago Anual"> Pago Anual</label>
+                        <label class="form-checkbox-opcion"><input type="checkbox" name="estado-cuenta" value="Pago de servicios específicos"> Pago de servicios específicos</label>
+                    </div>
+                    <p class="form-nota-final">Gracias por la información, en breve lo atenderá un agente de cobros.</p>
+                    <button type="submit" class="btn-whatsapp"><img src="assets/icono-whatsapp.png" alt=""> Enviar por WhatsApp</button>
+                </form>
+            </div>`;
+
+        overlay.querySelector('.modal-cerrar').addEventListener('click', cerrarModal);
+        overlay.querySelector('#form-sinpe').addEventListener('submit', (ev) => {
+            ev.preventDefault();
+            enviarFormularioSinpe(overlay);
+        });
+        document.body.appendChild(overlay);
+        overlay.querySelector('#sinpe-nombre').focus();
+    }
+
+    function enviarFormularioSinpe(overlay) {
+        const nombre = overlay.querySelector('#sinpe-nombre').value.trim();
+        const cedula = overlay.querySelector('#sinpe-cedula').value.trim();
+        const campoNombre = overlay.querySelector('#campo-nombre');
+        const campoCedula = overlay.querySelector('#campo-cedula');
+
+        // La validación (borde rojo + "Este campo es obligatorio") solo se
+        // muestra DESPUÉS de intentar enviar sin llenar, igual que el
+        // formulario real - no aparece de entrada ni mientras se escribe.
+        campoNombre.classList.toggle('con-error', !nombre);
+        campoNombre.querySelector('input').classList.toggle('campo-invalido', !nombre);
+        campoCedula.classList.toggle('con-error', !cedula);
+        campoCedula.querySelector('input').classList.toggle('campo-invalido', !cedula);
+        if (!nombre || !cedula) {
+            (nombre ? overlay.querySelector('#sinpe-cedula') : overlay.querySelector('#sinpe-nombre')).focus();
+            return;
+        }
+
+        const estados = Array.from(overlay.querySelectorAll('input[name="estado-cuenta"]:checked')).map(c => c.value);
+
+        let mensaje = `*SINPE MOVIL Flores*\n*SINPE MOVIL*\n`;
+        mensaje += `*Nombre del contribuyente :* ${nombre}\n`;
+        mensaje += `*Cédula del contribuyente :* ${cedula}`;
+        if (estados.length) {
+            mensaje += `\n*Consultar estado de cuenta por:* ${estados.join(', ')}`;
+        }
+
+        window.open(`https://wa.me/${SINPE_MOVIL_WHATSAPP}?text=${encodeURIComponent(mensaje)}`, '_blank', 'noopener,noreferrer');
+        cerrarModal();
     }
 
     // Listados de blog (ej. categorías del blog real como "Gestión Ambiental" o
